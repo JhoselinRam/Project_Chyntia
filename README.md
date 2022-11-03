@@ -5,13 +5,13 @@ Our goal is to provide reliable tools for real time data visualization and analy
 
 This project uses next.js framework, d3, and python (pyodide) for the numerical processing.
 
-###Road map
-#####Basic expected functionality
+### Road map
+##### Basic expected functionality
 - Real time data visualization from sensors connected via USB.
 - Basic data analysis and manipulation tools (Integrals, derivatives, composition, etc)
 - Free scripts and circuit schematics for arduino based sensors.
 
-#####Future advance functionality
+##### Future advance functionality
 - Advance data analysis tools (Fourier analysis, statistical analysis, linear and nonlinear regression, model fit, etc)
 - Data visualization draw form physics simulation instead of a sensor.
 - Support for multiple sensors at once.
@@ -19,7 +19,7 @@ This project uses next.js framework, d3, and python (pyodide) for the numerical 
 - 2D and 3D grhaper.
 - Support for import and export work sessions.
 ___
-##Start
+## Start
 To run this project clone the repository and open a terminal in the project root folder.
 Run the command:
 > npm install

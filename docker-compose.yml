@@ -1,0 +1,13 @@
+version: '1.0'
+
+services:
+  chyntia_dev:
+    container_name: chyntia_dev
+    ports:
+      - 3000:3000
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    command: npm run dev
+    volumes:
+      - .:/usr/src/app

@@ -61,8 +61,8 @@ function setupAxis({svg, axisPosition, centerX, centerY, marginStart, marginTop,
     function setAxisCenter(reference : Scale){
         if(svg.current == null) return;
 
-        let translationX = reference?.x(centerX);
-        let translationY = reference?.y(centerY);
+        let translationX = reference.x(centerX);
+        let translationY = reference.y(centerY);
         const offsetY = (select(svg.current)
             .select("g.Graph2D_AxisX")
             .node() as SVGGElement)
@@ -92,13 +92,18 @@ function setupAxis({svg, axisPosition, centerX, centerY, marginStart, marginTop,
 
         if(translationY < minTranslationY)
             translationY = minTranslationY;
+
+        select(svg.current)
+            .selectAll("g.tick")
+            .append("g")
+            .classed("Background", true);
         
 
         if(translationX < minTranslationX+offsetX){
             const translator = scaleLinear().domain([minTranslationX+offsetX, minTranslationX]).range([0, offsetX+6]);
             select(svg.current)
                 .select("g.Graph2D_AxisY")
-                .selectAll("text")
+                .selectAll("text, g.Background")
                 .style("transform", `translate(${translator(translationX)}px,0)`);
         }
 
@@ -106,7 +111,7 @@ function setupAxis({svg, axisPosition, centerX, centerY, marginStart, marginTop,
             const translator = scaleLinear().domain([maxTranslationY-offsetY, maxTranslationY]).range([0,-offsetY-6]);
             select(svg.current)
                 .select("g.Graph2D_AxisX")
-                .selectAll("text")
+                .selectAll("text, g.Background")
                 .style("transform", `translate(0,${translator(translationY)}px)`);
         }
 

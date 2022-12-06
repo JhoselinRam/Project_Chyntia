@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { Graph2DInterface, Scale } from "../Graph2D_types/types";
 import setupAxis from "./tools/setupAxis";
 import setupBackground from "./tools/setupBackground";
+import setupGrid from "./tools/setupGrid";
 import setupScale from "./tools/setupScale";
 
 function useCanvas({width=10, height=10, centerX=0, centerY=0, backgroundColor="#ffffff", axisType="rectangular", axisPosition="center", marginStart=5, marginTop=5, marginEnd=5, marginBottom=5} : Graph2DInterface){
@@ -10,6 +11,7 @@ function useCanvas({width=10, height=10, centerX=0, centerY=0, backgroundColor="
     const {setBackground, setAxisBackground} = setupBackground({svg, backgroundColor});
     const {setScale} = setupScale({svg, width, height, centerX, centerY, axisType, axisPosition, marginStart, marginTop, marginEnd, marginBottom});
     const {setAxis} = setupAxis({svg, axisPosition, centerX, centerY, marginStart, marginTop, marginEnd, marginBottom}); 
+    const {setMainGrid, setAuxGrid} = setupGrid({svg});
     let scale : Scale;
     let reference : Scale;
 
@@ -32,6 +34,8 @@ function useCanvas({width=10, height=10, centerX=0, centerY=0, backgroundColor="
         ({scale, reference} = setScale());
         setAxis({scale, reference});
         setAxisBackground();
+        setMainGrid();
+        setAuxGrid();
     }
 
 //------------------------------------------------------------------

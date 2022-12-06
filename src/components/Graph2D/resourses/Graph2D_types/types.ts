@@ -87,3 +87,15 @@ export type AxisType = {
 }
 
 //------------------------------------------------------------------
+//------------------------- Grid types -----------------------------
+
+export interface GridProps{
+    svg : MutableRefObject<SVGSVGElement | null>
+}
+
+export type GridType = {
+    setMainGrid : ()=>void,
+    setAuxGrid : ()=>void
+}
+
+//------------------------------------------------------------------

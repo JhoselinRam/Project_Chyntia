@@ -16,28 +16,26 @@ function setupBackground({svg, backgroundColor} : BackgroundProps) : BackgroundT
         select(svg.current)
             .selectAll("g.tick")
             .each((d,i,node)=>{
-                const tickElement = node[i] as SVGGElement;
-                const size = (select(tickElement)
+                const tick = (node[i] as SVGGElement);
+                const size = (select(tick)
                                 .select("text")
-                                .node() as SVGLineElement)
+                                .node() as SVGTextElement)
                                 .getBBox();
                 
-                select(tickElement)
+                select(tick)
+                    .select("g.Background")
                     .append("rect")
-                    .attr("x", size.x-1)
-                    .attr("y", size.y-1)
-                    .attr("width", size.width+2)
-                    .attr("height", size.height+2)
+                    .attr("x", size.x-2)
+                    .attr("y", size.y-2)
+                    .attr("width", size.width+4)
+                    .attr("height", size.height+4)
                     .attr("fill", backgroundColor);
-            });
 
-        const auxData = [0,2,1];
-        select(svg.current)
-            .selectAll("g.tick")
-            .selectChildren()
-            .data(auxData)
-            .sort((a,b)=>{
-                return a-b
+                const auxData = [0,2,1];
+                select(tick)
+                    .selectChildren()
+                    .data(auxData)
+                    .sort();
             })
     }
 

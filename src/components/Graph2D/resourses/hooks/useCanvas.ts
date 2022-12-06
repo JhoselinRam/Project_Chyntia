@@ -7,7 +7,7 @@ import setupScale from "./tools/setupScale";
 
 function useCanvas({width=10, height=10, centerX=0, centerY=0, backgroundColor="#ffffff", axisType="rectangular", axisPosition="center", marginStart=5, marginTop=5, marginEnd=5, marginBottom=5} : Graph2DInterface){
     const svg = useRef<SVGSVGElement | null>(null);
-    const {setBackground} = setupBackground({svg, backgroundColor});
+    const {setBackground, setAxisBackground} = setupBackground({svg, backgroundColor});
     const {setScale} = setupScale({svg, width, height, centerX, centerY, axisType, axisPosition, marginStart, marginTop, marginEnd, marginBottom});
     const {setAxis} = setupAxis({svg, axisPosition, centerX, centerY, marginStart, marginTop, marginEnd, marginBottom}); 
     let scale : Scale;
@@ -31,6 +31,7 @@ function useCanvas({width=10, height=10, centerX=0, centerY=0, backgroundColor="
         setBackground();
         ({scale, reference} = setScale());
         setAxis({scale, reference});
+        setAxisBackground();
     }
 
 //------------------------------------------------------------------

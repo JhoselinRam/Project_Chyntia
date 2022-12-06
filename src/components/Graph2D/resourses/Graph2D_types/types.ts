@@ -25,7 +25,8 @@ export interface BackgroundProps{
 }
 
 export type BackgroundType = {
-    setBackground : ()=>void
+    setBackground : ()=>void,
+    setAxisBackground : ()=>void
 }
 
 //------------------------------------------------------------------

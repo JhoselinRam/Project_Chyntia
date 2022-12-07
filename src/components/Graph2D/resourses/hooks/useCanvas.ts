@@ -35,7 +35,7 @@ function useCanvas({width=10, height=10, centerX=0, centerY=0, backgroundColor="
         setAxis({scale, reference});
         setAxisBackground();
         setMainGrid({scale});
-        setAuxGrid();
+        setAuxGrid({scale});
     }
 
 //------------------------------------------------------------------

@@ -11,7 +11,7 @@ function useCanvas({width=10, height=10, centerX=0, centerY=0, backgroundColor="
     const {setBackground, setAxisBackground} = setupBackground({svg, backgroundColor});
     const {setScale} = setupScale({svg, width, height, centerX, centerY, axisType, axisPosition, marginStart, marginTop, marginEnd, marginBottom});
     const {setAxis} = setupAxis({svg, axisPosition, centerX, centerY, marginStart, marginTop, marginEnd, marginBottom}); 
-    const {setMainGrid, setAuxGrid} = setupGrid({svg});
+    const {setMainGrid, setAuxGrid} = setupGrid({svg, axisPosition, marginStart, marginTop, marginEnd, marginBottom});
     let scale : Scale;
     let reference : Scale;
 

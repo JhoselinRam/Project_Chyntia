@@ -90,7 +90,12 @@ export type AxisType = {
 //------------------------- Grid types -----------------------------
 
 export interface GridProps{
-    svg : MutableRefObject<SVGSVGElement | null>
+    svg : MutableRefObject<SVGSVGElement | null>,
+    axisPosition : Graph2D_AxisPosition,
+    marginStart : number,
+    marginTop : number,
+    marginEnd : number,
+    marginBottom : number
 }
 
 export type GridType = {
@@ -104,6 +109,13 @@ export interface MainGridProps{
 
 export interface AuxGridProps{
     scale : Scale
+}
+
+export interface GetBoxType{
+    minX : number,
+    maxX : number,
+    minY : number,
+    maxY : number
 }
 
 //------------------------------------------------------------------

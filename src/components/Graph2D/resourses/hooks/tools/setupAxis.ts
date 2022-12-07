@@ -149,7 +149,7 @@ function setupAxis({svg, axisPosition, centerX, centerY, marginStart, marginTop,
                 const tolerance = 1e-5;
 
                 if((parseFloat(label)) < tolerance){
-                    tick.parentElement?.removeChild(tick);
+                    select(tick).attr("opacity", 0);
                 }
             });
 

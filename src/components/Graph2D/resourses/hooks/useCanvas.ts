@@ -34,7 +34,7 @@ function useCanvas({width=10, height=10, centerX=0, centerY=0, backgroundColor="
         ({scale, reference} = setScale());
         setAxis({scale, reference});
         setAxisBackground();
-        setMainGrid();
+        setMainGrid({scale});
         setAuxGrid();
     }
 
@@ -50,11 +50,15 @@ function useCanvas({width=10, height=10, centerX=0, centerY=0, backgroundColor="
 
         container
             .append("g")
-            .classed("Graph2D_Data", true);
-        
+            .classed("Graph2D_Grid", true);    
+
         container
             .append("g")
             .classed("Graph2D_Axis", true);
+            
+        container
+            .append("g")
+            .classed("Graph2D_Data", true);
 
     }
 

@@ -94,8 +94,12 @@ export interface GridProps{
 }
 
 export type GridType = {
-    setMainGrid : ()=>void,
+    setMainGrid : (arg0:MainGridProps)=>void,
     setAuxGrid : ()=>void
+}
+
+export interface MainGridProps{
+    scale : Scale
 }
 
 //------------------------------------------------------------------

@@ -1,5 +1,4 @@
-import { scaleLinear } from "d3";
-import { ChangeEvent, PointerEvent, useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import Graph2D, {Graph2DRef, Graph2D_AxisPosition} from "../components/Graph2D/Graph2D";
 
 export default function Home() {

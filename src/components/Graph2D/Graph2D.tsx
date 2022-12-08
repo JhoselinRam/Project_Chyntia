@@ -5,9 +5,6 @@ import useCanvas from "./resourses/hooks/useCanvas";
 function Graph2D(props:Graph2DInterface, ref:Ref<Graph2DRef>){
     const setSvgElement = useCanvas(props);
 
-
-
-    
     useImperativeHandle(ref,()=>{
         return {
 
@@ -20,10 +17,9 @@ function Graph2D(props:Graph2DInterface, ref:Ref<Graph2DRef>){
     }
 
    
-   
     return (
-        <div className="w-full h-full">
-            <svg className="w-full h-full" ref={svgSetup}>
+        <div className="w-full h-full hover:cursor-move">
+            <svg className="w-full h-full select-none" ref={svgSetup}>
             </svg>
         </div>
     );

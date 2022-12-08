@@ -1,3 +1,4 @@
+import { scaleLinear } from "d3";
 import { ChangeEvent, PointerEvent, useRef, useState } from "react";
 import Graph2D, {Graph2DRef, Graph2D_AxisPosition} from "../components/Graph2D/Graph2D";
 
@@ -14,6 +15,10 @@ export default function Home() {
   const [marginEnd, setMarginEnd] = useState(5);
   const [marginBottom, setMarginBottom] = useState(5);
   const graphRef = useRef<HTMLDivElement | null>(null);
+  const posX = useRef(0);
+  const posY = useRef(0);
+  const lastX = useRef(0);
+  const lastY = useRef(0);
 
   function setColor(e:ChangeEvent){
     const color = (e.target as HTMLInputElement).value;
@@ -75,11 +80,22 @@ export default function Home() {
   }
   
   function pointerDown(e:PointerEventInit){
+    posX.current = e.clientX as number;
+    posY.current = e.clientY as number;
+    lastX.current = centerX;
+    lastY.current = centerY;
+
     graphRef.current?.addEventListener("pointermove", pointerMove);
   }
 
   function pointerMove(e : PointerEventInit){
-    console.log(e);
+    const displacementX = ((e.clientX as number) - posX.current)/70;
+    const displacementY = (posY.current -(e.clientY as number))/50;
+    
+    setCenterX(lastX.current + displacementX);
+    setCenterY(lastY.current + displacementY);
+    
+
   }
 
   function pointerUp(e : PointerEventInit){
@@ -99,11 +115,11 @@ export default function Home() {
           <p>Center</p>
           <div className="flex flex-row">
             <p>X: </p>
-            <input type="number" step={0.02} value={centerX} className="border border-gray-500 rounded-md px-1" onChange={moveCenterX}/>
+            <input type="number" step={0.02} value={centerX.toFixed(2)} className="border border-gray-500 rounded-md px-1" onChange={moveCenterX}/>
           </div>
           <div className="flex flex-row">
             <p>Y: </p>
-            <input type="number" step={0.02} value={centerY} className="border border-gray-500 rounded-md px-1" onChange={moveCenterY}/>
+            <input type="number" step={0.02} value={centerY.toFixed(2)} className="border border-gray-500 rounded-md px-1" onChange={moveCenterY}/>
           </div>
         </div>
         

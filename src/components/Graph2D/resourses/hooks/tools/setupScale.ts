@@ -1,5 +1,5 @@
 import { select, scaleLinear, axisBottom, axisLeft, axisRight, axisTop } from "d3";
-import { Scale, ScaleProps, ScaleType, SetRangeType, SetScaleType } from "../../Graph2D_types/types";
+import { Scale, ScaleProps, ScaleType, SetRangeType } from "../../Graph2D_types/types";
 
 
 function setupScale({svg, width, height, centerX, centerY, axisType, axisPosition, marginStart, marginTop, marginEnd, marginBottom}:ScaleProps) : ScaleType{
@@ -109,7 +109,7 @@ function setupScale({svg, width, height, centerX, centerY, axisType, axisPositio
 
         switch(axisPosition){
             case "center":
-                range.rangeEndX = marginStart;
+                range.rangeStartX = marginStart;
                 range.rangeEndX = rangeWidth - marginEnd;
                 range.rangeStartY = rangeHeight - marginBottom;
                 range.rangeEndY = marginTop;

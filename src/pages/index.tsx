@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef, useState } from "react";
+import { ChangeEvent, PointerEvent, useRef, useState } from "react";
 import Graph2D, {Graph2DRef, Graph2D_AxisPosition} from "../components/Graph2D/Graph2D";
 
 export default function Home() {
@@ -9,6 +9,11 @@ export default function Home() {
   const [width, setWidth] = useState(10);
   const [height, setHeight] = useState(10);
   const [axisPosition, setAxisPosition] = useState<Graph2D_AxisPosition>("center");
+  const [marginStart, setMarginStart] = useState(5);
+  const [marginTop, setMarginTop] = useState(5);
+  const [marginEnd, setMarginEnd] = useState(5);
+  const [marginBottom, setMarginBottom] = useState(5);
+  const graphRef = useRef<HTMLDivElement | null>(null);
 
   function setColor(e:ChangeEvent){
     const color = (e.target as HTMLInputElement).value;
@@ -39,6 +44,47 @@ export default function Home() {
     const newPosition = ((e.target as HTMLSelectElement).value) as Graph2D_AxisPosition;
     setAxisPosition(newPosition);
   }
+
+  function changeMarginStart(e:ChangeEvent){
+    const newMargin = parseFloat((e.target as HTMLInputElement).value);
+    setMarginStart(newMargin);
+  }
+
+  function changeMarginTop(e:ChangeEvent){
+    const newMargin = parseFloat((e.target as HTMLInputElement).value);
+    setMarginTop(newMargin);
+  }
+
+  function changeMarginEnd(e:ChangeEvent){
+    const newMargin = parseFloat((e.target as HTMLInputElement).value);
+    setMarginEnd(newMargin);
+  }
+
+  function changeMarginBottom(e:ChangeEvent){
+    const newMargin = parseFloat((e.target as HTMLInputElement).value);
+    setMarginBottom(newMargin);
+  }
+
+  function setPointerListeners(element:HTMLDivElement){
+    if(element == null) return;
+
+    graphRef.current = element;
+    element.addEventListener("pointerdown", pointerDown);
+    element.addEventListener("pointerup", pointerUp);
+
+  }
+  
+  function pointerDown(e:PointerEventInit){
+    graphRef.current?.addEventListener("pointermove", pointerMove);
+  }
+
+  function pointerMove(e : PointerEventInit){
+    console.log(e);
+  }
+
+  function pointerUp(e : PointerEventInit){
+    graphRef.current?.removeEventListener("pointermove", pointerMove);
+  }
   
   return (
     <>
@@ -53,11 +99,11 @@ export default function Home() {
           <p>Center</p>
           <div className="flex flex-row">
             <p>X: </p>
-            <input type="number" step={0.02} defaultValue={0} className="border border-gray-500 rounded-md px-1" onChange={moveCenterX}/>
+            <input type="number" step={0.02} value={centerX} className="border border-gray-500 rounded-md px-1" onChange={moveCenterX}/>
           </div>
           <div className="flex flex-row">
             <p>Y: </p>
-            <input type="number" step={0.02} defaultValue={0} className="border border-gray-500 rounded-md px-1" onChange={moveCenterY}/>
+            <input type="number" step={0.02} value={centerY} className="border border-gray-500 rounded-md px-1" onChange={moveCenterY}/>
           </div>
         </div>
         
@@ -65,11 +111,11 @@ export default function Home() {
           <p>Size</p>
           <div className="flex flex-row">
             <p>X: </p>
-            <input type="number" step={0.2} min={0.2} defaultValue={10} className="border border-gray-500 rounded-md px-1" onChange={domainWidth} />
+            <input type="number" step={0.2} min={0.2} value={width} className="border border-gray-500 rounded-md px-1" onChange={domainWidth} />
           </div>
           <div className="flex flex-row">
             <p>Y: </p>
-            <input type="number" step={0.2} min={0.2} defaultValue={10} className="border border-gray-500 rounded-md px-1" onChange={domainHeight}/>
+            <input type="number" step={0.2} min={0.2} value={height} className="border border-gray-500 rounded-md px-1" onChange={domainHeight}/>
           </div>
         </div>
 
@@ -84,13 +130,46 @@ export default function Home() {
           </select>
         </div>
 
+        <div className="flex flex-col items-start justify-start">
+          <p>Margin</p>
+          <div className="flex items-start justify-start">
+            <div className="flex gap-2">
+            <p>Start</p>
+            <input type="number" value={marginStart} className="border border-gray-500 rounded-md px-1" onChange={changeMarginStart}/>
+            </div>
+            <div className="flex gap-2">
+            <p>End</p>
+            <input type="number" value={marginEnd} className="border border-gray-500 rounded-md px-1" onChange={changeMarginEnd}/>
+            </div>
+          </div>
+          <div className="flex items-start justify-start">
+            <div className="flex gap-2">
+            <p>Top</p>
+            <input type="number" value={marginTop} className="border border-gray-500 rounded-md px-1" onChange={changeMarginTop}/>
+            </div>
+            <div className="flex gap-2">
+            <p>Bottom</p>
+            <input type="number" value={marginBottom} className="border border-gray-500 rounded-md px-1" onChange={changeMarginBottom}/>
+            </div>
+          </div>
+        </div>
+
       </div>
       
       
       
       
-      <div className="w-full h-[500px] p-10 bg-gray-500 flex items-center justify-center">
-        <Graph2D backgroundColor={background} centerX={centerX} centerY={centerY} width={width} height={height} axisPosition={axisPosition}></Graph2D>
+      <div className="w-full h-[500px] p-10 bg-gray-500 flex items-center justify-center" ref={setPointerListeners}>
+        <Graph2D backgroundColor={background} 
+                 centerX={centerX} 
+                 centerY={centerY} 
+                 width={width} 
+                 height={height} 
+                 axisPosition={axisPosition} 
+                 marginStart={marginStart}
+                 marginTop={marginTop}
+                 marginEnd={marginEnd}
+                 marginBottom={marginBottom}></Graph2D>
       </div>
     </>
     );

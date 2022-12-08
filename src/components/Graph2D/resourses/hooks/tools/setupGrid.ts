@@ -108,11 +108,14 @@ function setupGrid({svg, axisPosition, marginStart, marginTop, marginEnd, margin
                 positionsY.push(parseFloat(label));
             });
         const dy = positionsY[1]-positionsY[0];
-        positionsY.push(positionsY[positionsX.length-1]+dy);
+        positionsY.push(positionsY[positionsY.length-1]+dy);
         
         positionsX.forEach(position=>{
             for(let i=1; i<divisions; i++){
                 const xPosition = scale.x(position-dx/divisions*i);
+                if(xPosition < minX) continue;
+                if(xPosition > maxX) continue;
+
                 select(svg.current)
                     .select("g.Graph2D_Grid_Aux")
                     .append("line")
@@ -129,6 +132,9 @@ function setupGrid({svg, axisPosition, marginStart, marginTop, marginEnd, margin
         positionsY.forEach(position=>{
             for(let i=1; i<divisions; i++){
                 const yPosition = scale.y(position-dy/divisions*i);
+                if(yPosition < minY) continue;
+                if(yPosition > maxY) continue;
+
                 select(svg.current)
                     .select("g.Graph2D_Grid_Aux")
                     .append("line")

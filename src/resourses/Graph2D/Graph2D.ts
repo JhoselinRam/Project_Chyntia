@@ -1,25 +1,38 @@
-import { Graph2D_Props } from "./Graph2D_Types/types";
-import Background from "./tools/Background";
+import { select } from "d3";
 
-//---------------------- Graph2D Type ---------------------------------
+class Graph2D{
+    private svg  : SVGSVGElement;
+    private bgColor : string;
 
-export type Graph2D_Type = {
+    public constructor(svg:SVGSVGElement){
+        this.svg = svg;
 
-}
+        //Default values
+        this.bgColor = "#ffffff";   //White
 
-//---------------------------------------------------------------------
-//----------------------- Main Function -------------------------------
 
-function Graph2D(this:Graph2D_Type, {svg} : Graph2D_Props) : Graph2D_Type{
-    const Default_BackgroundColor = "#ffffff"   //white
-    const ref : Graph2D_Type = this;
-    const {backgroundColor} = Background({svg});
-    
-
-//---------------------------------------------------------------------
-    return {
-
+        //Initial setup
+        this._changeBackgrounColor();
     }
+
+//-------------------------- Background -------------------------------
+//---------------------------------------------------------------------
+
+    public setBackgroundColor(color:string) : Graph2D{
+        this.bgColor = color;
+        this._changeBackgrounColor();
+        return this;
+    }
+
+    public getBackgrounColor():string{
+        return this.bgColor;
+    }
+
+    private _changeBackgrounColor(){
+        select(this.svg).style("background-color", this.bgColor);
+    }
+
+//---------------------------------------------------------------------
 }
 
 export default Graph2D;

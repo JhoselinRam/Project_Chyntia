@@ -126,7 +126,7 @@ export default function Home() {
           <p>Size</p>
           <div className="flex flex-row">
             <p>X: </p>
-            <input type="number" step={0.2} min={0.2} value={width} className="border border-gray-500 rounded-md px-1" onChange={domainWidth} />
+            <input type="number" step={100} min={0.2} value={width} className="border border-gray-500 rounded-md px-1" onChange={domainWidth} />
           </div>
           <div className="flex flex-row">
             <p>Y: </p>

@@ -23,12 +23,13 @@ export default function Home() {
     <div className="flex items-start justify-center gap-3 my-3">
       <div className="flex flex-col items-start justify-center">
         <p>Color</p>
-        <input type="color" defaultValue="#ffffff" onChange={changeColor}/>
+        <input type="color" defaultValue="#ffffff"/>
       </div>
     </div>
 
     <div className="w-full h-[500px] p-10 bg-gray-500 flex items-center justify-center">
-        <svg className="w-full h-full" ref={setGraphObject}></svg>
+        <svg className="w-full h-full" ref={setGraphObject}>
+        </svg>
     </div>
     </>
     );

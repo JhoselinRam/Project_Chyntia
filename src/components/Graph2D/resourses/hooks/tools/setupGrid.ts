@@ -24,7 +24,8 @@ function setupGrid({svg, axisPosition, marginStart, marginTop, marginEnd, margin
                 const label = select(tick)
                                 .select("text")
                                 .text()
-                                .replace("−","-");
+                                .replace("−","-")
+                                .replace(",", "");
                 
                 const xPosition = scale.x(parseFloat(label));
 
@@ -47,7 +48,8 @@ function setupGrid({svg, axisPosition, marginStart, marginTop, marginEnd, margin
                 const label = select(tick)
                                 .select("text")
                                 .text()
-                                .replace("−","-");
+                                .replace("−","-")
+                                .replace(",", "");
                 
                 const yPosition = scale.y(parseFloat(label));
 
@@ -87,7 +89,8 @@ function setupGrid({svg, axisPosition, marginStart, marginTop, marginEnd, margin
                 const label = select(tick)
                     .select("text")
                     .text()
-                    .replace("−","-");
+                    .replace("−","-")
+                    .replace(",", "");
                 
                 positionsX.push(parseFloat(label));
             });
@@ -103,7 +106,8 @@ function setupGrid({svg, axisPosition, marginStart, marginTop, marginEnd, margin
                 const label = select(tick)
                     .select("text")
                     .text()
-                    .replace("−","-");
+                    .replace("−","-")
+                    .replace(",", "");
                 
                 positionsY.push(parseFloat(label));
             });

@@ -1,4 +1,4 @@
-import { scaleLinear, select, Selection } from "d3";
+import { axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, Selection } from "d3";
 import { Scale } from "./Graph2D_Types/types";
 import {v4 as uuidv4} from "uuid";
 
@@ -45,11 +45,18 @@ class Graph2D{
             scale:{x:scaleLinear(), y:scaleLinear()},
             reference:{x:scaleLinear(), y:scaleLinear()},
         };
-        this.canvas = select(svg).append("g").classed(`Graph2D_${groupID}`, true);
+        this.canvas = select(svg).append("g").classed(`Graph2D_ID_${groupID}`, true); //Create the graph group
 
         //Initial setup
-
+        this.canvas     //Append the "background element"
+            .append("rect")
+            .classed("Background", true)
+            .attr("x", 0)
+            .attr("y", 0)
+            .attr("width", svg.clientWidth*this.relativeWidth)
+            .attr("height", svg.clientHeight*this.relativeHeight);
         this._changeBackgrounColor();
+
     }
 
 //-------------------------- Background -------------------------------
@@ -66,7 +73,9 @@ class Graph2D{
     }
 
     private _changeBackgrounColor(){
-        this.canvas.style("background-color", this.bgColor);
+        this.canvas
+            .select(".Background")
+            .attr("fill", this.bgColor);
     }
 
 //-------------------------- Utilities --------------------------------
@@ -77,7 +86,61 @@ class Graph2D{
 //----------------------------- Scale ---------------------------------
 //---------------------------------------------------------------------
 
+    private _computeScale(){
+        const domainStartX = -this.width/2 - this.centerX;  //Inner coordinates bounding box
+        const domainEndX   = this.width/2 - this.centerX;
+        const domainStartY = -this.height/2 - this.centerY;
+        const domainEndY   = this.height/2 - this.centerY;
+        let rangeStartX : number;   //Real pixel coordinates bounding box
+        let rangeEndX : number;
+        let rangeStartY : number;
+        let rangeEndY : number;
 
+        ({rangeStartX, rangeEndX, rangeStartY, rangeEndY} = this._setRange());
+    }
+
+    private _setRange(){
+        const domainStartX = -this.width/2 - this.centerX;
+        const domainEndX   = this.width/2 - this.centerX;
+        const domainStartY = -this.height/2 - this.centerY;
+        const domainEndY   = this.height/2 - this.centerY;
+        const fullWidth = (this.canvas
+                            .select(".Background") 
+                            .node() as SVGRectElement)
+                            .getBBox()
+                            .width;
+        const fullHeight = (this.canvas
+                            .select(".Background") 
+                            .node() as SVGRectElement)
+                            .getBBox()
+                            .height;
+            
+        const auxScaleX = scaleLinear().domain([domainStartX,domainEndX]).range([0,fullWidth]);
+        const auxScaleY = scaleLinear().domain([domainStartY,domainEndY]).range([0,fullHeight]);
+        let auxAxisX : any;
+        let auxAxisY : any;
+
+        if(this.axisPosition==="center" || this.axisPosition==="bottom-left" || this.axisPosition==="bottom-right")    auxAxisX = axisBottom(auxScaleX);
+        else    auxAxisX = axisTop(auxScaleX);
+
+        if(this.axisPosition==="center" || this.axisPosition==="bottom-left" || this.axisPosition==="top-left")    auxAxisY = axisLeft(auxScaleY);
+        else    auxAxisY = axisRight(auxScaleY);
+
+        this.canvas
+            .select("g.Graph2D_Axis")
+            .append("g")
+            .classed("Graph2D_AxisX", true)
+            .call(auxAxisX)
+            .attr("opacity", 0);
+            
+        this.canvas
+            .select("g.Graph2D_Axis")
+            .append("g")
+            .classed("Graph2D_AxisY", true)
+            .call(auxAxisY)
+            .attr("opacity", 0);
+    
+    }
 
 }
 

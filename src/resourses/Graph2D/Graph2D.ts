@@ -9,7 +9,7 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
     const graphID = uuidv4();
     const canvas = select(svg)
                     .append("g")
-                    .classed(`Graph2D_ID_${graphID}`, true);
+                    .classed(`Graph2D_Main_Group Graph2D_ID_${graphID}`, true);
     
     //Inner state
     const state : Grapg2D_State = {
@@ -21,9 +21,7 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
         axis : {
             type : "rectangular",
             position : "center",
-            color : "#000000",  //Back
-            opacity : 1,
-            axisColor : "#000000",
+            axisColor : "#000000", //Black
             axisOpacity : 1,
             tickColor : "#000000",
             tickOpacity : 1,
@@ -65,7 +63,7 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
     //Setup configuration  
     canvas                  //Generate the "background element"
         .append("rect")
-        .classed("Background", true)
+        .classed("Graph2d_Background", true)
         .attr("x", 0)
         .attr("y", 0)
         .attr("width", svg.clientWidth)

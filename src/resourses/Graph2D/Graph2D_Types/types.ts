@@ -1,23 +1,39 @@
-import { Selection } from "d3"
+import { ScaleLinear, Selection } from "d3"
 import { Grap2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
 export type Grapg2D_State = {
     canvas : Selection<SVGGElement, unknown, null, undefined>,
-    widht : number,
-    height : number,
-    relativeWidth : number,
-    relativeHeigh : number,
-    centerX : number,
-    centerY : number,
-    bgColor : string,
-    axisType : Graph2D_AxisType,
-    axisPosition : Graph2D_AxisPosition,
-    marginStart : number,
-    marginTop : number,
-    marginEnd : number,
-    marginBottom : number
+    background : {
+        bgColor : string,
+        bgOpacity : number
+    },
+    scale ?: {
+        inner : Scale,
+        reference : Scale,
+        compute : ()=>void
+    },
+    axis :{
+        type : Graph2D_AxisType,
+        position : Graph2D_AxisPosition,
+        compute ?: ()=>void
+    },
+    grid : {
+
+    },
+    config : {
+        width : number,
+        height : number,
+        relativeWidth : number,
+        relativeHeight : number,
+        centerX : number,
+        centerY : number,
+        marginStart : number,
+        marginTop : number,
+        marginEnd : number,
+        marginBottom : number
+    }
 }
 
 export type Method_Generator_Props = {
@@ -29,5 +45,35 @@ export type Method_Generator_Props = {
 //---------------------- Background -----------------------
 
 export type Background_Type = {
-
+    setBackground : (arg0:string)=>Grap2D_Type,
+    getBackground : ()=>string,
+    setBackgroundOpacity : (arg0:number)=>Grap2D_Type,
+    getBackgroundOpacity : ()=>number
 }
+
+//---------------------------------------------------------
+//------------------------- Scale -------------------------
+
+export type Scale = {
+    x : ScaleLinear<number, number, never>,
+    y : ScaleLinear<number, number, never>
+}
+
+export type Scale_Type = {
+    inner : Scale,
+    reference : Scale,
+    compute : ()=>void   
+}
+
+export type _GetScale_Type = {
+    rangeStartX : number,
+    rangeEndX : number,
+    rangeStartY : number,
+    rangeEndY : number
+}
+
+//---------------------------------------------------------
+//-------------------------- Axis -------------------------
+
+export type Axis_Type = ()=>void;
+

@@ -1,4 +1,4 @@
-import { select, axisBottom, axisRight, axisLeft, axisTop, scaleLinear } from "d3";
+import { select, axisBottom, axisRight, axisLeft, axisTop, scaleLinear, Axis, NumberValue } from "d3";
 import { AxisProps, AxisType, Scale, SetScaleType } from "../../Graph2D_types/types";
 
 function setupAxis({svg, axisPosition, centerX, centerY, marginStart, marginTop, marginEnd, marginBottom} : AxisProps) : AxisType{
@@ -6,8 +6,8 @@ function setupAxis({svg, axisPosition, centerX, centerY, marginStart, marginTop,
     function setAxis({scale, reference}:SetScaleType){
         if(svg.current == null) return;
 
-        let axisX : any;
-        let axisY : any;
+        let axisX : Axis<NumberValue>;
+        let axisY : Axis<NumberValue>;
 
         if(axisPosition==="center" || axisPosition==="bottom-left" || axisPosition==="bottom-right")    axisX = axisBottom(scale.x);
         else    axisX = axisTop(scale.x);

@@ -1,7 +1,9 @@
 import { select } from "d3";
 import { v4 as uuidv4 } from "uuid";
 import { Grapg2D_State } from "./Graph2D_Types/types";
+import Axis from "./tools/Axis";
 import Background from "./tools/Background";
+import Scale from "./tools/Scale";
 
 function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
     const graphID = uuidv4();
@@ -11,33 +13,58 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
     
     //Inner state
     const state : Grapg2D_State = {
-     canvas,
-     widht : 10,
-     height : 10,
-     relativeWidth : 1,
-     relativeHeigh : 1,
-     centerX : 0,
-     centerY : 0,
-     bgColor : "#ffffff",   //white
-     axisType : "rectangular",
-     axisPosition : "center",
-     marginStart : 5,
-     marginTop : 5,
-     marginEnd : 5,
-     marginBottom : 5
+        canvas,
+        background : {
+            bgColor : "#ffffff",   //white
+            bgOpacity : 1
+        },
+        axis : {
+            type : "rectangular",
+            position : "center"
+        },
+        grid : {
+            
+        },
+        config : {
+            width : 10,
+            height : 10,
+            relativeWidth : 1,
+            relativeHeight : 1,
+            centerX : 0,
+            centerY : 0,
+            marginStart : 5,
+            marginTop : 5,
+            marginEnd : 5,
+            marginBottom : 5
+        }
     }
+    
     const graphHandler : Grap2D_Type | any = {}; //Main object (method handler)
     
     //Method generators
+    state.scale = Scale(state);
+    state.axis.compute = Axis(state);
     const background = Background({graphHandler, state});
 
     //Main object population
     graphHandler.canvas = ()=>canvas.node() as SVGGElement;
     graphHandler.setBackground = background.setBackground;
     graphHandler.getBackground = background.getBackground;
+    graphHandler.setBackgroundOpacity = background.setBackgroundOpacity;
+    graphHandler.getBackgroundOpacity = background.getBackgroundOpacity;
     
-    //Setup configuration
-
+    
+    //Setup configuration  
+    canvas                  //Generate the "background element"
+        .append("rect")
+        .classed("Background", true)
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", svg.clientWidth)
+        .attr("height", svg.clientHeight)
+        .attr("fill", state.background.bgColor);
+    
+    state.scale.compute();  //Creates the scale
 
 
     
@@ -58,7 +85,9 @@ export default Grap2D;
 export type Grap2D_Type = {
     canvas : ()=>SVGGElement,
     setBackground : (arg0:string)=>Grap2D_Type,
-    getBackground : ()=>string
+    getBackground : ()=>string,
+    setBackgroundOpacity : (arg0:number)=>Grap2D_Type,
+    getBackgroundOpacity : ()=>number
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";

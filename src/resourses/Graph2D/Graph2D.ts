@@ -20,7 +20,15 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
         },
         axis : {
             type : "rectangular",
-            position : "center"
+            position : "center",
+            color : "#000000",  //Back
+            opacity : 1,
+            axisColor : "#000000",
+            axisOpacity : 1,
+            tickColor : "#000000",
+            tickOpacity : 1,
+            textColor : "#000000",
+            textOpacity: 1
         },
         grid : {
             
@@ -63,8 +71,21 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
         .attr("width", svg.clientWidth)
         .attr("height", svg.clientHeight)
         .attr("fill", state.background.bgColor);
+
+    canvas
+        .append("g")
+        .classed("Graph2D_Grid", true);
+    
+    canvas
+        .append("g")
+        .classed("Graph2D_Axis", true);
+
+    canvas
+        .append("g")
+        .classed("Graph2D_Data", true);
     
     state.scale.compute();  //Creates the scale
+    state.axis.compute();   //Creates the axis
 
 
     

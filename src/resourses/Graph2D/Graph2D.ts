@@ -62,13 +62,13 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
 
     //Main object population
     graphHandler.canvas = ()=>canvas.node() as SVGGElement;
-    graphHandler.setBackground = background.setBackground;
-    graphHandler.getBackground = background.getBackground;
-    graphHandler.setBackgroundOpacity = background.setBackgroundOpacity;
+    graphHandler.backgroundColor = background.backgroundColor;
+    graphHandler.getBackgroundColor = background.getBackgroundColor;
+    graphHandler.backgroundOpacity = background.backgroundOpacity;
     graphHandler.getBackgroundOpacity = background.getBackgroundOpacity;
-    graphHandler.setAxisType = config.setAxisType;
+    graphHandler.axisType = config.axisType;
     graphHandler.getAxisType = config.getAxisType;
-    graphHandler.setAxisPosition = config.setAxisPosition;
+    graphHandler.axisPosition = config.axisPosition;
     graphHandler.getAxisPosition = config.getAxisPosition;
     
     
@@ -115,13 +115,13 @@ export default Grap2D;
 
 export type Grap2D_Type = {
     canvas : ()=>SVGGElement,
-    setBackground : (arg0:string)=>Grap2D_Type,
-    getBackground : ()=>string,
-    setBackgroundOpacity : (arg0:number)=>Grap2D_Type,
+    backgroundColor : (arg0:string)=>Grap2D_Type,
+    getBackgroundColor : ()=>string,
+    backgroundOpacity : (arg0:number)=>Grap2D_Type,
     getBackgroundOpacity : ()=>number,
-    setAxisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
+    axisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
     getAxisType : ()=>Graph2D_AxisType,
-    setAxisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
+    axisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
     getAxisPosition : ()=>Graph2D_AxisPosition
 }
 

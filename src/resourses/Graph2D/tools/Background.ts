@@ -1,10 +1,10 @@
 import { Grap2D_Type } from "../Graph2D";
-import { Method_Generator_Props } from "../Graph2D_Types/types";
+import { Background_Type, Method_Generator_Props } from "../Graph2D_Types/types";
 
-function Background({graphHandler, state} : Method_Generator_Props){
+function Background({graphHandler, state} : Method_Generator_Props) : Background_Type{
   
 //---------------------------------------------------------
-    function setBackground(value : string) : Grap2D_Type{
+    function backgroundColor(value : string) : Grap2D_Type{
         if (value === state.background.bgColor) return graphHandler;
         
         state.canvas
@@ -17,13 +17,13 @@ function Background({graphHandler, state} : Method_Generator_Props){
     }
 
 //---------------------------------------------------------
-    function getBackground() : string{
+    function getBackgroundColor() : string{
         return state.background.bgColor;
     }
 
 //---------------------------------------------------------
 
-    function setBackgroundOpacity(value : number) : Grap2D_Type{
+    function backgroundOpacity(value : number) : Grap2D_Type{
         const newOpacity = value > 1 ? 1 : (value < 0 ? 0 : value); //Opacity must be between 0 and 1
         if (newOpacity === state.background.bgOpacity) return graphHandler;
 
@@ -45,9 +45,9 @@ function Background({graphHandler, state} : Method_Generator_Props){
 //---------------------------------------------------------
     
     return {
-        setBackground,
-        getBackground,
-        setBackgroundOpacity,
+        backgroundColor,
+        getBackgroundColor,
+        backgroundOpacity,
         getBackgroundOpacity
     }
 

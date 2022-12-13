@@ -6,18 +6,18 @@ export default function Home() {
 
   function changeColor(e:ChangeEvent){
     const color = (e.target as HTMLInputElement).value as string;
-    Graph.setBackground(color);
+    Graph.backgroundColor(color);
     
   }
 
   function changeOpacity(e : ChangeEvent){
     const opacity = parseFloat((e.target as HTMLInputElement).value as string);
-    Graph.setBackgroundOpacity(opacity);
+    Graph.backgroundOpacity(opacity);
   }
 
   function changePosition(e : ChangeEvent){
     const position = (e.target as HTMLSelectElement).value as Graph2D_AxisPosition;
-    Graph.setAxisPosition(position);
+    Graph.axisPosition(position);
   }
   
 
@@ -35,17 +35,17 @@ export default function Home() {
       
       <div className="flex items-start justify-center gap-3 my-3">
         
-        <div className="flex-1 flex flex-col items-start justify-center">
+        <div className="flex flex-col items-start justify-center">
           <p>Color</p>
           <input type="color" defaultValue="#ffffff" onChange={changeColor}/>
         </div>
-        <div className="flex-1 flex flex-col justify-start items-start">
+        <div className="flex flex-col justify-start items-start">
           <p>Canvas opacity</p>
           <input type="number" className="border border-gray-500 rounded-md w-full px-1" min={0} max={1} step={0.01} defaultValue={1} onChange={changeOpacity}/>
         </div>
-        <div className="flex-1 flex flex-col justify-start items-start">
+        <div className="flex flex-col justify-start items-start">
           <p>Position</p>
-          <select defaultValue="center" onChange={changePosition}>
+          <select defaultValue="center" className="border border-gray-500 rounded-md w-full px-1" onChange={changePosition}>
             <option value="center">Center</option>
             <option value="bottom-left">Bottom-Left</option>
             <option value="bottom-right">Bottom-Right</option>

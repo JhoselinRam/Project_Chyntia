@@ -58,9 +58,9 @@ export type Method_Generator_Props = {
 //---------------------- Background -----------------------
 
 export type Background_Type = {
-    setBackground : (arg0:string)=>Grap2D_Type,
-    getBackground : ()=>string,
-    setBackgroundOpacity : (arg0:number)=>Grap2D_Type,
+    backgroundColor : (arg0:string)=>Grap2D_Type,
+    getBackgroundColor : ()=>string,
+    backgroundOpacity : (arg0:number)=>Grap2D_Type,
     getBackgroundOpacity : ()=>number
 }
 
@@ -94,8 +94,31 @@ export type Axis_Type = ()=>void;
 //------------------------ Config -------------------------
 
 export type Config_Type = {
-    setAxisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
+    axisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
     getAxisType : ()=>Graph2D_AxisType,
-    setAxisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
+    axisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
     getAxisPosition : ()=>Graph2D_AxisPosition
+}
+
+export type Axis_Color_Options = {
+    axis ?: string,
+    xAxis ?: string,
+    yAxis ?: string,
+    xBase ?: string,
+    xTick ?: string,
+    xLabel ?: string,
+    yBase ?: string,
+    yTick ?: string,
+    yLabel ?: string,
+}
+export type Axis_Opacity_Options = {
+    axis ?: number,
+    xAxis ?: number,
+    yAxis ?: number,
+    xBase ?: number,
+    xTick ?: number,
+    xLabel ?: number,
+    yBase ?: number,
+    yTick ?: number,
+    yLabel ?: number,
 }

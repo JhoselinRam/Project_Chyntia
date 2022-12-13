@@ -21,12 +21,18 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
         axis : {
             type : "rectangular",
             position : "center",
-            axisColor : "#000000", //Black
-            axisOpacity : 1,
-            tickColor : "#000000",
-            tickOpacity : 1,
-            textColor : "#000000",
-            textOpacity: 1
+            xAxisColor : "#000000", //Black
+            xAxisOpacity : 1,
+            yAxisColor : "#000000", //Black
+            yAxisOpacity : 0.2,
+            xTickColor : "#000000",
+            xTickOpacity : 1,
+            xLabelColor : "#000000",
+            xLabelOpacity: 1,
+            yTickColor : "#000000",
+            yTickOpacity : 1,
+            yLabelColor : "#000000",
+            yLabelOpacity: 1
         },
         grid : {
             

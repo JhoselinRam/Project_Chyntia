@@ -1,4 +1,5 @@
 import { ScaleLinear, Selection } from "d3"
+import { type } from "os"
 import { Grap2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D"
 
 //------------------------- Main ---------------------------
@@ -89,3 +90,12 @@ export type _GetScale_Type = {
 
 export type Axis_Type = ()=>void;
 
+//---------------------------------------------------------
+//------------------------ Config -------------------------
+
+export type Config_Type = {
+    setAxisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
+    getAxisType : ()=>Graph2D_AxisType,
+    setAxisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
+    getAxisPosition : ()=>Graph2D_AxisPosition
+}

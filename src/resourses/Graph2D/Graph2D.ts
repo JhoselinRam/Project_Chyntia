@@ -3,6 +3,7 @@ import { v4 as uuidv4 } from "uuid";
 import { Grapg2D_State } from "./Graph2D_Types/types";
 import Axis from "./tools/Axis";
 import Background from "./tools/Background";
+import Config from "./tools/Config";
 import Scale from "./tools/Scale";
 
 function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
@@ -24,7 +25,7 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
             xAxisColor : "#000000", //Black
             xAxisOpacity : 1,
             yAxisColor : "#000000", //Black
-            yAxisOpacity : 0.2,
+            yAxisOpacity : 1,
             xTickColor : "#000000",
             xTickOpacity : 1,
             xLabelColor : "#000000",
@@ -38,8 +39,8 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
             
         },
         config : {
-            width : 20,
-            height : 20,
+            width : 10,
+            height : 10,
             relativeWidth : 1,
             relativeHeight : 1,
             centerX : 0,
@@ -57,6 +58,7 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
     state.scale = Scale(state);
     state.axis.compute = Axis(state);
     const background = Background({graphHandler, state});
+    const config = Config({graphHandler, state});
 
     //Main object population
     graphHandler.canvas = ()=>canvas.node() as SVGGElement;
@@ -64,6 +66,10 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
     graphHandler.getBackground = background.getBackground;
     graphHandler.setBackgroundOpacity = background.setBackgroundOpacity;
     graphHandler.getBackgroundOpacity = background.getBackgroundOpacity;
+    graphHandler.setAxisType = config.setAxisType;
+    graphHandler.getAxisType = config.getAxisType;
+    graphHandler.setAxisPosition = config.setAxisPosition;
+    graphHandler.getAxisPosition = config.getAxisPosition;
     
     
     //Setup configuration  
@@ -112,7 +118,11 @@ export type Grap2D_Type = {
     setBackground : (arg0:string)=>Grap2D_Type,
     getBackground : ()=>string,
     setBackgroundOpacity : (arg0:number)=>Grap2D_Type,
-    getBackgroundOpacity : ()=>number
+    getBackgroundOpacity : ()=>number,
+    setAxisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
+    getAxisType : ()=>Graph2D_AxisType,
+    setAxisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
+    getAxisPosition : ()=>Graph2D_AxisPosition
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";

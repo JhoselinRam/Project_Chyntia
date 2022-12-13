@@ -32,8 +32,8 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
             
         },
         config : {
-            width : 10,
-            height : 10,
+            width : 20,
+            height : 20,
             relativeWidth : 1,
             relativeHeight : 1,
             centerX : 0,
@@ -66,8 +66,8 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
         .classed("Graph2d_Background", true)
         .attr("x", 0)
         .attr("y", 0)
-        .attr("width", svg.clientWidth)
-        .attr("height", svg.clientHeight)
+        .attr("width", svg.clientWidth*state.config.relativeWidth)
+        .attr("height", svg.clientHeight*state.config.relativeHeight)
         .attr("fill", state.background.bgColor);
 
     canvas

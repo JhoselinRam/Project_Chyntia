@@ -53,8 +53,8 @@ function Scale(state : Grapg2D_State) : Scale_Type{
                                 .select("rect.Graph2d_Background")
                                 .node() as SVGRectElement)
                                 .getBBox();
-        const rangeWidth = fullSizeRange.width * state.config.relativeWidth;
-        const rangeHeight = fullSizeRange.height * state.config.relativeHeight;
+        const rangeWidth = fullSizeRange.width;
+        const rangeHeight = fullSizeRange.height;
 
         
         //Aux calculations, usefull to take into acount axis size in the effective range calculation

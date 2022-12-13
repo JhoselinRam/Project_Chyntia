@@ -1,4 +1,3 @@
-import { Console } from "console";
 import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select } from "d3";
 import { Axis_Type, Grapg2D_State } from "../Graph2D_Types/types";
 
@@ -51,8 +50,8 @@ function Axis(state : Grapg2D_State) : Axis_Type{
                                 .node() as SVGRectElement)
                                 .getBBox()
                                 .height;
-        //Position the axis
         
+        //Position the axis
         if(state.axis.position == "center"){
             positionAxisCenter(axisWidth, axisHeight, canvasWidth, canvasHeight);
             return;
@@ -67,8 +66,8 @@ function Axis(state : Grapg2D_State) : Axis_Type{
     function positionAxisCenter(axisWidth:number, axisHeight:number, canvasWidth:number, canvasHeight:number){
         if(state.scale == null) return;
 
-        let translationX = state.scale.inner.x(state.config.centerX);
-        let translationY = state.scale.inner.y(state.config.centerY);
+        let translationX = state.scale.reference.x(state.config.centerX);
+        let translationY = state.scale.reference.y(state.config.centerY);
 
         const maxTranslationX = canvasWidth - state.config.marginEnd - 2;
         const minTranslationX = state.config.marginStart + 1;
@@ -182,32 +181,71 @@ function Axis(state : Grapg2D_State) : Axis_Type{
 //---------------------- Non-center  ----------------------
 
     function positionAxis(axisWidth:number, axisHeight:number, canvasWidth:number, canvasHeight:number){
-        let translationX : number;
-        let translationY : number;
-        let extensionXStart : number;
-        let extensionXEnd : number;
-        let extensionYStart : number;
-        let extensionYEnd : number;
+        let translationX : number = 0;
+        let translationY : number = 0;
+        let extensionXStart : number = 0;
+        let extensionXEnd : number = 0;
+        let extensionYStart : number = 0;
+        let extensionYEnd : number = 0;
         
-
+        //Calculate the axis translation and axis extension location.
         switch(state.axis.position){
             case "bottom-left":
                 translationX = axisWidth+state.config.marginStart;
-                translationY = 0;
+                translationY = canvasHeight-axisHeight-state.config.marginBottom;
                 extensionXStart = canvasWidth-state.config.marginEnd-2;
                 extensionXEnd = canvasWidth;
                 extensionYStart = 0;
-                extensionYEnd = state.config.marginTop+2
+                extensionYEnd = state.config.marginTop+2;
+                break;
             
             case "bottom-right":
+                translationX = canvasWidth-axisWidth-state.config.marginEnd;
+                translationY = canvasHeight-axisHeight-state.config.marginBottom;
+                extensionXStart = 0;
+                extensionXEnd = state.config.marginStart+2;
+                extensionYStart = 0;
+                extensionYEnd = state.config.marginTop+2;
                 break;
 
             case "top-left":
+                translationX = axisWidth+state.config.marginStart;
+                translationY = axisHeight+state.config.marginTop;
+                extensionXStart = canvasWidth-state.config.marginEnd-2;
+                extensionXEnd = canvasWidth;
+                extensionYStart = canvasHeight-state.config.marginBottom-2;
+                extensionYEnd = canvasHeight;
                 break;
 
             case "top-right":
+                translationX = canvasWidth-axisWidth-state.config.marginEnd;
+                translationY = axisHeight+state.config.marginTop;
+                extensionXStart = 0;
+                extensionXEnd = state.config.marginStart;
+                extensionYStart = canvasHeight-state.config.marginBottom-2;
+                extensionYEnd = canvasHeight;
                 break;
         }
+
+        state.canvas
+            .select("g.Graph2D_AxisX")
+            .style("transform", `translate(0,${translationY}px)`)
+            .append("line")
+            .attr("stroke", state.axis.axisColor)
+            .attr("x1", extensionXStart)
+            .attr("x2", extensionXEnd)
+            .attr("y1", 0.5)
+            .attr("y2", 0.5);
+        
+        state.canvas
+            .select("g.Graph2D_AxisY")
+            .style("transform", `translate(${translationX}px,0)`)
+            .append("line")
+            .attr("stroke", state.axis.axisColor)
+            .attr("x1", 0.5)
+            .attr("x2", 0.5)
+            .attr("y1", extensionYStart)
+            .attr("y2", extensionYEnd);
     }
 
 //---------------------------------------------------------

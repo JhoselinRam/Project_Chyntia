@@ -1,6 +1,6 @@
 import { ScaleLinear, Selection } from "d3"
 import { type } from "os"
-import { Grap2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Grap2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -94,31 +94,13 @@ export type Axis_Type = ()=>void;
 //------------------------ Config -------------------------
 
 export type Config_Type = {
+    canvas : ()=>SVGGElement,
     axisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
     getAxisType : ()=>Graph2D_AxisType,
     axisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
-    getAxisPosition : ()=>Graph2D_AxisPosition
-}
-
-export type Axis_Color_Options = {
-    axis ?: string,
-    xAxis ?: string,
-    yAxis ?: string,
-    xBase ?: string,
-    xTick ?: string,
-    xLabel ?: string,
-    yBase ?: string,
-    yTick ?: string,
-    yLabel ?: string,
-}
-export type Axis_Opacity_Options = {
-    axis ?: number,
-    xAxis ?: number,
-    yAxis ?: number,
-    xBase ?: number,
-    xTick ?: number,
-    xLabel ?: number,
-    yBase ?: number,
-    yTick ?: number,
-    yLabel ?: number,
+    getAxisPosition : ()=>Graph2D_AxisPosition,
+    axisColor : (arg0:Axis_Color_Options)=>Grap2D_Type,
+    getAxisColor :  ()=>Axis_Color_Options,
+    axisOpacity : (arg0:Axis_Opacity_Options)=>Grap2D_Type,
+    getAxisOpacity : ()=>Axis_Opacity_Options
 }

@@ -1,8 +1,10 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useRef } from "react";
 import Graph2D, { Grap2D_Type, Graph2D_AxisPosition } from "../resourses/Graph2D/Graph2D";
 
 export default function Home() {
   let Graph : Grap2D_Type; 
+  const colorTarget = useRef("0");
+  const opacityTarget = useRef("0");
 
   function changeColor(e:ChangeEvent){
     const color = (e.target as HTMLInputElement).value as string;
@@ -19,7 +21,89 @@ export default function Home() {
     const position = (e.target as HTMLSelectElement).value as Graph2D_AxisPosition;
     Graph.axisPosition(position);
   }
+
+  function changeColorTarget(e:ChangeEvent){
+    colorTarget.current = (e.target as HTMLSelectElement).value;
+  }
+
+  function changeAxisColor(e:ChangeEvent){
+    const color = (e.target as HTMLInputElement).value;
+
+    switch(colorTarget.current){
+      case "0":
+        Graph.axisColor({axis:color});
+        break;
+      case "1":
+        Graph.axisColor({xAxis:color});
+        break;
+      case "2":
+        Graph.axisColor({yAxis:color});
+        break;
+      case "3":
+        Graph.axisColor({xBase:color});
+        break;
+      case "4":
+        Graph.axisColor({xTick:color});
+        break;
+      case "5":
+        Graph.axisColor({xLabel:color});
+        break;
+      case "6":
+        Graph.axisColor({yBase:color});
+        break;
+      case "7":
+        Graph.axisColor({yTick:color});
+        break;
+      case "8":
+        Graph.axisColor({yLabel:color});
+        break;
+    }
+
+  }
   
+  function changeOpacityTarget(e:ChangeEvent){
+    opacityTarget.current = (e.target as HTMLSelectElement).value;
+  }
+  
+  function changeAxisOpacity(e:ChangeEvent){
+    const opacity = parseFloat((e.target as HTMLInputElement).value);
+
+    switch(opacityTarget.current){
+      case "0":
+        Graph.axisOpacity({axis:opacity});
+        break;
+      case "1":
+        Graph.axisOpacity({xAxis:opacity});
+        break;
+      case "2":
+        Graph.axisOpacity({yAxis:opacity});
+        break;
+      case "3":
+        Graph.axisOpacity({xBase:opacity});
+        break;
+      case "4":
+        Graph.axisOpacity({xTick:opacity});
+        break;
+      case "5":
+        Graph.axisOpacity({xLabel:opacity});
+        break;
+      case "6":
+        Graph.axisOpacity({yBase:opacity});
+        break;
+      case "7":
+        Graph.axisOpacity({yTick:opacity});
+        break;
+      case "8":
+        Graph.axisOpacity({yLabel:opacity});
+        break;
+    }
+
+  }
+  
+
+
+
+
 
 
 
@@ -33,15 +117,15 @@ export default function Home() {
     <>
     <div className="flex flex-col justify-center items-center">
       
-      <div className="flex items-start justify-center gap-3 my-3">
+      <div className="flex items-start justify-center gap-5 my-3">
         
         <div className="flex flex-col items-start justify-center">
-          <p>Color</p>
-          <input type="color" defaultValue="#ffffff" onChange={changeColor}/>
+          <p>Background</p>
+          <input type="color" defaultValue="#ffffff" onChange={changeColor} className="w-7 self-center"/>
         </div>
         <div className="flex flex-col justify-start items-start">
           <p>Canvas opacity</p>
-          <input type="number" className="border border-gray-500 rounded-md w-full px-1" min={0} max={1} step={0.01} defaultValue={1} onChange={changeOpacity}/>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1" min={0} max={1} step={0.02} defaultValue={1} onChange={changeOpacity}/>
         </div>
         <div className="flex flex-col justify-start items-start">
           <p>Position</p>
@@ -52,6 +136,42 @@ export default function Home() {
             <option value="top-left">Top-Left</option>
             <option value="top-right">Top-Right</option>
           </select>
+        </div>
+        <div className="flex flex-col justify-start items-start">
+          <div className="flex items-center justify-center">
+            <p>Color</p>
+            <p className="mx-1">to:</p>
+            <select defaultValue={0} className="border border-gray-500 rounded-md w-full px-1" onChange={changeColorTarget}>
+              <option value="0">All axis</option>
+              <option value="1">X Axis</option>
+              <option value="2">Y Axis</option>
+              <option value="3">X Base</option>
+              <option value="4">X Ticks</option>
+              <option value="5">X Labels</option>
+              <option value="6">Y Base</option>
+              <option value="7">Y Ticks</option>
+              <option value="8">Y Labels</option>
+            </select>
+          </div>
+          <input type="color" defaultValue="#000000" className="w-7 self-center"  onChange={changeAxisColor}/>
+        </div>
+        <div className="flex flex-col justify-start items-start">
+          <div className="flex items-center justify-center">
+            <p>Opacity</p>
+            <p className="mx-1">to:</p>
+            <select defaultValue={0} className="border border-gray-500 rounded-md w-full px-1" onChange={changeOpacityTarget}>
+              <option value="0">All axis</option>
+              <option value="1">X Axis</option>
+              <option value="2">Y Axis</option>
+              <option value="3">X Base</option>
+              <option value="4">X Ticks</option>
+              <option value="5">X Labels</option>
+              <option value="6">Y Base</option>
+              <option value="7">Y Ticks</option>
+              <option value="8">Y Labels</option>
+            </select>
+          </div>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1" min={0} max={1} step={0.02} defaultValue={1} onChange={changeAxisOpacity}/>
         </div>
       
       </div>

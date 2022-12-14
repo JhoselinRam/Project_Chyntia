@@ -61,15 +61,19 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
     const config = Config({graphHandler, state});
 
     //Main object population
-    graphHandler.canvas = ()=>canvas.node() as SVGGElement;
     graphHandler.backgroundColor = background.backgroundColor;
     graphHandler.getBackgroundColor = background.getBackgroundColor;
     graphHandler.backgroundOpacity = background.backgroundOpacity;
     graphHandler.getBackgroundOpacity = background.getBackgroundOpacity;
+    graphHandler.canvas = config.canvas;
     graphHandler.axisType = config.axisType;
     graphHandler.getAxisType = config.getAxisType;
     graphHandler.axisPosition = config.axisPosition;
     graphHandler.getAxisPosition = config.getAxisPosition;
+    graphHandler.axisColor = config.axisColor;
+    graphHandler.getAxisColor = config.getAxisColor;
+    graphHandler.axisOpacity = config.axisOpacity;
+    graphHandler.getAxisOpacity = config.getAxisOpacity;
     
     
     //Setup configuration  
@@ -114,17 +118,44 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
 export default Grap2D;
 
 export type Grap2D_Type = {
-    canvas : ()=>SVGGElement,
     backgroundColor : (arg0:string)=>Grap2D_Type,
     getBackgroundColor : ()=>string,
     backgroundOpacity : (arg0:number)=>Grap2D_Type,
     getBackgroundOpacity : ()=>number,
+    canvas : ()=>SVGGElement,
     axisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
     getAxisType : ()=>Graph2D_AxisType,
     axisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
-    getAxisPosition : ()=>Graph2D_AxisPosition
+    getAxisPosition : ()=>Graph2D_AxisPosition,
+    axisColor : (arg0:Axis_Color_Options)=>Grap2D_Type,
+    getAxisColor :  ()=>Axis_Color_Options,
+    axisOpacity : (arg0:Axis_Opacity_Options)=>Grap2D_Type,
+    getAxisOpacity : ()=>Axis_Opacity_Options
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
 
 export type Graph2D_AxisPosition = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
+
+export type Axis_Color_Options = {
+    axis ?: string,
+    xAxis ?: string,
+    yAxis ?: string,
+    xBase ?: string,
+    xTick ?: string,
+    xLabel ?: string,
+    yBase ?: string,
+    yTick ?: string,
+    yLabel ?: string,
+}
+export type Axis_Opacity_Options = {
+    axis ?: number,
+    xAxis ?: number,
+    yAxis ?: number,
+    xBase ?: number,
+    xTick ?: number,
+    xLabel ?: number,
+    yBase ?: number,
+    yTick ?: number,
+    yLabel ?: number,
+}

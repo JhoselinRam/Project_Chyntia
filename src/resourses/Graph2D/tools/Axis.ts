@@ -50,7 +50,7 @@ function Axis(state : Grapg2D_State) : Axis_Type{
                                 .node() as SVGRectElement)
                                 .getBBox()
                                 .height;
-
+console.log(state.axis);
         //Set the color and opacity of the axis, labels and ticks
          state.canvas
             .select("g.Graph2D_AxisX")
@@ -73,7 +73,7 @@ function Axis(state : Grapg2D_State) : Axis_Type{
             .attr("opacity", state.axis.xLabelOpacity);
             
         state.canvas
-            .select("g.g.Graph2D_AxisY")
+            .select("g.Graph2D_AxisY")
             .select("path")
             .attr("stroke", state.axis.yAxisColor)
             .attr("opacity", state.axis.yAxisOpacity);
@@ -184,6 +184,7 @@ function Axis(state : Grapg2D_State) : Axis_Type{
         state.canvas
             .select("g.Graph2D_AxisX")
             .append("line")
+            .classed("Graph2D_Extension", true)
             .attr("stroke", state.axis.xAxisColor)
             .attr("opacity", state.axis.xAxisOpacity)
             .attr("x1", 0)
@@ -194,6 +195,7 @@ function Axis(state : Grapg2D_State) : Axis_Type{
         state.canvas
             .select("g.Graph2D_AxisX")
             .append("line")
+            .classed("Graph2D_Extension", true)
             .attr("stroke", state.axis.xAxisColor)
             .attr("opacity", state.axis.xAxisOpacity)
             .attr("x1", canvasWidth-state.config.marginEnd-2)
@@ -204,6 +206,7 @@ function Axis(state : Grapg2D_State) : Axis_Type{
         state.canvas
             .select("g.Graph2D_AxisY")
             .append("line")
+            .classed("Graph2D_Extension", true)
             .attr("stroke", state.axis.yAxisColor)
             .attr("opacity", state.axis.yAxisOpacity)
             .attr("x1", 0.5)
@@ -214,6 +217,7 @@ function Axis(state : Grapg2D_State) : Axis_Type{
         state.canvas
             .select("g.Graph2D_AxisY")
             .append("line")
+            .classed("Graph2D_Extension", true)
             .attr("stroke", state.axis.yAxisColor)
             .attr("opacity", state.axis.yAxisOpacity)
             .attr("x1", 0.5)
@@ -276,8 +280,9 @@ function Axis(state : Grapg2D_State) : Axis_Type{
             .select("g.Graph2D_AxisX")
             .style("transform", `translate(0,${translationY}px)`)
             .append("line")
+            .classed("Graph2D_Extension", true)
             .attr("stroke", state.axis.xAxisColor)
-            .attr("opacity", state.axis.xLabelOpacity)
+            .attr("opacity", state.axis.xAxisOpacity)
             .attr("x1", extensionXStart)
             .attr("x2", extensionXEnd)
             .attr("y1", 0.5)
@@ -287,8 +292,9 @@ function Axis(state : Grapg2D_State) : Axis_Type{
             .select("g.Graph2D_AxisY")
             .style("transform", `translate(${translationX}px,0)`)
             .append("line")
+            .classed("Graph2D_Extension", true)
             .attr("stroke", state.axis.yAxisColor)
-            .attr("opacity", state.axis.yLabelOpacity)
+            .attr("opacity", state.axis.yAxisOpacity)
             .attr("x1", 0.5)
             .attr("x2", 0.5)
             .attr("y1", extensionYStart)

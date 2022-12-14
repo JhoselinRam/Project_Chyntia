@@ -6,7 +6,7 @@ import Background from "./tools/Background";
 import Config from "./tools/Config";
 import Scale from "./tools/Scale";
 
-function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
+function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     const graphID = uuidv4();
     const canvas = select(svg)
                     .append("g")
@@ -52,28 +52,33 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
         }
     }
     
-    const graphHandler : Grap2D_Type | any = {}; //Main object (method handler)
+    const graphHandler : Graph2D_Type | any = {}; //Main object (method handler)
     
     //Method generators
-    state.scale = Scale(state);
-    state.axis.compute = Axis(state);
+    const axis = Axis({graphHandler, state});
     const background = Background({graphHandler, state});
     const config = Config({graphHandler, state});
+    state.scale = Scale(state);
+    state.axis.compute = axis.compute;
 
     //Main object population
     graphHandler.backgroundColor = background.backgroundColor;
     graphHandler.getBackgroundColor = background.getBackgroundColor;
     graphHandler.backgroundOpacity = background.backgroundOpacity;
     graphHandler.getBackgroundOpacity = background.getBackgroundOpacity;
+    graphHandler.axisType = axis.axisType;
+    graphHandler.getAxisType = axis.getAxisType;
+    graphHandler.axisPosition = axis.axisPosition;
+    graphHandler.getAxisPosition = axis.getAxisPosition;
+    graphHandler.axisColor = axis.axisColor;
+    graphHandler.getAxisColor = axis.getAxisColor;
+    graphHandler.axisOpacity = axis.axisOpacity;
+    graphHandler.getAxisOpacity = axis.getAxisOpacity;
     graphHandler.canvas = config.canvas;
-    graphHandler.axisType = config.axisType;
-    graphHandler.getAxisType = config.getAxisType;
-    graphHandler.axisPosition = config.axisPosition;
-    graphHandler.getAxisPosition = config.getAxisPosition;
-    graphHandler.axisColor = config.axisColor;
-    graphHandler.getAxisColor = config.getAxisColor;
-    graphHandler.axisOpacity = config.axisOpacity;
-    graphHandler.getAxisOpacity = config.getAxisOpacity;
+    graphHandler.width = config.width;
+    graphHandler.getWidth = config.getWidth,
+    graphHandler.height = config.height,
+    graphHandler.getHeight = config.getHeight;
     
     
     //Setup configuration  
@@ -103,7 +108,7 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
 
 
     
-    return (graphHandler as Grap2D_Type);
+    return (graphHandler as Graph2D_Type);
 
 }
 
@@ -117,20 +122,24 @@ function Grap2D(svg : SVGSVGElement) : Grap2D_Type{
 
 export default Grap2D;
 
-export type Grap2D_Type = {
-    backgroundColor : (arg0:string)=>Grap2D_Type,
+export type Graph2D_Type = {
+    backgroundColor : (arg0:string)=>Graph2D_Type,
     getBackgroundColor : ()=>string,
-    backgroundOpacity : (arg0:number)=>Grap2D_Type,
+    backgroundOpacity : (arg0:number)=>Graph2D_Type,
     getBackgroundOpacity : ()=>number,
     canvas : ()=>SVGGElement,
-    axisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
+    axisType : (arg0:Graph2D_AxisType)=>Graph2D_Type,
     getAxisType : ()=>Graph2D_AxisType,
-    axisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
+    axisPosition : (arg0:Graph2D_AxisPosition)=>Graph2D_Type,
     getAxisPosition : ()=>Graph2D_AxisPosition,
-    axisColor : (arg0:Axis_Color_Options)=>Grap2D_Type,
+    axisColor : (arg0:Axis_Color_Options)=>Graph2D_Type,
     getAxisColor :  ()=>Axis_Color_Options,
-    axisOpacity : (arg0:Axis_Opacity_Options)=>Grap2D_Type,
-    getAxisOpacity : ()=>Axis_Opacity_Options
+    axisOpacity : (arg0:Axis_Opacity_Options)=>Graph2D_Type,
+    getAxisOpacity : ()=>Axis_Opacity_Options,
+    width : (arg0:number)=>Graph2D_Type,
+    getWidth : ()=>number,
+    height : (arg0:number)=>Graph2D_Type,
+    getHeight : ()=>number
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";

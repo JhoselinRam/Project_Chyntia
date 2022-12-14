@@ -1,6 +1,6 @@
 import { ScaleLinear, Selection } from "d3"
 import { type } from "os"
-import { Axis_Color_Options, Axis_Opacity_Options, Grap2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -50,7 +50,7 @@ export type Grapg2D_State = {
 }
 
 export type Method_Generator_Props = {
-    graphHandler : Grap2D_Type, 
+    graphHandler : Graph2D_Type, 
     state : Grapg2D_State
 }
 
@@ -58,9 +58,9 @@ export type Method_Generator_Props = {
 //---------------------- Background -----------------------
 
 export type Background_Type = {
-    backgroundColor : (arg0:string)=>Grap2D_Type,
+    backgroundColor : (arg0:string)=>Graph2D_Type,
     getBackgroundColor : ()=>string,
-    backgroundOpacity : (arg0:number)=>Grap2D_Type,
+    backgroundOpacity : (arg0:number)=>Graph2D_Type,
     getBackgroundOpacity : ()=>number
 }
 
@@ -88,19 +88,25 @@ export type _GetScale_Type = {
 //---------------------------------------------------------
 //-------------------------- Axis -------------------------
 
-export type Axis_Type = ()=>void;
+export type Axis_Type = {
+    compute : ()=>void,
+    axisType : (arg0:Graph2D_AxisType)=>Graph2D_Type,
+    getAxisType : ()=>Graph2D_AxisType,
+    axisPosition : (arg0:Graph2D_AxisPosition)=>Graph2D_Type,
+    getAxisPosition : ()=>Graph2D_AxisPosition,
+    axisColor : (arg0:Axis_Color_Options)=>Graph2D_Type,
+    getAxisColor :  ()=>Axis_Color_Options,
+    axisOpacity : (arg0:Axis_Opacity_Options)=>Graph2D_Type,
+    getAxisOpacity : ()=>Axis_Opacity_Options
+};
 
 //---------------------------------------------------------
 //------------------------ Config -------------------------
 
 export type Config_Type = {
     canvas : ()=>SVGGElement,
-    axisType : (arg0:Graph2D_AxisType)=>Grap2D_Type,
-    getAxisType : ()=>Graph2D_AxisType,
-    axisPosition : (arg0:Graph2D_AxisPosition)=>Grap2D_Type,
-    getAxisPosition : ()=>Graph2D_AxisPosition,
-    axisColor : (arg0:Axis_Color_Options)=>Grap2D_Type,
-    getAxisColor :  ()=>Axis_Color_Options,
-    axisOpacity : (arg0:Axis_Opacity_Options)=>Grap2D_Type,
-    getAxisOpacity : ()=>Axis_Opacity_Options
+    width : (arg0:number)=>Graph2D_Type,
+    getWidth : ()=>number,
+    height : (arg0:number)=>Graph2D_Type,
+    getHeight : ()=>number
 }

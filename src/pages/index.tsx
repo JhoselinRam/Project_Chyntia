@@ -1,8 +1,8 @@
 import { ChangeEvent, useRef } from "react";
-import Graph2D, { Grap2D_Type, Graph2D_AxisPosition } from "../resourses/Graph2D/Graph2D";
+import Graph2D, { Graph2D_Type, Graph2D_AxisPosition } from "../resourses/Graph2D/Graph2D";
 
 export default function Home() {
-  let Graph : Grap2D_Type; 
+  let Graph : Graph2D_Type; 
   const colorTarget = useRef("0");
   const opacityTarget = useRef("0");
 
@@ -97,9 +97,17 @@ export default function Home() {
         Graph.axisOpacity({yLabel:opacity});
         break;
     }
+  }
 
+  function changeWidth(e:ChangeEvent){
+    const width = parseFloat((e.target as HTMLInputElement).value);
+    Graph.width(width);
   }
   
+  function changeHeight(e:ChangeEvent){
+    const height = parseFloat((e.target as HTMLInputElement).value);
+    Graph.height(height);
+  }
 
 
 
@@ -172,6 +180,12 @@ export default function Home() {
             </select>
           </div>
           <input type="number" className="border border-gray-500 rounded-md w-full px-1" min={0} max={1} step={0.02} defaultValue={1} onChange={changeAxisOpacity}/>
+        </div>
+        <div className="grid grid-cols-2">
+          <p className="place-self-end mr-2">Width</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1" step={0.1} defaultValue={10} onChange={changeWidth}/>
+          <p className="place-self-end mr-2">Height</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1" step={0.1} defaultValue={10} onChange={changeHeight}/>
         </div>
       
       </div>

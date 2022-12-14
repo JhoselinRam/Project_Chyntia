@@ -4,15 +4,15 @@ import { Grapg2D_State, Scale_Type, _GetScale_Type } from "../Graph2D_Types/type
 function Scale(state : Grapg2D_State) : Scale_Type{
     let inner = {x:scaleLinear(), y:scaleLinear()};
     let reference = {x:scaleLinear(), y:scaleLinear()};
-    const domainStartX = -state.config.width/2 - state.config.centerX;
-    const domainEndX   = state.config.width/2 - state.config.centerX;
-    const domainStartY = -state.config.height/2 - state.config.centerY;
-    const domainEndY   = state.config.height/2 - state.config.centerY;
-
-//---------------------------------------------------------
+    
+    //---------------------------------------------------------
     function compute(){
-        const {rangeStartX,rangeEndX,rangeStartY,rangeEndY} = _getRange();
-
+        const domainStartX = -state.config.width/2 - state.config.centerX;
+        const domainEndX   = state.config.width/2 - state.config.centerX;
+        const domainStartY = -state.config.height/2 - state.config.centerY;
+        const domainEndY   = state.config.height/2 - state.config.centerY;
+        const {rangeStartX,rangeEndX,rangeStartY,rangeEndY} = _getRange(domainStartX, domainEndX, domainStartY, domainEndY);
+        
         switch(state.axis.type){
             case "rectangular":
                 inner.x = scaleLinear()
@@ -48,7 +48,7 @@ function Scale(state : Grapg2D_State) : Scale_Type{
 
 //---------------------------------------------------------
 
-    function _getRange() : _GetScale_Type{
+    function _getRange(domainStartX:number, domainEndX:number, domainStartY:number, domainEndY:number) : _GetScale_Type{
         const fullSizeRange = (state.canvas
                                 .select("rect.Graph2d_Background")
                                 .node() as SVGRectElement)

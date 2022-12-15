@@ -1,4 +1,4 @@
-import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select } from "d3";
+import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, sort } from "d3";
 import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D";
 import { Axis_Type, Method_Generator_Props } from "../Graph2D_Types/types";
 
@@ -94,13 +94,15 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .attr("fill", state.axis.yLabelColor)
             .attr("opacity", state.axis.yLabelOpacity);
 
+        labelBackground();
+
         //Position the axis
         if(state.axis.position == "center"){
             positionAxisCenter(axisWidth, axisHeight, canvasWidth, canvasHeight);
             return;
         }
         positionAxis(axisWidth, axisHeight, canvasWidth, canvasHeight);
-       
+
     }
 
 //---------------------------------------------------------
@@ -128,11 +130,6 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
         if(translationY < minTranslationY)
             translationY = minTranslationY;
-
-        state.canvas    //Appends a group to set the background of each tick label
-            .selectAll("g.tick")
-            .append("g")
-            .classed("Graph2D_Tick_Background", true);
 
         //set the position of the tick labels
         if(translationX < minTranslationX + axisWidth){
@@ -173,8 +170,10 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .selectAll("g.tick")
             .each((d,i,nodes)=>{
                 const tick = (nodes[i] as SVGGElement);
-                const text = tick.children[1] as SVGTextElement;
-                const label = text.textContent as string;
+                const label = select(tick)
+                                .select("text")
+                                .text();
+
                 const tolerance = 1e-5;
 
                 if(parseFloat(label)<tolerance){
@@ -304,7 +303,51 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
     }
 
 //---------------------------------------------------------
+//------------------ Label Background ---------------------
+
+    function labelBackground(){
+        const sortData = [0,2,1]; //Used to sort the elemnts in the tick group
+
+        state.canvas    //Appends a group to set the background of each tick label
+            .selectAll("g.tick")
+            .append("g")
+            .classed("Graph2D_Tick_Background", true)
+            .append("rect")
+            .attr("fill", state.background.bgColor)
+            .attr("opacity", state.background.bgOpacity);
+
+        state.canvas
+            .selectAll("g.tick")
+            .each((d,i,nodes)=>{
+                const tick = (nodes[i] as SVGGElement);
+                const size = (select(tick)
+                                .select("text")
+                                .node() as SVGTextElement)
+                                .getBBox();
+
+                select(tick)
+                    .select("rect")
+                    .attr("x", size.x-1)
+                    .attr("y", size.y-1)
+                    .attr("width", size.width+4)
+                    .attr("height", size.height+4);
+                
+                select(tick)
+                    .selectChildren()
+                    .data(sortData)
+                    .sort();
+            });
+
+    }
+
 //---------------------------------------------------------
+//---------------------------------------------------------
+
+
+
+
+
+
 
 
 

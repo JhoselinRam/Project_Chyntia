@@ -1,6 +1,5 @@
 import { ScaleLinear, Selection } from "d3"
-import { type } from "os"
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -35,7 +34,24 @@ export type Grapg2D_State = {
         compute ?: ()=>void
     },
     grid : {
-
+        main : {
+            compute ?: ()=>void,
+            xColor : string,
+            xOpacity : number,
+            xStyle : Graph2D_LineStyle,
+            yColor : string,
+            yOpacity : number,
+            yStyle : Graph2D_LineStyle
+        },
+        aux : {
+            compute ?: ()=>void,
+            xColor : string,
+            xOpacity : number,
+            xStyle : Graph2D_LineStyle,
+            yColor : string,
+            yOpacity : number,
+            yStyle : Graph2D_LineStyle
+        }
     },
     config : {
         width : number,
@@ -120,3 +136,21 @@ export type Config_Type = {
     relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
     getRelativePosition : ()=>Relative_Position
 }
+
+//---------------------------------------------------------
+//------------------------- Grid --------------------------
+
+export type Grid_Type = {
+    mainGrid : Main_Grid,
+    auxGrid : Aux_Grid
+}
+
+export type Main_Grid = {
+
+}
+
+export type Aux_Grid = {
+
+}
+
+//---------------------------------------------------------

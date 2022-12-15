@@ -4,6 +4,7 @@ import { Grapg2D_State } from "./Graph2D_Types/types";
 import Axis from "./tools/Axis";
 import Background from "./tools/Background";
 import Config from "./tools/Config";
+import Grid from "./tools/Grid/Grid";
 import Scale from "./tools/Scale";
 
 function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
@@ -37,7 +38,22 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
             yLabelOpacity: 1
         },
         grid : {
-            
+            main : {
+                xColor : "#000000",
+                xOpacity : 0.5,
+                xStyle : "solid",
+                yColor : "#00000",
+                yOpacity : 0.5,
+                yStyle : "solid"
+            },
+            aux : {
+                xColor : "#000000",
+                xOpacity : 0.2,
+                xStyle : "doted",
+                yColor : "#000000",
+                yOpacity : 0.2,
+                yStyle : "doted"
+            }
         },
         config : {
             width : 10,
@@ -60,6 +76,7 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     //Method generators
     const axis = Axis({graphHandler, state});
     const background = Background({graphHandler, state});
+    const {mainGrid, auxGrid} = Grid({graphHandler, state});
     const config = Config({graphHandler, state});
     state.scale = Scale(state);
     state.axis.compute = axis.compute;
@@ -92,7 +109,14 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     
     
     //Setup configuration  
-    canvas                  //Generate the thematic groups
+    canvas.append("defs")   
+          .append("clipPath")
+          .attr("id", `Graph2D_ClipPath_ID_${graphID}`)
+          .append("rect");
+
+    canvas.attr("clip-path", `url(#Graph2D_ClipPath_ID_${graphID})`);
+
+    canvas                  
         .append("rect")
         .classed("Graph2D_Background", true);
 
@@ -116,6 +140,8 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
 
 }
 
+//---------------------------------------------------------
+
 function render(state:Grapg2D_State){
     return function(){
         if(state.scale==null || state.axis.compute==null) return;
@@ -130,11 +156,18 @@ function render(state:Grapg2D_State){
             .attr("fill", state.background.bgColor)
             .attr("opacity", state.background.bgOpacity);
 
+        state.canvas
+                .select("defs")
+                .select("rect")
+                .attr("width" , svgWidth*state.config.relativeWidth)
+                .attr("height", svgHeight*state.config.relativeHeight)
+
         state.scale.compute();
         state.axis.compute();
     }
 }
 
+//---------------------------------------------------------
 
 
 
@@ -174,6 +207,8 @@ export type Graph2D_Type = {
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
 
 export type Graph2D_AxisPosition = "center" | "bottom-left" | "bottom-right" | "top-left" | "top-right";
+
+export type Graph2D_LineStyle = "solid" | "dashed" | "doted" | "dash-dot" | "dash-2dot";
 
 export type Axis_Color_Options = {
     axis ?: string,

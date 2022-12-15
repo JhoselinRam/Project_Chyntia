@@ -81,14 +81,10 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.canvas = config.canvas;
     graphHandler.size = config.size;
     graphHandler.getSize = config.getSize;
-    graphHandler.relativeWidth = config.relativeWidth;
-    graphHandler.getRelativeWidth = config.getRelativeWidth;
-    graphHandler.relativeHeight = config.relativeHeight;
-    graphHandler.getRelativeHeight = config.getRelativeHeight;
-    graphHandler.centerX = config.centerX;
-    graphHandler.getCenterX = config.getCenterX;
-    graphHandler.centerY = config.centerY;
-    graphHandler.getCenterY = config.getCenterY;
+    graphHandler.relativeSize = config.relativeSize;
+    graphHandler.getRelativeSize = config.getRelativeSize;
+    graphHandler.center = config.center;
+    graphHandler.getCenter = config.getCenter;
     
     
     //Setup configuration  
@@ -161,14 +157,10 @@ export type Graph2D_Type = {
     getAxisOpacity : ()=>Axis_Opacity_Options,
     size : (arg0:Canvas_Size)=>Graph2D_Type,
     getSize : ()=>Canvas_Size,
-    relativeWidth : (arg0:number)=>Graph2D_Type,
-    getRelativeWidth : ()=>number,
-    relativeHeight : (arg0:number)=>Graph2D_Type,
-    getRelativeHeight : ()=>number,
-    centerX : (arg0:number)=>Graph2D_Type,
-    getCenterX : ()=>number,
-    centerY : (arg0:number)=>Graph2D_Type,
-    getCenterY : ()=>number
+    relativeSize : (arg0:Canvas_Size)=>Graph2D_Type,
+    getRelativeSize : ()=>Canvas_Size,
+    center :  (arg0:Center_Type)=>Graph2D_Type,
+    getCenter : ()=>Center_Type
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -201,4 +193,9 @@ export type Axis_Opacity_Options = {
 export type Canvas_Size = {
     width ?: number,
     height ?: number
+}
+
+export type Center_Type = {
+    x ?: number,
+    y ?: number
 }

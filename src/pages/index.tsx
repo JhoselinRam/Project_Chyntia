@@ -111,22 +111,22 @@ export default function Home() {
 
   function changeRelativeWidth(e:ChangeEvent){
     const relativeWidth = parseFloat((e.target as HTMLInputElement).value);
-    Graph.relativeWidth(relativeWidth);
+    Graph.relativeSize({width:relativeWidth});
   }
   
   function changeRelativeHeight(e:ChangeEvent){
     const relativeHeight = parseFloat((e.target as HTMLInputElement).value);
-    Graph.relativeHeight(relativeHeight);
+    Graph.relativeSize({height:relativeHeight});
   }
 
   function changeCenterX(e:ChangeEvent){
     const position = parseFloat((e.target as HTMLInputElement).value);
-    Graph.centerX(position);
+    Graph.center({x:position});
   }
   
   function changeCenterY(e:ChangeEvent){
     const position = parseFloat((e.target as HTMLInputElement).value);
-    Graph.centerY(position);
+    Graph.center({y:position});
   }
 
 
@@ -207,7 +207,7 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-2">
           <p className="place-self-end mr-2">Relative width</p>
-          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[150px]" min={0} step={0.01} defaultValue={1} onChange={changeRelativeWidth}/>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[150px]"  step={0.01} defaultValue={1} onChange={changeRelativeWidth}/>
           <p className="place-self-end mr-2">Relative height</p>
           <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[150px]" min={0} step={0.01} defaultValue={1} onChange={changeRelativeHeight}/>
         </div>

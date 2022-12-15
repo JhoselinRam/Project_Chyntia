@@ -1,4 +1,4 @@
-import { Canvas_Size, Graph2D_Type } from "../Graph2D";
+import { Canvas_Size, Center_Type, Graph2D_Type } from "../Graph2D";
 import { Config_Type, Method_Generator_Props } from "../Graph2D_Types/types";
 
 function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
@@ -35,72 +35,47 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
 //---------------------------------------------------------
 //---------------Relative Width & Height ------------------
 
-    function relativeWidth(value:number) : Graph2D_Type{
+    function relativeSize({width, height}:Canvas_Size) : Graph2D_Type{
         if(state.render == null) return graphHandler;
-        if(value === state.config.relativeWidth) return graphHandler;
-        const newRelativeWidth = value < 0 ? 0: value;
+        if(width === state.config.relativeWidth && height === state.config.relativeHeight) return graphHandler;
 
-        state.config.relativeWidth = newRelativeWidth;
+        if(width != null) state.config.relativeWidth = width < 0 ? 0 : width;
+        if(height != null) state.config.relativeHeight = height < 0 ? 0 : height;
+
         state.render();
-
+        
         return graphHandler;
+
     }
 
-    function getRelativeWidth() : number{
-        return state.config.relativeWidth;
-    }
-
-    //---------------------------------------------------------
-
-    function relativeHeight(value:number) : Graph2D_Type{
-
-        if(state.render == null) return graphHandler;
-        if(value === state.config.relativeHeight) return graphHandler;
-        const newRelativeHeight = value < 0 ? 0: value;
-
-        state.config.relativeHeight = newRelativeHeight;
-        state.render();
-
-        return graphHandler;
-    }
-
-    function getRelativeHeight() : number{
-        return state.config.relativeHeight;
+    function getRelativeSize() : Canvas_Size{
+        return{
+            width : state.config.relativeWidth,
+            height : state.config.relativeHeight
+        }
     }
 
 //---------------------------------------------------------
 //--------------------- Center ----------------------------
 
-    function centerX(position:number) : Graph2D_Type{
+    function center({x, y}:Center_Type) : Graph2D_Type{
         if(state.scale == null || state.axis.compute == null) return graphHandler;
-        if(position === state.config.centerX) return graphHandler;
+        if(x===state.config.centerX && y===state.config.centerY) return graphHandler;
 
-        state.config.centerX = position;
+        if(x != null) state.config.centerX = x;
+        if(y != null) state.config.centerY = y;
+
         state.scale.compute();
         state.axis.compute();
 
         return graphHandler;
-    }
-
-    function getCenterX() : number{
-        return state.config.centerX;
-    }
+    }   
     
-    //---------------------------------------------------------
-    
-    function centerY(position:number) : Graph2D_Type{
-        if(state.scale == null || state.axis.compute == null) return graphHandler;
-        if(position === state.config.centerY) return graphHandler;
-
-        state.config.centerY = position;
-        state.scale.compute();
-        state.axis.compute();
-
-        return graphHandler;
-    }
-
-    function getCenterY(){
-        return state.config.centerY;
+    function getCenter() : Center_Type{
+        return {
+            x : state.config.centerX,
+            y : state.config.centerY
+        }
     }
 
 //---------------------------------------------------------
@@ -128,14 +103,10 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
         canvas,
         size,
         getSize,
-        relativeWidth,
-        getRelativeWidth,
-        relativeHeight,
-        getRelativeHeight, 
-        centerX,
-        getCenterX,
-        centerY,
-        getCenterY
+        relativeSize,
+        getRelativeSize,
+        center,
+        getCenter
     };
 }
 

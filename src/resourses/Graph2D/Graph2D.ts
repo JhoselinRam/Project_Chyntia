@@ -85,6 +85,10 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getRelativeSize = config.getRelativeSize;
     graphHandler.center = config.center;
     graphHandler.getCenter = config.getCenter;
+    graphHandler.margin = config.margin;
+    graphHandler.getMargin = config.getMargin;
+    graphHandler.relativePosition = config.relativePosition;
+    graphHandler.getRelativePosition = config.getRelativePosition;
     
     
     //Setup configuration  
@@ -160,7 +164,11 @@ export type Graph2D_Type = {
     relativeSize : (arg0:Canvas_Size)=>Graph2D_Type,
     getRelativeSize : ()=>Canvas_Size,
     center :  (arg0:Center_Type)=>Graph2D_Type,
-    getCenter : ()=>Center_Type
+    getCenter : ()=>Center_Type,
+    margin : (arg0:Margin_Type)=>Graph2D_Type,
+    getMargin : ()=>Margin_Type,
+    relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
+    getRelativePosition : ()=>Relative_Position
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -196,6 +204,18 @@ export type Canvas_Size = {
 }
 
 export type Center_Type = {
+    x ?: number,
+    y ?: number
+}
+
+export type Margin_Type = {
+    left ?: number,
+    right ?: number,
+    top ? : number,
+    bottom ?: number 
+}
+
+export type Relative_Position = {
     x ?: number,
     y ?: number
 }

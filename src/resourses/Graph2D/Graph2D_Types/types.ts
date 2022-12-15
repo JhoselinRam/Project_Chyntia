@@ -1,6 +1,6 @@
 import { ScaleLinear, Selection } from "d3"
 import { type } from "os"
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -114,5 +114,9 @@ export type Config_Type = {
     relativeSize : (arg0:Canvas_Size)=>Graph2D_Type,
     getRelativeSize : ()=>Canvas_Size,
     center :  (arg0:Center_Type)=>Graph2D_Type,
-    getCenter : ()=>Center_Type
+    getCenter : ()=>Center_Type,
+    margin : (arg0:Margin_Type)=>Graph2D_Type,
+    getMargin : ()=>Margin_Type,
+    relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
+    getRelativePosition : ()=>Relative_Position
 }

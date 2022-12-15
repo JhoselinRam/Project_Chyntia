@@ -129,6 +129,56 @@ export default function Home() {
     Graph.center({y:position});
   }
 
+  function changeMarginLeft(e:ChangeEvent){
+    const margin = parseFloat((e.target as HTMLInputElement).value);
+    Graph.margin({left:margin});
+  }
+  
+  function changeMarginRight(e:ChangeEvent){
+    const margin = parseFloat((e.target as HTMLInputElement).value);
+    Graph.margin({right:margin});
+  }
+  
+  function changeMarginTop(e:ChangeEvent){
+    const margin = parseFloat((e.target as HTMLInputElement).value);
+    Graph.margin({top:margin});
+  }
+  
+  function changeMarginBottom(e:ChangeEvent){
+    const margin = parseFloat((e.target as HTMLInputElement).value);
+    Graph.margin({bottom:margin});
+  }
+
+  function changeRelativePositionX(e:ChangeEvent){
+    const position = parseFloat((e.target as HTMLInputElement).value);
+    Graph.relativePosition({x:position});
+  }
+  
+  function changeRelativePositionY(e:ChangeEvent){
+    const position = parseFloat((e.target as HTMLInputElement).value);
+    Graph.relativePosition({y:position});
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -141,7 +191,7 @@ export default function Home() {
 
   return (
     <>
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col justify-center items-center px-2">
       
       <div className="flex items-start justify-center gap-5 my-3">
         
@@ -216,6 +266,26 @@ export default function Home() {
           <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.1} defaultValue={0} onChange={changeCenterX}/>
           <p className="place-self-end mr-2">Center Y</p>
           <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.1} defaultValue={0} onChange={changeCenterY}/>
+        </div>
+      
+      </div>
+      <div className="flex items-start justify-center gap-5 my-3">
+        
+        <div className="grid grid-cols-4">
+          <p className="place-self-end mr-2">Margin left</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={1} defaultValue={5} onChange={changeMarginLeft}/>
+          <p className="place-self-end mr-2">Margin right</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={1} defaultValue={5} onChange={changeMarginRight}/>
+          <p className="place-self-end mr-2">Margin top</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={1} defaultValue={5} onChange={changeMarginTop}/>
+          <p className="place-self-end mr-2">Margin bottom</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={1} defaultValue={5} onChange={changeMarginBottom}/>
+        </div>
+        <div className="grid grid-cols-2">
+          <p className="place-self-end mr-2">Relative position x</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.01} defaultValue={0} onChange={changeRelativePositionX}/>
+          <p className="place-self-end mr-2">Relative position y</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.01} defaultValue={0} onChange={changeRelativePositionY}/>
         </div>
       
       </div>

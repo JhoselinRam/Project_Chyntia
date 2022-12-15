@@ -101,12 +101,12 @@ export default function Home() {
 
   function changeWidth(e:ChangeEvent){
     const width = parseFloat((e.target as HTMLInputElement).value);
-    Graph.width(width);
+    Graph.size({width});
   }
   
   function changeHeight(e:ChangeEvent){
     const height = parseFloat((e.target as HTMLInputElement).value);
-    Graph.height(height);
+    Graph.size({height});
   }
 
   function changeRelativeWidth(e:ChangeEvent){

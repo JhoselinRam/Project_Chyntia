@@ -79,10 +79,8 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.axisOpacity = axis.axisOpacity;
     graphHandler.getAxisOpacity = axis.getAxisOpacity;
     graphHandler.canvas = config.canvas;
-    graphHandler.width = config.width;
-    graphHandler.getWidth = config.getWidth,
-    graphHandler.height = config.height,
-    graphHandler.getHeight = config.getHeight;
+    graphHandler.size = config.size;
+    graphHandler.getSize = config.getSize;
     graphHandler.relativeWidth = config.relativeWidth;
     graphHandler.getRelativeWidth = config.getRelativeWidth;
     graphHandler.relativeHeight = config.relativeHeight;
@@ -161,10 +159,8 @@ export type Graph2D_Type = {
     getAxisColor :  ()=>Axis_Color_Options,
     axisOpacity : (arg0:Axis_Opacity_Options)=>Graph2D_Type,
     getAxisOpacity : ()=>Axis_Opacity_Options,
-    width : (arg0:number)=>Graph2D_Type,
-    getWidth : ()=>number,
-    height : (arg0:number)=>Graph2D_Type,
-    getHeight : ()=>number,
+    size : (arg0:Canvas_Size)=>Graph2D_Type,
+    getSize : ()=>Canvas_Size,
     relativeWidth : (arg0:number)=>Graph2D_Type,
     getRelativeWidth : ()=>number,
     relativeHeight : (arg0:number)=>Graph2D_Type,
@@ -200,4 +196,9 @@ export type Axis_Opacity_Options = {
     yBase ?: number,
     yTick ?: number,
     yLabel ?: number,
+}
+
+export type Canvas_Size = {
+    width ?: number,
+    height ?: number
 }

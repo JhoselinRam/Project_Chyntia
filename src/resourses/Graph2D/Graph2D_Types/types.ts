@@ -1,6 +1,6 @@
 import { ScaleLinear, Selection } from "d3"
 import { type } from "os"
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -109,10 +109,8 @@ export type Axis_Type = {
 
 export type Config_Type = {
     canvas : ()=>SVGGElement,
-    width : (arg0:number)=>Graph2D_Type,
-    getWidth : ()=>number,
-    height : (arg0:number)=>Graph2D_Type,
-    getHeight : ()=>number,
+    size : (arg0:Canvas_Size)=>Graph2D_Type,
+    getSize : ()=>Canvas_Size,
     relativeWidth : (arg0:number)=>Graph2D_Type,
     getRelativeWidth : ()=>number,
     relativeHeight : (arg0:number)=>Graph2D_Type,
@@ -121,5 +119,4 @@ export type Config_Type = {
     getCenterX : ()=>number,
     centerY : (arg0:number)=>Graph2D_Type,
     getCenterY : ()=>number
-
 }

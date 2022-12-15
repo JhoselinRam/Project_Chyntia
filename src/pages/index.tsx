@@ -109,7 +109,25 @@ export default function Home() {
     Graph.height(height);
   }
 
+  function changeRelativeWidth(e:ChangeEvent){
+    const relativeWidth = parseFloat((e.target as HTMLInputElement).value);
+    Graph.relativeWidth(relativeWidth);
+  }
+  
+  function changeRelativeHeight(e:ChangeEvent){
+    const relativeHeight = parseFloat((e.target as HTMLInputElement).value);
+    Graph.relativeHeight(relativeHeight);
+  }
 
+  function changeCenterX(e:ChangeEvent){
+    const position = parseFloat((e.target as HTMLInputElement).value);
+    Graph.centerX(position);
+  }
+  
+  function changeCenterY(e:ChangeEvent){
+    const position = parseFloat((e.target as HTMLInputElement).value);
+    Graph.centerY(position);
+  }
 
 
 
@@ -129,11 +147,11 @@ export default function Home() {
         
         <div className="flex flex-col items-start justify-center">
           <p>Background</p>
-          <input type="color" defaultValue="#ffffff" onChange={changeColor} className="w-7 self-center"/>
+          <input type="color" defaultValue="#ffffff" onChange={changeColor} className="w-6 h-6 self-center mt-1"/>
         </div>
         <div className="flex flex-col justify-start items-start">
           <p>Canvas opacity</p>
-          <input type="number" className="border border-gray-500 rounded-md w-full px-1" min={0} max={1} step={0.02} defaultValue={1} onChange={changeOpacity}/>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[150px]" min={0} max={1} step={0.02} defaultValue={1} onChange={changeOpacity}/>
         </div>
         <div className="flex flex-col justify-start items-start">
           <p>Position</p>
@@ -149,7 +167,7 @@ export default function Home() {
           <div className="flex items-center justify-center">
             <p>Color</p>
             <p className="mx-1">to:</p>
-            <select defaultValue={0} className="border border-gray-500 rounded-md w-full px-1" onChange={changeColorTarget}>
+            <select defaultValue={0} className="border border-gray-500 rounded-md w-full px-1 min-w-[80px]" onChange={changeColorTarget}>
               <option value="0">All axis</option>
               <option value="1">X Axis</option>
               <option value="2">Y Axis</option>
@@ -161,7 +179,7 @@ export default function Home() {
               <option value="8">Y Labels</option>
             </select>
           </div>
-          <input type="color" defaultValue="#000000" className="w-7 self-center"  onChange={changeAxisColor}/>
+          <input type="color" defaultValue="#000000" className="w-6 h-6 self-center mt-1"  onChange={changeAxisColor}/>
         </div>
         <div className="flex flex-col justify-start items-start">
           <div className="flex items-center justify-center">
@@ -179,13 +197,25 @@ export default function Home() {
               <option value="8">Y Labels</option>
             </select>
           </div>
-          <input type="number" className="border border-gray-500 rounded-md w-full px-1" min={0} max={1} step={0.02} defaultValue={1} onChange={changeAxisOpacity}/>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[175px]" min={0} max={1} step={0.02} defaultValue={1} onChange={changeAxisOpacity}/>
         </div>
         <div className="grid grid-cols-2">
           <p className="place-self-end mr-2">Width</p>
-          <input type="number" className="border border-gray-500 rounded-md w-full px-1" step={0.1} defaultValue={10} onChange={changeWidth}/>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.1} defaultValue={10} onChange={changeWidth}/>
           <p className="place-self-end mr-2">Height</p>
-          <input type="number" className="border border-gray-500 rounded-md w-full px-1" step={0.1} defaultValue={10} onChange={changeHeight}/>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.1} defaultValue={10} onChange={changeHeight}/>
+        </div>
+        <div className="grid grid-cols-2">
+          <p className="place-self-end mr-2">Relative width</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[150px]" min={0} step={0.01} defaultValue={1} onChange={changeRelativeWidth}/>
+          <p className="place-self-end mr-2">Relative height</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[150px]" min={0} step={0.01} defaultValue={1} onChange={changeRelativeHeight}/>
+        </div>
+        <div className="grid grid-cols-2">
+          <p className="place-self-end mr-2">Center X</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.1} defaultValue={0} onChange={changeCenterX}/>
+          <p className="place-self-end mr-2">Center Y</p>
+          <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.1} defaultValue={0} onChange={changeCenterY}/>
         </div>
       
       </div>

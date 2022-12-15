@@ -50,7 +50,7 @@ function Scale(state : Grapg2D_State) : Scale_Type{
 
     function _getRange(domainStartX:number, domainEndX:number, domainStartY:number, domainEndY:number) : _GetScale_Type{
         const fullSizeRange = (state.canvas
-                                .select("rect.Graph2d_Background")
+                                .select("rect.Graph2D_Background")
                                 .node() as SVGRectElement)
                                 .getBBox();
         const rangeWidth = fullSizeRange.width;

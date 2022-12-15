@@ -49,11 +49,13 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
 //---------------Relative Width & Height ------------------
 
     function relativeWidth(value:number) : Graph2D_Type{
-        if(state.scale == null || state.axis.compute == null) return graphHandler;
+        if(state.render == null) return graphHandler;
         if(value === state.config.relativeWidth) return graphHandler;
-        const newRelativeWidth = value < 0 ? 0: (value > 1 ? 1 : value);
+        const newRelativeWidth = value < 0 ? 0: value;
+        const svgWidth = state.svg.clientWidth;
 
         state.config.relativeWidth = newRelativeWidth;
+        state.render();
 
         return graphHandler;
     }
@@ -66,18 +68,54 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
 
     function relativeHeight(value:number) : Graph2D_Type{
 
-        if(state.scale == null || state.axis.compute == null) return graphHandler;
+        if(state.render == null) return graphHandler;
         if(value === state.config.relativeHeight) return graphHandler;
-        const newRelativeHeight = value < 0 ? 0: (value > 1 ? 1 : value);
+        const newRelativeHeight = value < 0 ? 0: value;
+        const svgHeight = state.svg.clientHeight;
 
         state.config.relativeHeight = newRelativeHeight;
-        
+        state.render();
 
         return graphHandler;
     }
 
-    function getRelatveHeight() : number{
+    function getRelativeHeight() : number{
         return state.config.relativeHeight;
+    }
+
+//---------------------------------------------------------
+//--------------------- Center ----------------------------
+
+    function centerX(position:number) : Graph2D_Type{
+        if(state.scale == null || state.axis.compute == null) return graphHandler;
+        if(position === state.config.centerX) return graphHandler;
+
+        state.config.centerX = position;
+        state.scale.compute();
+        state.axis.compute();
+
+        return graphHandler;
+    }
+
+    function getCenterX() : number{
+        return state.config.centerX;
+    }
+    
+    //---------------------------------------------------------
+    
+    function centerY(position:number) : Graph2D_Type{
+        if(state.scale == null || state.axis.compute == null) return graphHandler;
+        if(position === state.config.centerY) return graphHandler;
+
+        state.config.centerY = position;
+        state.scale.compute();
+        state.axis.compute();
+
+        return graphHandler;
+    }
+
+    function getCenterY(){
+        return state.config.centerY;
     }
 
 //---------------------------------------------------------
@@ -87,7 +125,15 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
         width,
         getWidth,
         height,
-        getHeight
+        getHeight,
+        relativeWidth,
+        getRelativeWidth,
+        relativeHeight,
+        getRelativeHeight, 
+        centerX,
+        getCenterX,
+        centerY,
+        getCenterY
     };
 }
 

@@ -5,6 +5,8 @@ import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPos
 //------------------------- Main ---------------------------
 
 export type Grapg2D_State = {
+    render ?: ()=>void,
+    svg : SVGSVGElement,
     canvas : Selection<SVGGElement, unknown, null, undefined>,
     background : {
         bgColor : string,
@@ -40,6 +42,8 @@ export type Grapg2D_State = {
         height : number,
         relativeWidth : number,
         relativeHeight : number,
+        relativePositionX : number,
+        relativePositionY : number,
         centerX : number,
         centerY : number,
         marginStart : number,
@@ -108,5 +112,14 @@ export type Config_Type = {
     width : (arg0:number)=>Graph2D_Type,
     getWidth : ()=>number,
     height : (arg0:number)=>Graph2D_Type,
-    getHeight : ()=>number
+    getHeight : ()=>number,
+    relativeWidth : (arg0:number)=>Graph2D_Type,
+    getRelativeWidth : ()=>number,
+    relativeHeight : (arg0:number)=>Graph2D_Type,
+    getRelativeHeight : ()=>number,
+    centerX : (arg0:number)=>Graph2D_Type,
+    getCenterX : ()=>number,
+    centerY : (arg0:number)=>Graph2D_Type,
+    getCenterY : ()=>number
+
 }

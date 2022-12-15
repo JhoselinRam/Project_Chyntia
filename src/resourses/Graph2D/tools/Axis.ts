@@ -43,12 +43,12 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                             .width;
         
         const canvasWidth = (state.canvas
-                                .select("rect.Graph2d_Background")
+                                .select("rect.Graph2D_Background")
                                 .node() as SVGRectElement)
                                 .getBBox()
                                 .width;
         const canvasHeight = (state.canvas
-                                .select("rect.Graph2d_Background")
+                                .select("rect.Graph2D_Background")
                                 .node() as SVGRectElement)
                                 .getBBox()
                                 .height;

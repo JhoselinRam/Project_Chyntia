@@ -14,6 +14,7 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     
     //Inner state
     const state : Grapg2D_State = {
+        svg,
         canvas,
         background : {
             bgColor : "#ffffff",   //white
@@ -43,6 +44,8 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
             height : 10,
             relativeWidth : 1,
             relativeHeight : 1,
+            relativePositionX : 0,
+            relativePositionY : 0,
             centerX : 0,
             centerY : 0,
             marginStart : 5,
@@ -60,8 +63,9 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     const config = Config({graphHandler, state});
     state.scale = Scale(state);
     state.axis.compute = axis.compute;
+    state.render = render(state);
 
-    //Main object population
+    //Populate main object
     graphHandler.backgroundColor = background.backgroundColor;
     graphHandler.getBackgroundColor = background.getBackgroundColor;
     graphHandler.backgroundOpacity = background.backgroundOpacity;
@@ -79,17 +83,20 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getWidth = config.getWidth,
     graphHandler.height = config.height,
     graphHandler.getHeight = config.getHeight;
+    graphHandler.relativeWidth = config.relativeWidth;
+    graphHandler.getRelativeWidth = config.getRelativeWidth;
+    graphHandler.relativeHeight = config.relativeHeight;
+    graphHandler.getRelativeHeight = config.getRelativeHeight;
+    graphHandler.centerX = config.centerX;
+    graphHandler.getCenterX = config.getCenterX;
+    graphHandler.centerY = config.centerY;
+    graphHandler.getCenterY = config.getCenterY;
     
     
     //Setup configuration  
-    canvas                  //Generate the "background element"
+    canvas                  //Generate the thematic groups
         .append("rect")
-        .classed("Graph2d_Background", true)
-        .attr("x", 0)
-        .attr("y", 0)
-        .attr("width", svg.clientWidth*state.config.relativeWidth)
-        .attr("height", svg.clientHeight*state.config.relativeHeight)
-        .attr("fill", state.background.bgColor);
+        .classed("Graph2D_Background", true);
 
     canvas
         .append("g")
@@ -103,13 +110,31 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
         .append("g")
         .classed("Graph2D_Data", true);
     
-    state.scale.compute();  //Creates the scale
-    state.axis.compute();   //Creates the axis
+    state.render();
 
 
     
     return (graphHandler as Graph2D_Type);
 
+}
+
+function render(state:Grapg2D_State){
+    return function(){
+        if(state.scale==null || state.axis.compute==null) return;
+    
+        const svgWidth = state.svg.clientWidth;
+        const svgHeight = state.svg.clientHeight;
+
+        state.canvas
+            .select("rect.Graph2D_Background")
+            .attr("width" , svgWidth*state.config.relativeWidth)
+            .attr("height", svgHeight*state.config.relativeHeight)
+            .attr("fill", state.background.bgColor)
+            .attr("opacity", state.background.bgOpacity);
+
+        state.scale.compute();
+        state.axis.compute();
+    }
 }
 
 
@@ -139,7 +164,15 @@ export type Graph2D_Type = {
     width : (arg0:number)=>Graph2D_Type,
     getWidth : ()=>number,
     height : (arg0:number)=>Graph2D_Type,
-    getHeight : ()=>number
+    getHeight : ()=>number,
+    relativeWidth : (arg0:number)=>Graph2D_Type,
+    getRelativeWidth : ()=>number,
+    relativeHeight : (arg0:number)=>Graph2D_Type,
+    getRelativeHeight : ()=>number,
+    centerX : (arg0:number)=>Graph2D_Type,
+    getCenterX : ()=>number,
+    centerY : (arg0:number)=>Graph2D_Type,
+    getCenterY : ()=>number
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";

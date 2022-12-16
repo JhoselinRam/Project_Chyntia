@@ -21,7 +21,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
         if(state.axis.position==="center" || state.axis.position==="bottom-left" || state.axis.position==="top-left")    axisY = axisLeft(state.scale.inner.y);
         else    axisY = axisRight(state.scale.inner.y);
-
+        
         axisX.tickSizeOuter(0);
         axisY.tickSizeOuter(0);
 
@@ -314,7 +314,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .classed("Graph2D_Tick_Background", true)
             .append("rect")
             .attr("fill", state.background.bgColor)
-            .attr("opacity", state.background.bgOpacity);
+            .style("mix-blend-mode", "difference");
 
         state.canvas
             .selectAll("g.tick")

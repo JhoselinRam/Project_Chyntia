@@ -19,6 +19,8 @@ export type Grapg2D_State = {
     axis :{
         type : Graph2D_AxisType,
         position : Graph2D_AxisPosition,
+        xUnit : string | null,
+        yUnit : string | null,
         xAxisColor : string,
         xAxisOpacity : number,
         yAxisColor : string,

@@ -24,6 +24,8 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
         axis : {
             type : "rectangular",
             position : "center",
+            xUnit : "m",
+            yUnit : null,
             xAxisColor : "#000000", //Black
             xAxisOpacity : 1,
             yAxisColor : "#000000", //Black

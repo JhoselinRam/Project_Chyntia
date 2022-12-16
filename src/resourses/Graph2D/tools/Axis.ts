@@ -314,7 +314,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .classed("Graph2D_Tick_Background", true)
             .append("rect")
             .attr("fill", state.background.bgColor)
-            .style("mix-blend-mode", "difference");
+            .style("mix-blend-mode", "overlay");
 
         state.canvas
             .selectAll("g.tick")

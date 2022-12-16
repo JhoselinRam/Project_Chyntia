@@ -119,33 +119,41 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         const maxTranslationY = canvasHeight - state.config.marginBottom - 2;
         const minTranslationY = state.config.marginTop + 1;
 
-        if(translationX > maxTranslationX)
-            translationX = maxTranslationX;
-            
-        if(translationX < minTranslationX)
-            translationX = minTranslationX;
-            
-        if(translationY > maxTranslationY)
-            translationY = maxTranslationY;
-
-        if(translationY < minTranslationY)
-            translationY = minTranslationY;
-
-        //set the position of the tick labels
-        if(translationX < minTranslationX + axisWidth){
-            const translator = scaleLinear().domain([minTranslationX+axisWidth, minTranslationX]).range([0, axisWidth+6]);
-            state.canvas
-                .select("g.Graph2D_AxisY")
-                .selectAll("text, g.Graph2D_Tick_Background")
-                .style("transform", `translate(${translator(translationX)}px,0)`);
+        if(state.axis.xAxisContained){
+            if(translationX > maxTranslationX)
+                translationX = maxTranslationX;
+                
+            if(translationX < minTranslationX)
+                translationX = minTranslationX;
+        }
+        
+        if(state.axis.yAxisContained){
+            if(translationY > maxTranslationY)
+                translationY = maxTranslationY;
+    
+            if(translationY < minTranslationY)
+                translationY = minTranslationY;
         }
 
-        if(translationY > maxTranslationY - axisHeight){
-            const translator = scaleLinear().domain([maxTranslationY-axisHeight, maxTranslationY]).range([0, -axisHeight-6]);
-            state.canvas
-                .select(".Graph2D_AxisX")
-                .selectAll("text, g.Graph2D_Tick_Background")
-                .style("transform", `translate(0,${translator(translationY)}px)`);
+        //set the position of the tick labels
+        if(state.axis.xLabelDynamic){
+            if(translationX < minTranslationX + axisWidth){
+                const translator = scaleLinear().domain([minTranslationX+axisWidth, minTranslationX]).range([0, axisWidth+6]);
+                state.canvas
+                    .select("g.Graph2D_AxisY")
+                    .selectAll("text, g.Graph2D_Tick_Background")
+                    .style("transform", `translate(${translator(translationX<minTranslationX?minTranslationX:translationX)}px,0)`);
+            }
+        }
+
+        if(state.axis.yLabelDynamic){
+            if(translationY > maxTranslationY - axisHeight){
+                const translator = scaleLinear().domain([maxTranslationY-axisHeight, maxTranslationY]).range([0, -axisHeight-6]);
+                state.canvas
+                    .select(".Graph2D_AxisX")
+                    .selectAll("text, g.Graph2D_Tick_Background")
+                    .style("transform", `translate(0,${translator(translationY>maxTranslationY?maxTranslationY:translationY)}px)`);
+            }
         }
 
         //Translate the axis and increase the tick size
@@ -313,8 +321,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .append("g")
             .classed("Graph2D_Tick_Background", true)
             .append("rect")
-            .attr("fill", state.background.bgColor)
-            .style("mix-blend-mode", "overlay");
+            .attr("fill", state.background.bgColor);
 
         state.canvas
             .selectAll("g.tick")

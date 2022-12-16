@@ -159,6 +159,25 @@ export default function Home() {
     Graph.relativePosition({y:position});
   }
 
+  function changeContainedX(e:ChangeEvent){
+    const value = Graph.getAxisDynamic();
+    Graph.axisDynamic({xContained:!value.xContained});
+  }
+
+  function changeDynamicX(e:ChangeEvent){
+    const value = Graph.getAxisDynamic();
+    Graph.axisDynamic({xDynamic:!value.xDynamic});
+  }
+  
+  function changeContainedY(e:ChangeEvent){
+    const value = Graph.getAxisDynamic();
+    Graph.axisDynamic({yContained:!value.yContained});
+  }
+
+  function changeDynamicY(e:ChangeEvent){
+    const value = Graph.getAxisDynamic();
+    Graph.axisDynamic({yDynamic:!value.yDynamic});
+  }
 
 
 
@@ -286,6 +305,16 @@ export default function Home() {
           <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.01} defaultValue={0} onChange={changeRelativePositionX}/>
           <p className="place-self-end mr-2">Relative position y</p>
           <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" step={0.01} defaultValue={0} onChange={changeRelativePositionY}/>
+        </div>
+        <div className="grid grid-cols-4">
+          <p className="place-self-end mr-2">Contained x</p>
+          <input type="checkbox" defaultChecked onChange={changeContainedX} className="w-[15px] h-[15px] self-center"/>
+          <p className="place-self-end mr-2">Dynamic x</p>
+          <input type="checkbox" defaultChecked onChange={changeDynamicX} className="w-[15px] h-[15px] self-center"/>
+          <p className="place-self-end mr-2">Contained y</p>
+          <input type="checkbox" defaultChecked onChange={changeContainedY} className="w-[15px] h-[15px] self-center"/>
+          <p className="place-self-end mr-2">Dynamic y</p>
+          <input type="checkbox" defaultChecked onChange={changeDynamicY} className="w-[15px] h-[15px] self-center  "/>
         </div>
       
       </div>

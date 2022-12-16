@@ -1,11 +1,12 @@
 import { ScaleLinear, Selection } from "d3"
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
 export type Grapg2D_State = {
     render ?: ()=>void,
     svg : SVGSVGElement,
+    graphID : string,
     canvas : Selection<SVGGElement, unknown, null, undefined>,
     background : {
         bgColor : string,
@@ -19,6 +20,10 @@ export type Grapg2D_State = {
     axis :{
         type : Graph2D_AxisType,
         position : Graph2D_AxisPosition,
+        xAxisContained : boolean,
+        yAxisContained : boolean,
+        xLabelDynamic : boolean,
+        yLabelDynamic : boolean,
         xUnit : string | null,
         yUnit : string | null,
         xAxisColor : string,
@@ -136,7 +141,9 @@ export type Config_Type = {
     margin : (arg0:Margin_Type)=>Graph2D_Type,
     getMargin : ()=>Margin_Type,
     relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
-    getRelativePosition : ()=>Relative_Position
+    getRelativePosition : ()=>Relative_Position,
+    axisDynamic : (arg0:Axis_Dynamic)=>Graph2D_Type,
+    getAxisDynamic : ()=>Axis_Dynamic
 }
 
 //---------------------------------------------------------

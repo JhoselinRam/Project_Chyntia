@@ -1,4 +1,4 @@
-import { Canvas_Size, Center_Type, Graph2D_Type, Margin_Type, Relative_Position } from "../Graph2D";
+import { Axis_Dynamic, Canvas_Size, Center_Type, Graph2D_Type, Margin_Type, Relative_Position } from "../Graph2D";
 import { Config_Type, Method_Generator_Props } from "../Graph2D_Types/types";
 
 function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
@@ -140,6 +140,35 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
     }
 
 //---------------------------------------------------------
+//--------------------- Axis Dynamic ----------------------
+
+    function axisDynamic({xContained, yContained, xDynamic, yDynamic}:Axis_Dynamic) : Graph2D_Type{
+        if(state.scale == null || state.axis.compute == null) return graphHandler;
+        if(xContained===state.axis.xAxisContained && yContained===state.axis.yAxisContained && xDynamic===state.axis.xLabelDynamic && yDynamic===state.axis.yLabelDynamic) return graphHandler;
+        if(xContained==null && yContained==null && xDynamic==null && yDynamic==null) return graphHandler;
+
+        if(xContained!=null) state.axis.xAxisContained = xContained;
+        if(yContained!=null) state.axis.yAxisContained = yContained;
+        if(xDynamic!=null) state.axis.xLabelDynamic = xDynamic;
+        if(yDynamic!=null) state.axis.yLabelDynamic = yDynamic;
+
+        state.scale.compute();
+        state.axis.compute();
+
+
+        return graphHandler;
+    }
+
+    function getAxisDynamic():Axis_Dynamic{
+        return {
+            xContained : state.axis.xAxisContained,
+            yContained : state.axis.yAxisContained,
+            xDynamic : state.axis.xLabelDynamic,
+            yDynamic : state.axis.yLabelDynamic
+        }
+    }
+
+//---------------------------------------------------------
 
     return {
         canvas,
@@ -152,7 +181,9 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
         margin,
         getMargin,
         relativePosition,
-        getRelativePosition
+        getRelativePosition,
+        axisDynamic,
+        getAxisDynamic
     };
 }
 

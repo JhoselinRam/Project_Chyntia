@@ -16,6 +16,7 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     //Inner state
     const state : Grapg2D_State = {
         svg,
+        graphID,
         canvas,
         background : {
             bgColor : "#ffffff",   //white
@@ -24,7 +25,11 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
         axis : {
             type : "rectangular",
             position : "center",
-            xUnit : "m",
+            xAxisContained : true,
+            yAxisContained : true,
+            xLabelDynamic : true,
+            yLabelDynamic : true,
+            xUnit : null,
             yUnit : null,
             xAxisColor : "#000000", //Black
             xAxisOpacity : 1,
@@ -108,6 +113,8 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getMargin = config.getMargin;
     graphHandler.relativePosition = config.relativePosition;
     graphHandler.getRelativePosition = config.getRelativePosition;
+    graphHandler.axisDynamic = config.axisDynamic;
+    graphHandler.getAxisDynamic = config.getAxisDynamic;
     
     
     //Setup configuration  
@@ -203,7 +210,9 @@ export type Graph2D_Type = {
     margin : (arg0:Margin_Type)=>Graph2D_Type,
     getMargin : ()=>Margin_Type,
     relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
-    getRelativePosition : ()=>Relative_Position
+    getRelativePosition : ()=>Relative_Position,
+    axisDynamic : (arg0:Axis_Dynamic)=>Graph2D_Type,
+    getAxisDynamic : ()=>Axis_Dynamic
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -255,4 +264,11 @@ export type Margin_Type = {
 export type Relative_Position = {
     x ?: number,
     y ?: number
+}
+
+export type Axis_Dynamic = {
+    xContained ?: boolean,
+    yContained ?: boolean,
+    xDynamic ?: boolean,
+    yDynamic ?: boolean
 }

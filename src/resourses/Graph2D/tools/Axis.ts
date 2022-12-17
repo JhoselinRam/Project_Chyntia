@@ -316,6 +316,63 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     function overlapMask(){
         if(state.axis.axisOverlap) return;
+
+        const initXCoords = state.canvas
+                            .select("g.Graph2D_AxisX")
+                            .attr("transform")
+                            .replace("translate(", "")
+                            .replace(")","")
+                            .split(",");
+                            
+        const initYCoords = state.canvas
+                            .select("g.Graph2D_AxisY")
+                            .attr("transform")
+                            .replace("translate(", "")
+                            .replace(")","")
+                            .split(",");
+        
+        state.canvas
+            .select("g.Graph2D_AxisX")
+            .selectAll("g.tick")
+            .each((d,i,nodes)=>{
+                const tick = nodes[i] as SVGGElement;
+                let translation = [0,0];
+                const groupCoords = select(tick)
+                                    .attr("transform")
+                                    .replace("translate(", "")
+                                    .replace(")", "")
+                                    .split(",");
+                                    
+                const textCoords = select(tick)
+                                    .select("text")
+                                    .attr("transform");
+
+                const size = (select(tick)
+                                .select("text")
+                                .node() as SVGTextElement)
+                                .getBBox();
+
+                translation[0] = parseFloat(initXCoords[0]) + parseFloat(groupCoords[0]);
+                translation[1] = parseFloat(initXCoords[1]) + parseFloat(groupCoords[1]);
+                if(textCoords != null){
+                    translation[0] += parseFloat(textCoords[0]);
+                    translation[1] += parseFloat(textCoords[1]);
+                }
+
+                state.canvas
+                    .append("rect")
+                    .attr("fill", "#000000")
+                    .attr("x", size.x)
+                    .attr("y", size.y)
+                    .attr("width" , size.width)
+                    .attr("height", size.height)
+                    .attr("transform", `translate(${translation[0]}, ${translation[1]})`);
+
+                
+
+
+            });
+
     }
 
 //---------------------------------------------------------

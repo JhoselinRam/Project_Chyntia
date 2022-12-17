@@ -1,4 +1,4 @@
-import { ChangeEvent, useRef } from "react";
+import { ChangeEvent, ReactNode, useRef } from "react";
 import Graph2D, { Graph2D_Type, Graph2D_AxisPosition } from "../resourses/Graph2D/Graph2D";
 
 export default function Home() {
@@ -324,6 +324,9 @@ export default function Home() {
         <svg className="w-full h-full" ref={setGraphObject}>
         </svg>
     </div>
+
+
+
     </>
     );
   }

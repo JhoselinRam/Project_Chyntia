@@ -7,7 +7,7 @@ import Config from "./tools/Config";
 import Grid from "./tools/Grid/Grid";
 import Scale from "./tools/Scale";
 
-function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
+function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     const graphID = uuidv4();
     const canvas = select(svg)
                     .append("g")
@@ -188,7 +188,7 @@ function render(state:Grapg2D_State){
 //---------------------------------------------------------
 //------------------------ Exports ------------------------
 
-export default Grap2D;
+export default Graph2D;
 
 export type Graph2D_Type = {
     backgroundColor : (arg0:string)=>Graph2D_Type,

@@ -1,6 +1,6 @@
-import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, sort } from "d3";
+import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, sort, BaseType } from "d3";
 import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D";
-import { Axis_Type, Method_Generator_Props } from "../Graph2D_Types/types";
+import { Axis_Type, Define_Mask_Props, Method_Generator_Props } from "../Graph2D_Types/types";
 
 function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
     let axisX : Axis<NumberValue>
@@ -98,7 +98,6 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         //Position the axis
         if(state.axis.position == "center"){
             positionAxisCenter(axisWidth, axisHeight, canvasWidth, canvasHeight);
-            overlapMask();
             return;
         }
         
@@ -234,6 +233,15 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .attr("x2", 0.5)
             .attr("y1", canvasHeight-state.config.marginBottom-2)
             .attr("y2", canvasHeight);
+
+        //Aplies the mask if needed
+        if(!state.axis.axisOverlap){
+            overlapMask();
+            state.canvas
+                .select("g.Graph2D_Axis")
+                .selectAll("line, path")
+                .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
+        }
     }
  
 //---------------------------------------------------------
@@ -317,6 +325,37 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
     function overlapMask(){
         if(state.axis.axisOverlap) return;
 
+        const canvasSize = (state.canvas
+                            .select("rect.Graph2D_Background")
+                            .node() as SVGRectElement)
+                            .getBBox();
+        
+        state.canvas    //Remove Previous mask
+            .select("defs")
+            .selectAll("mask.Graph2D_Full_Mask, mask.Graph2D_Partial_Mask")
+            .remove();
+
+        state.canvas    //Adds the new mask
+            .select("defs")
+            .append("mask")
+            .classed("Graph2D_Full_Mask", true)
+            .attr("id", `Graph2D_Full_Mask_${state.graphID}`)
+            .append("rect")
+            .attr("fill", "#ffffff")
+            .attr("width" , canvasSize.width)
+            .attr("height", canvasSize.height);
+            
+        state.canvas  
+            .select("defs")
+            .append("mask")
+            .classed("Graph2D_Partial_Mask", true)
+            .attr("id", `Graph2D_Partial_Mask_${state.graphID}`)
+            .append("rect")
+            .attr("fill", "#ffffff")
+            .attr("width" , canvasSize.width)
+            .attr("height", canvasSize.height);
+
+
         const initXCoords = state.canvas
                             .select("g.Graph2D_AxisX")
                             .attr("transform")
@@ -335,44 +374,56 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .select("g.Graph2D_AxisX")
             .selectAll("g.tick")
             .each((d,i,nodes)=>{
-                const tick = nodes[i] as SVGGElement;
-                let translation = [0,0];
-                const groupCoords = select(tick)
-                                    .attr("transform")
-                                    .replace("translate(", "")
-                                    .replace(")", "")
-                                    .split(",");
-                                    
-                const textCoords = select(tick)
-                                    .select("text")
-                                    .attr("transform");
-
-                const size = (select(tick)
-                                .select("text")
-                                .node() as SVGTextElement)
-                                .getBBox();
-
-                translation[0] = parseFloat(initXCoords[0]) + parseFloat(groupCoords[0]);
-                translation[1] = parseFloat(initXCoords[1]) + parseFloat(groupCoords[1]);
-                if(textCoords != null){
-                    translation[0] += parseFloat(textCoords[0]);
-                    translation[1] += parseFloat(textCoords[1]);
-                }
-
-                state.canvas
-                    .append("rect")
-                    .attr("fill", "#000000")
-                    .attr("x", size.x)
-                    .attr("y", size.y)
-                    .attr("width" , size.width)
-                    .attr("height", size.height)
-                    .attr("transform", `translate(${translation[0]}, ${translation[1]})`);
-
-                
-
-
+                defineMask({tick:nodes[i] as SVGGElement, initCoords:initXCoords, mask:"Graph2D_Full_Mask"});
             });
+            
+        state.canvas
+            .select("g.Graph2D_AxisY")
+            .selectAll("g.tick")
+            .each((d,i,nodes)=>{
+                defineMask({tick:nodes[i] as SVGGElement, initCoords:initYCoords, mask:"Graph2D_Full_Mask"});
+            });
+    }
 
+    function defineMask({tick, initCoords, mask}:Define_Mask_Props){
+        if(select(tick).attr("visibility")==="hidden") return;
+
+        let translation = [0,0];
+        const groupCoords = select(tick)
+                            .attr("transform")
+                            .replace("translate(", "")
+                            .replace(")", "")
+                            .split(",");
+                            
+        const textTransform = select(tick)
+                            .select("text")
+                            .attr("transform");
+
+        const size = (select(tick)
+                        .select("text")
+                        .node() as SVGTextElement)
+                        .getBBox();
+
+        translation[0] = parseFloat(initCoords[0]) + parseFloat(groupCoords[0]);
+        translation[1] = parseFloat(initCoords[1]) + parseFloat(groupCoords[1]);
+        if(textTransform != null){
+            const textCoords = textTransform
+                            .replace("translate(", "")
+                            .replace(")", "")
+                            .split(",");
+            translation[0] += parseFloat(textCoords[0]);
+            translation[1] += parseFloat(textCoords[1]);
+        }
+
+        state.canvas
+            .select(`mask.${mask}`)
+            .append("rect")
+            .attr("fill", "#000000")
+            .attr("x", size.x)
+            .attr("y", size.y)
+            .attr("width" , size.width)
+            .attr("height", size.height)
+            .attr("transform", `translate(${translation[0]}, ${translation[1]})`);
     }
 
 //---------------------------------------------------------

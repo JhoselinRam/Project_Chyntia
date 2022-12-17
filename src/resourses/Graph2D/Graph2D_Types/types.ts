@@ -1,4 +1,4 @@
-import { ScaleLinear, Selection } from "d3"
+import { BaseType, ScaleLinear, Selection } from "d3"
 import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic } from "../Graph2D"
 
 //------------------------- Main ---------------------------
@@ -130,6 +130,12 @@ export type Axis_Type = {
     axisOpacity : (arg0:Axis_Opacity_Options)=>Graph2D_Type,
     getAxisOpacity : ()=>Axis_Opacity_Options
 };
+
+export type Define_Mask_Props = {
+    tick : SVGGElement, 
+    initCoords:Array<string>,
+    mask : string
+}
 
 //---------------------------------------------------------
 //------------------------ Config -------------------------

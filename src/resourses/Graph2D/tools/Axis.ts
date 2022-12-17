@@ -94,13 +94,14 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .attr("fill", state.axis.yLabelColor)
             .attr("opacity", state.axis.yLabelOpacity);
 
-        labelBackground();
 
         //Position the axis
         if(state.axis.position == "center"){
             positionAxisCenter(axisWidth, axisHeight, canvasWidth, canvasHeight);
+            overlapMask();
             return;
         }
+        
         positionAxis(axisWidth, axisHeight, canvasWidth, canvasHeight);
 
     }
@@ -142,7 +143,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 state.canvas
                     .select("g.Graph2D_AxisY")
                     .selectAll("text, g.Graph2D_Tick_Background")
-                    .style("transform", `translate(${translator(translationX<minTranslationX?minTranslationX:translationX)}px,0)`);
+                    .attr("transform", `translate(${translator(translationX<minTranslationX?minTranslationX:translationX)},0)`);
             }
         }
 
@@ -152,26 +153,26 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 state.canvas
                     .select(".Graph2D_AxisX")
                     .selectAll("text, g.Graph2D_Tick_Background")
-                    .style("transform", `translate(0,${translator(translationY>maxTranslationY?maxTranslationY:translationY)}px)`);
+                    .attr("transform", `translate(0,${translator(translationY>maxTranslationY?maxTranslationY:translationY)})`);
             }
         }
 
         //Translate the axis and increase the tick size
         state.canvas
             .select("g.Graph2D_AxisX")
-            .style("transform", `translate(0,${translationY}px)`)
+            .attr("transform", `translate(0,${translationY})`)
             .selectAll("g.tick")
             .select("line")
             .attr("y2", 8)
-            .style("transform", "translate(0,-4px)");
+            .attr("transform", "translate(0,-4)");
 
         state.canvas
             .select("g.Graph2D_AxisY")
-            .style("transform", `translate(${translationX}px,0`)
+            .attr("transform", `translate(${translationX},0)`)
             .selectAll("g.tick")
             .select("line")
             .attr("x2", 8)
-            .style("transform", "translate(-4px,0)");
+            .attr("transform", "translate(-4,0)");
 
         //Makes invisible the tick and label at the origin
         state.canvas
@@ -185,7 +186,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 const tolerance = 1e-5;
 
                 if(parseFloat(label)<tolerance){
-                    select(tick).style("visibility", "hidden");
+                    select(tick).attr("visibility", "hidden");
                 }
             });
 
@@ -287,7 +288,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
         state.canvas
             .select("g.Graph2D_AxisX")
-            .style("transform", `translate(0,${translationY}px)`)
+            .attr("transform", `translate(0,${translationY})`)
             .append("line")
             .classed("Graph2D_Extension", true)
             .attr("stroke", state.axis.xAxisColor)
@@ -299,7 +300,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         
         state.canvas
             .select("g.Graph2D_AxisY")
-            .style("transform", `translate(${translationX}px,0)`)
+            .attr("transform", `translate(${translationX},0)`)
             .append("line")
             .classed("Graph2D_Extension", true)
             .attr("stroke", state.axis.yAxisColor)
@@ -311,47 +312,14 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
     }
 
 //---------------------------------------------------------
-//------------------ Label Background ---------------------
+//---------------------- Mask -----------------------------
 
-    function labelBackground(){
-        const sortData = [0,2,1]; //Used to sort the elemnts in the tick group
-
-        state.canvas    //Appends a group to set the background of each tick label
-            .selectAll("g.tick")
-            .append("g")
-            .classed("Graph2D_Tick_Background", true)
-            .append("rect")
-            .attr("fill", state.background.bgColor);
-
-        state.canvas
-            .selectAll("g.tick")
-            .each((d,i,nodes)=>{
-                const tick = (nodes[i] as SVGGElement);
-                const size = (select(tick)
-                                .select("text")
-                                .node() as SVGTextElement)
-                                .getBBox();
-
-                select(tick)
-                    .select("rect")
-                    .attr("x", size.x-1)
-                    .attr("y", size.y-1)
-                    .attr("width", size.width+4)
-                    .attr("height", size.height+4);
-                
-                select(tick)
-                    .selectChildren()
-                    .data(sortData)
-                    .sort();
-            });
-
+    function overlapMask(){
+        if(state.axis.axisOverlap) return;
     }
 
 //---------------------------------------------------------
 //---------------------------------------------------------
-
-
-
 
 
 
@@ -573,6 +541,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     return {
         compute,
+        overlapMask,
         axisType,
         getAxisType,
         axisPosition,

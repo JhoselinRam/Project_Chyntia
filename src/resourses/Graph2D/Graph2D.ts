@@ -42,7 +42,9 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
             yTickColor : "#000000",
             yTickOpacity : 1,
             yLabelColor : "#000000",
-            yLabelOpacity: 1
+            yLabelOpacity: 1,
+            axisOverlap : false,
+            overlapPriority : "x"
         },
         grid : {
             main : {
@@ -87,6 +89,7 @@ function Grap2D(svg : SVGSVGElement) : Graph2D_Type{
     const config = Config({graphHandler, state});
     state.scale = Scale(state);
     state.axis.compute = axis.compute;
+    state.axis.overlapMask = axis.overlapMask;
     state.render = render(state);
 
     //Populate main object

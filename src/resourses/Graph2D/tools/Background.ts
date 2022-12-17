@@ -8,7 +8,7 @@ function Background({graphHandler, state} : Method_Generator_Props) : Background
         if (value === state.background.bgColor) return graphHandler;
         
         state.canvas
-            .selectAll("rect.Graph2D_Background, g.Graph2D_Tick_Background rect")
+            .select("rect.Graph2D_Background")
             .attr("fill", value);
         
         
@@ -30,7 +30,7 @@ function Background({graphHandler, state} : Method_Generator_Props) : Background
         if (newOpacity === state.background.bgOpacity) return graphHandler;
 
         state.canvas
-            .selectAll("rect.Graph2D_Background")
+            .select("rect.Graph2D_Background")
             .attr("opacity", newOpacity);
 
         state.background.bgOpacity = newOpacity;

@@ -9,7 +9,6 @@ export default function Home() {
   function changeColor(e:ChangeEvent){
     const color = (e.target as HTMLInputElement).value as string;
     Graph.backgroundColor(color);
-    
   }
 
   function changeOpacity(e : ChangeEvent){
@@ -204,8 +203,8 @@ export default function Home() {
 
   function setGraphObject(element : SVGSVGElement){
     if(element == null) return;
-
     Graph = Graph2D(element);
+
   }
 
   return (

@@ -141,7 +141,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 const translator = scaleLinear().domain([minTranslationX+axisWidth, minTranslationX]).range([0, axisWidth+6]);
                 state.canvas
                     .select("g.Graph2D_AxisY")
-                    .selectAll("text, g.Graph2D_Tick_Background")
+                    .selectAll("text")
                     .attr("transform", `translate(${translator(translationX<minTranslationX?minTranslationX:translationX)},0)`);
             }
         }
@@ -151,7 +151,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 const translator = scaleLinear().domain([maxTranslationY-axisHeight, maxTranslationY]).range([0, -axisHeight-6]);
                 state.canvas
                     .select(".Graph2D_AxisX")
-                    .selectAll("text, g.Graph2D_Tick_Background")
+                    .selectAll("text")
                     .attr("transform", `translate(0,${translator(translationY>maxTranslationY?maxTranslationY:translationY)})`);
             }
         }
@@ -235,13 +235,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .attr("y2", canvasHeight);
 
         //Aplies the mask if needed
-        if(!state.axis.axisOverlap){
-            overlapMask();
-            state.canvas
-                .select("g.Graph2D_Axis")
-                .selectAll("line, path")
-                .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
-        }
+        if(!state.axis.axisOverlap) computeOverlapMask();
     }
  
 //---------------------------------------------------------
@@ -322,110 +316,69 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 //---------------------------------------------------------
 //---------------------- Mask -----------------------------
 
-    function overlapMask(){
+    function computeOverlapMask(){
         if(state.axis.axisOverlap) return;
 
-        const canvasSize = (state.canvas
-                            .select("rect.Graph2D_Background")
-                            .node() as SVGRectElement)
-                            .getBBox();
-        
         state.canvas    //Remove Previous mask
-            .select("defs")
-            .selectAll("mask.Graph2D_Full_Mask, mask.Graph2D_Partial_Mask")
+            .selectAll("mask.Graph2D_Overlap_Mask")
             .remove();
 
-        state.canvas    //Adds the new mask
-            .select("defs")
-            .append("mask")
-            .classed("Graph2D_Full_Mask", true)
-            .attr("id", `Graph2D_Full_Mask_${state.graphID}`)
-            .append("rect")
-            .attr("fill", "#ffffff")
-            .attr("width" , canvasSize.width)
-            .attr("height", canvasSize.height);
-            
-        state.canvas  
-            .select("defs")
-            .append("mask")
-            .classed("Graph2D_Partial_Mask", true)
-            .attr("id", `Graph2D_Partial_Mask_${state.graphID}`)
-            .append("rect")
-            .attr("fill", "#ffffff")
-            .attr("width" , canvasSize.width)
-            .attr("height", canvasSize.height);
+        const yMask = state.canvas
+                        .select("g.Graph2D_AxisY")
+                        .append("mask")
+                        .classed("Graph2D_Overlap_Mask", true);
 
-
-        const initXCoords = state.canvas
-                            .select("g.Graph2D_AxisX")
-                            .attr("transform")
-                            .replace("translate(", "")
-                            .replace(")","")
-                            .split(",");
-                            
-        const initYCoords = state.canvas
-                            .select("g.Graph2D_AxisY")
-                            .attr("transform")
-                            .replace("translate(", "")
-                            .replace(")","")
-                            .split(",");
-        
-        state.canvas
-            .select("g.Graph2D_AxisX")
-            .selectAll("g.tick")
-            .each((d,i,nodes)=>{
-                defineMask({tick:nodes[i] as SVGGElement, initCoords:initXCoords, mask:"Graph2D_Full_Mask"});
-            });
-            
-        state.canvas
+        state.canvas    
             .select("g.Graph2D_AxisY")
             .selectAll("g.tick")
             .each((d,i,nodes)=>{
-                defineMask({tick:nodes[i] as SVGGElement, initCoords:initYCoords, mask:"Graph2D_Full_Mask"});
+                const tick = nodes[i] as SVGGElement;
+                const size = tick.getBBox();
+                const position = select(tick)
+                                    .attr("transform")
+                                    .replace("translate(", "")
+                                    .replace(")", "")
+                                    .split(",");
+
+                const labelSize = (select(tick)
+                                    .select("text")
+                                    .node() as SVGTextElement)
+                                    .getBBox();
+
+                const labelPosition = select(tick)
+                                        .select("text")
+                                        .attr("transform")
+                                        .replace("translate(", "")
+                                        .replace(")", "")
+                                        .split(",");
+                
+                const absolutePosition : Array<number> = [0,0];
+                const relativePosition : Array<number> = [0,0];
+
+                if(position != null){
+                    absolutePosition[0] = parseFloat(position[0]);
+                    absolutePosition[1] = parseFloat(position[1]);
+                }
+
+                if(labelPosition != null){
+                    absolutePosition[0] += parseFloat(labelPosition[0]);
+                    absolutePosition[1] += parseFloat(labelPosition[1]);
+                    relativePosition 
+                }
+
+
+                select(tick)
+                    .append("mask")
+                    .classed("Graph2D_Overlap_Mask", true)
+                    .append("rect")
+                    .attr("fill", "#ffffff")
+                    .attr("width", size.width)
+                    .attr("height", size.height);
+
             });
+
+        
     }
-
-    function defineMask({tick, initCoords, mask}:Define_Mask_Props){
-        if(select(tick).attr("visibility")==="hidden") return;
-
-        let translation = [0,0];
-        const groupCoords = select(tick)
-                            .attr("transform")
-                            .replace("translate(", "")
-                            .replace(")", "")
-                            .split(",");
-                            
-        const textTransform = select(tick)
-                            .select("text")
-                            .attr("transform");
-
-        const size = (select(tick)
-                        .select("text")
-                        .node() as SVGTextElement)
-                        .getBBox();
-
-        translation[0] = parseFloat(initCoords[0]) + parseFloat(groupCoords[0]);
-        translation[1] = parseFloat(initCoords[1]) + parseFloat(groupCoords[1]);
-        if(textTransform != null){
-            const textCoords = textTransform
-                            .replace("translate(", "")
-                            .replace(")", "")
-                            .split(",");
-            translation[0] += parseFloat(textCoords[0]);
-            translation[1] += parseFloat(textCoords[1]);
-        }
-
-        state.canvas
-            .select(`mask.${mask}`)
-            .append("rect")
-            .attr("fill", "#000000")
-            .attr("x", size.x)
-            .attr("y", size.y)
-            .attr("width" , size.width)
-            .attr("height", size.height)
-            .attr("transform", `translate(${translation[0]}, ${translation[1]})`);
-    }
-
 //---------------------------------------------------------
 //---------------------------------------------------------
 
@@ -649,7 +602,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     return {
         compute,
-        overlapMask,
+        computeOverlapMask,
         axisType,
         getAxisType,
         axisPosition,

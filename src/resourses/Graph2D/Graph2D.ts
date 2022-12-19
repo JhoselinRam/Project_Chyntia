@@ -89,7 +89,7 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     const config = Config({graphHandler, state});
     state.scale = Scale(state);
     state.axis.compute = axis.compute;
-    state.axis.overlapMask = axis.overlapMask;
+    state.axis.computeOverlapMask = axis.computeOverlapMask;
     state.render = render(state);
 
     //Populate main object

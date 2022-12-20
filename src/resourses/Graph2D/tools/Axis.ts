@@ -233,9 +233,6 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .attr("x2", 0.5)
             .attr("y1", canvasHeight-state.config.marginBottom-2)
             .attr("y2", canvasHeight);
-
-        //Aplies the mask if needed
-        if(!state.axis.axisOverlap) computeOverlapMask();
     }
  
 //---------------------------------------------------------
@@ -316,69 +313,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 //---------------------------------------------------------
 //---------------------- Mask -----------------------------
 
-    function computeOverlapMask(){
-        if(state.axis.axisOverlap) return;
-
-        state.canvas    //Remove Previous mask
-            .selectAll("mask.Graph2D_Overlap_Mask")
-            .remove();
-
-        const yMask = state.canvas
-                        .select("g.Graph2D_AxisY")
-                        .append("mask")
-                        .classed("Graph2D_Overlap_Mask", true);
-
-        state.canvas    
-            .select("g.Graph2D_AxisY")
-            .selectAll("g.tick")
-            .each((d,i,nodes)=>{
-                const tick = nodes[i] as SVGGElement;
-                const size = tick.getBBox();
-                const position = select(tick)
-                                    .attr("transform")
-                                    .replace("translate(", "")
-                                    .replace(")", "")
-                                    .split(",");
-
-                const labelSize = (select(tick)
-                                    .select("text")
-                                    .node() as SVGTextElement)
-                                    .getBBox();
-
-                const labelPosition = select(tick)
-                                        .select("text")
-                                        .attr("transform")
-                                        .replace("translate(", "")
-                                        .replace(")", "")
-                                        .split(",");
-                
-                const absolutePosition : Array<number> = [0,0];
-                const relativePosition : Array<number> = [0,0];
-
-                if(position != null){
-                    absolutePosition[0] = parseFloat(position[0]);
-                    absolutePosition[1] = parseFloat(position[1]);
-                }
-
-                if(labelPosition != null){
-                    absolutePosition[0] += parseFloat(labelPosition[0]);
-                    absolutePosition[1] += parseFloat(labelPosition[1]);
-                    relativePosition 
-                }
-
-
-                select(tick)
-                    .append("mask")
-                    .classed("Graph2D_Overlap_Mask", true)
-                    .append("rect")
-                    .attr("fill", "#ffffff")
-                    .attr("width", size.width)
-                    .attr("height", size.height);
-
-            });
-
-        
-    }
+    
 //---------------------------------------------------------
 //---------------------------------------------------------
 
@@ -602,7 +537,6 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     return {
         compute,
-        computeOverlapMask,
         axisType,
         getAxisType,
         axisPosition,

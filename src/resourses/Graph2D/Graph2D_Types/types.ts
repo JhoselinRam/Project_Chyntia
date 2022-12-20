@@ -41,7 +41,8 @@ export type Grapg2D_State = {
         xAxisOverlap : boolean,
         yAxisOverlap : boolean,
         overlapPriority : "X" | "Y" | "none",
-        compute ?: ()=>void
+        compute ?: ()=>void,
+        computeMask ?: ()=>void
     },
     grid : {
         main : {
@@ -120,6 +121,7 @@ export type _GetScale_Type = {
 
 export type Axis_Type = {
     compute : ()=>void,
+    computeMask : ()=>void,
     axisType : (arg0:Graph2D_AxisType)=>Graph2D_Type,
     getAxisType : ()=>Graph2D_AxisType,
     axisPosition : (arg0:Graph2D_AxisPosition)=>Graph2D_Type,

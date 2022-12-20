@@ -120,7 +120,9 @@ export default function Home() {
 
   function changeCenterX(e:ChangeEvent){
     const position = parseFloat((e.target as HTMLInputElement).value);
+
     Graph.center({x:position});
+
   }
   
   function changeCenterY(e:ChangeEvent){

@@ -1,6 +1,7 @@
-import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, sort, BaseType } from "d3";
+import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, Selection, BaseType } from "d3";
+import { isGeneratorFunction } from "util/types";
 import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D";
-import { Axis_Type, Define_Mask_Props, Method_Generator_Props } from "../Graph2D_Types/types";
+import { Axis_Type, Method_Generator_Props } from "../Graph2D_Types/types";
 
 function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
     let axisX : Axis<NumberValue>
@@ -233,6 +234,10 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .attr("x2", 0.5)
             .attr("y1", canvasHeight-state.config.marginBottom-2)
             .attr("y2", canvasHeight);
+
+
+            //Computes the mask for axis overlap
+        computeMask();
     }
  
 //---------------------------------------------------------
@@ -313,7 +318,130 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 //---------------------------------------------------------
 //---------------------- Mask -----------------------------
 
+    function computeMask(){
+        //Detach the old mask
+        (state.canvas
+            .select("g.Graph2D_Axis")
+            .node() as SVGGElement)
+            .removeAttribute("mask");
+        
+        (state.canvas
+            .select("g.Graph2D_Grid")
+            .node() as SVGGElement)
+            .removeAttribute("mask");
+
+        //Delete the old mask
+        state.canvas
+            .select("defs")
+            .select("g.Graph2D_Mask")
+            .remove();
+
+        state.canvas
+            .select("g.Graph2D_Axis_Proxy")
+            .remove();
+
+        //Guard conditions
+        if(state.axis.position != "center") return;
+        if(state.axis.xAxisOverlap && state.axis.yAxisOverlap) return;
+
+        state.canvas
+            .select("defs")
+            .append("g")
+            .classed("Graph2D_Mask", true);
+
+        const size = (state.canvas
+                        .select("rect.Graph2D_Background")
+                        .node() as SVGRectElement)
+                        .getBBox();
+        
+        //Declare the new masks
+        state.canvas
+            .select("g.Graph2D_Mask")
+            .append("mask")
+            .classed("Graph2D_Full_Mask", true)
+            .attr("id", `Graph2D_Full_Mask_${state.graphID}`)
+            .append("rect")
+            .attr("fill", "#ffffff")
+            .attr("width", size.width)
+            .attr("height", size.height);
     
+        state.canvas
+            .select("g.Graph2D_Mask")
+            .append("mask")
+            .classed("Graph2D_Partial_Mask", true)
+            .attr("id", `Graph2D_Partial_Mask_${state.graphID}`)
+            .append("rect")
+            .attr("fill", "#ffffff")
+            .attr("width", size.width)
+            .attr("height", size.height);
+
+        if(!state.axis.xAxisOverlap)
+            getLabelPositions("X");
+        if(!state.axis.yAxisOverlap)
+            getLabelPositions("Y");
+        
+    
+        
+
+
+        //Attach the new mask
+        state.canvas
+            .select("g.Graph2D_Grid")
+            .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
+            
+        state.canvas
+            .select("g.Graph2D_Axis")
+            .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
+    
+    
+    }    
+
+
+    function getLabelPositions(axis : "X"|"Y"){
+        const groupPosition = extractPosition(state.canvas.select(`g.Graph2D_Axis${axis}`));
+
+        state.canvas
+            .select(`g.Graph2D_Axis${axis}`)
+            .selectAll("g.tick")
+            .each((d,i,nodes)=>{
+                const tick = nodes[i] as SVGGElement;
+                if(select(tick).attr("visibility") === "hidden") return;
+
+                const size = (select(tick)
+                                .select("text")
+                                .node() as SVGTextElement)
+                                .getBBox();
+                
+                const tickPosition = extractPosition(select(nodes[i]));    
+                const labelPosition = extractPosition(select(tick).select("text"));
+                const finalPosition = [groupPosition[0]+tickPosition[0]+labelPosition[0], groupPosition[1]+tickPosition[1]+labelPosition[1]];
+                
+                state.canvas
+                    .select("mask.Graph2D_Full_Mask")
+                    .append("rect")
+                    .attr("fill", "#00000")
+                    .attr("x", size.x-1)
+                    .attr("y", size.y-1)
+                    .attr("width", size.width+2)
+                    .attr("height", size.height+2)
+                    .attr("transform", `translate(${finalPosition[0]}, ${finalPosition[1]})`);
+                });
+
+    }
+
+    function extractPosition(element : Selection<BaseType, unknown, null, undefined>) : [number, number]{
+        const position : [number, number] = [0,0];
+        const elementTransform = element.attr("transform");
+
+        if(elementTransform != null){
+            const extractedPosition = elementTransform.replace("translate(","").replace(")","").split(",");
+            position[0] = parseFloat(extractedPosition[0]);
+            position[1] = parseFloat(extractedPosition[1]);
+        }
+
+        return position;
+    }
+
 //---------------------------------------------------------
 //---------------------------------------------------------
 
@@ -537,6 +665,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     return {
         compute,
+        computeMask,
         axisType,
         getAxisType,
         axisPosition,

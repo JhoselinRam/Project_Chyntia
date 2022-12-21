@@ -42,7 +42,6 @@ export type Grapg2D_State = {
         yAxisOverlap : boolean,
         overlapPriority : "X" | "Y" | "none",
         compute ?: ()=>void,
-        computeMask ?: ()=>void
     },
     grid : {
         main : {
@@ -121,7 +120,6 @@ export type _GetScale_Type = {
 
 export type Axis_Type = {
     compute : ()=>void,
-    computeMask : ()=>void,
     axisType : (arg0:Graph2D_AxisType)=>Graph2D_Type,
     getAxisType : ()=>Graph2D_AxisType,
     axisPosition : (arg0:Graph2D_AxisPosition)=>Graph2D_Type,
@@ -136,6 +134,25 @@ export type Define_Mask_Props = {
     tick : SVGGElement, 
     initCoords:Array<string>,
     mask : string
+}
+
+export type Compute_Mask_Props = {
+    tick : SVGGElement,
+    translationX : number,
+    translationY : number,
+    labelTranslationX : number,
+    labelTranslationY : number,
+    axis : "x" | "y",
+    label : string
+}
+
+export type Set_Proxi_Props = {
+    tick : SVGGElement,
+    axis : "x" | "y",
+    label : string,
+    absolutePositionX : number,
+    absolutePositionY : number,
+    labelSize : DOMRect
 }
 
 //---------------------------------------------------------

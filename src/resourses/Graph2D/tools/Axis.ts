@@ -1,7 +1,7 @@
 import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, Selection, BaseType } from "d3";
 import { isGeneratorFunction } from "util/types";
 import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D";
-import { Axis_Type, Method_Generator_Props } from "../Graph2D_Types/types";
+import { Axis_Type, Compute_Mask_Props, Method_Generator_Props, Set_Proxi_Props } from "../Graph2D_Types/types";
 
 function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
     let axisX : Axis<NumberValue>
@@ -24,7 +24,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .remove();
 
         state.canvas
-            .select("g.Graph2D_Axis_Proxy")
+            .select("g.Graph2D_Axis_Proxi")
             .remove();
 
         if(state.axis.position==="center" || state.axis.position==="bottom-left" || state.axis.position==="bottom-right")    axisX = axisBottom(state.scale.inner.x);
@@ -52,12 +52,13 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                             .node() as SVGGElement)
                             .getBBox()
                             .width;
-        
+     
         const canvasWidth = (state.canvas
                                 .select("rect.Graph2D_Background")
                                 .node() as SVGRectElement)
                                 .getBBox()
                                 .width;
+
         const canvasHeight = (state.canvas
                                 .select("rect.Graph2D_Background")
                                 .node() as SVGRectElement)
@@ -170,53 +171,8 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             }
         }
         
-        //Computes the axis overlap mask
-
-        state.canvas    //Create the new mask
-            .select("defs")
-            .append("g")
-            .classed("Graph2D_Mask", true)
-            .append("mask")
-            .classed("Graph2D_Full_Mask", true)
-            .attr("id", `Graph2D_Full_Mask_${state.graphID}`)
-            .append("rect")
-            .attr("fill", "#ffffff")
-            .attr("width", canvasWidth)
-            .attr("height", canvasHeight);
-    
-        state.canvas
-            .select("g.Graph2D_Mask")
-            .append("mask")
-            .classed("Graph2D_Partial_Mask", true)
-            .attr("id", `Graph2D_Partial_Mask_${state.graphID}`)
-            .append("rect")
-            .attr("fill", "#ffffff")
-            .attr("width", canvasWidth)
-            .attr("height", canvasHeight);
-
-        state.canvas
-            .append("g")
-            .classed("Graph2D_Axis_Proxy", true);
-
-        //Attach the new mask
-        state.canvas
-            .select("g.Graph2D_Grid")
-            .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
-            
-        state.canvas
-            .select("g.Graph2D_Axis")
-            .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
-
-
-        const proxyX = state.canvas
-                        .select("g.Graph2D_Axis_Proxy")
-                        .append("g")
-                        .classed("Graph2D_ProxiX", true);
-
-        const proxyY = state.canvas
-                        .select("g.Graph2D_Axis_Proxy")
-                        .append("g")
-                        .classed("Graph2D_ProxiY", true)
+        if(state.background.bgOpacity < 1)
+            setupMask(canvasWidth, canvasHeight);
 
 
         //Computes translation, tick increase and mask positions
@@ -245,75 +201,19 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 }
 
                 if(state.axis.xAxisOverlap) return;
-
-                const tickPosition = extractPosition(select(nodes[i]));
-                const labelSize = (select(tick)
-                                    .select("text")
-                                    .node() as SVGTextElement)
-                                    .getBBox();
                 
-                const absolutPositionX = tickPosition[0];
-                const absolutPositionY = translationY + tickPosition[1] + labelTranslationY;
-
-                state.canvas
-                    .select("mask.Graph2D_Full_Mask")
-                    .append("rect")
-                    .attr("fill", "#00000")
-                    .attr("x", labelSize.x-1)
-                    .attr("y", labelSize.y-1)
-                    .attr("width", labelSize.width+2)
-                    .attr("height", labelSize.height+2)
-                    .attr("transform", `translate(${absolutPositionX}, ${absolutPositionY})`);
-
-
-                //Set the proxy axis
-                const font_size = state.canvas
-                                    .select("g.Graph2D_AxisX")
-                                    .attr("font-size");
-                                    
-                const font_family = state.canvas
-                                    .select("g.Graph2D_AxisX")
-                                    .attr("font-family");
-
-                const text_anchor = state.canvas
-                                    .select("g.Graph2D_AxisX")
-                                    .attr("text-anchor");
-                
-                const dy = select(tick)
-                            .select("text")
-                            .attr("dy");
-
-                const y = select(tick)
-                            .select("text")
-                            .attr("y");
-                proxyX
-                    .attr("font-size", font_size)
-                    .attr("font-family", font_family)
-                    .attr("text-anchor", text_anchor)
-                    .append("text")
-                    .attr("fill", state.axis.xLabelColor)
-                    .attr("opacity", state.axis.xLabelOpacity)
-                    .attr("y", y)
-                    .attr("dy", dy)
-                    .attr("transform", `translate(${absolutPositionX}, ${absolutPositionY})`)
-                    .text(label);
-
-                if(state.axis.overlapPriority === "X"){
-                    state.canvas
-                        .select("mask.Graph2D_Partial_Mask")
-                        .append("rect")
-                        .attr("fill", "#00000")
-                        .attr("x", labelSize.x-1)
-                        .attr("y", labelSize.y-1)
-                        .attr("width", labelSize.width+2)
-                        .attr("height", labelSize.height+2)
-                        .attr("transform", `translate(${absolutPositionX}, ${absolutPositionY})`);
-                
-                    state.canvas
-                        .select("g.Graph2D_ProxiY")
-                        .attr("mask", `url(#Graph2D_Partial_Mask_${state.graphID})`);
-                }
-
+                if(state.background.bgOpacity === 1)
+                    computeLabelBackground();
+                else
+                    computeMask({
+                        tick,
+                        translationX : 0,
+                        translationY,
+                        labelTranslationX : 0,
+                        labelTranslationY,
+                        axis : "x",
+                        label
+                    });
             });
 
         state.canvas
@@ -341,76 +241,18 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 }
 
                 if(state.axis.yAxisOverlap) return;
-
-                const tickPosition = extractPosition(select(nodes[i]));
-                const labelSize = (select(tick)
-                                    .select("text")
-                                    .node() as SVGTextElement)
-                                    .getBBox();
-                
-                const absolutPositionX = translationX + tickPosition[0] + labelTranslationX;
-                const absolutPositionY = tickPosition[1];
-
-                state.canvas
-                    .select("mask.Graph2D_Full_Mask")
-                    .append("rect")
-                    .attr("fill", "#00000")
-                    .attr("x", labelSize.x-1)
-                    .attr("y", labelSize.y-1)
-                    .attr("width", labelSize.width+2)
-                    .attr("height", labelSize.height+2)
-                    .attr("transform", `translate(${absolutPositionX}, ${absolutPositionY})`);
-
-
-                //Set the proxy axis
-                const font_size = state.canvas
-                    .select("g.Graph2D_AxisX")
-                    .attr("font-size");
-                    
-                const font_family = state.canvas
-                                    .select("g.Graph2D_AxisY")
-                                    .attr("font-family");
-
-                const text_anchor = state.canvas
-                                    .select("g.Graph2D_AxisY")
-                                    .attr("text-anchor");
-
-                const dy = select(tick)
-                            .select("text")
-                            .attr("dy");
-
-                const x = select(tick)
-                            .select("text")
-                            .attr("x");
-
-                proxyY
-                    .attr("font-size", font_size)
-                    .attr("font-family", font_family)
-                    .attr("text-anchor", text_anchor)
-                    .append("text")
-                    .attr("fill", state.axis.yLabelColor)
-                    .attr("opacity", state.axis.yLabelOpacity)
-                    .attr("x", x)
-                    .attr("dy", dy)
-                    .attr("transform", `translate(${absolutPositionX}, ${absolutPositionY})`)
-                    .text(label);
-
-                if(state.axis.overlapPriority === "Y"){
-                    state.canvas
-                        .select("mask.Graph2D_Partial_Mask")
-                        .append("rect")
-                        .attr("fill", "#00000")
-                        .attr("x", labelSize.x-1)
-                        .attr("y", labelSize.y-1)
-                        .attr("width", labelSize.width+2)
-                        .attr("height", labelSize.height+2)
-                        .attr("transform", `translate(${absolutPositionX}, ${absolutPositionY})`);
-
-                    state.canvas
-                        .select("g.Graph2D_ProxiX")
-                        .attr("mask", `url(#Graph2D_Partial_Mask_${state.graphID})`);
-                }
-
+                if(state.background.bgOpacity === 1)
+                    computeLabelBackground();
+                else
+                    computeMask({
+                        tick,
+                        translationX,
+                        translationY : 0,
+                        labelTranslationX,
+                        labelTranslationY : 0,
+                        axis : "y",
+                        label
+                    });
             });
 
         //Creates little axis extensions to cover the margins
@@ -463,6 +305,167 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     }
  
+//---------------------- Aux Center Functions  ----------------------
+
+    function computeLabelBackground(){
+        
+    }
+
+    //---------------------------------------------------------
+
+    function computeMask({tick, translationX, translationY, labelTranslationX, labelTranslationY, axis, label} : Compute_Mask_Props){
+        const tickPosition = extractPosition(tick);
+        const labelSize = (select(tick)
+                            .select("text")
+                            .node() as SVGTextElement)
+                            .getBBox();
+        
+        const absolutePositionX = translationX + tickPosition[0] + labelTranslationX;
+        const absolutePositionY = translationY + tickPosition[1] + labelTranslationY;
+
+        state.canvas
+            .select("mask.Graph2D_Full_Mask")
+            .append("rect")
+            .attr("fill", "#00000")
+            .attr("x", labelSize.x-1)
+            .attr("y", labelSize.y-1)
+            .attr("width", labelSize.width+2)
+            .attr("height", labelSize.height+2)
+            .attr("transform", `translate(${absolutePositionX}, ${absolutePositionY})`);
+
+        setProxi({
+            tick,
+            axis,
+            label,
+            absolutePositionX,
+            absolutePositionY,
+            labelSize
+        })
+    }
+
+    //---------------------------------------------------------
+
+    function setProxi({tick, axis, label, absolutePositionX, absolutePositionY, labelSize} : Set_Proxi_Props){
+        const font_size = state.canvas
+        .select(`g.Graph2D_Axis${axis.toUpperCase()}`)
+        .attr("font-size");
+        
+        const font_family = state.canvas
+                .select(`g.Graph2D_Axis${axis.toUpperCase()}`)
+                .attr("font-family");
+
+        const text_anchor = state.canvas
+                .select(`g.Graph2D_Axis${axis.toUpperCase()}`)
+                .attr("text-anchor");
+
+        const dy = select(tick)
+            .select("text")
+            .attr("dy");
+        
+        const position = select(tick)
+            .select("text")
+            .attr(`${"x"}`);
+
+        console.log(position);
+
+        state.canvas
+            .select(`g.Graph2D_Proxi${axis.toUpperCase()}`)
+            .attr("font-size", font_size)
+            .attr("font-family", font_family)
+            .attr("text-anchor", text_anchor)
+            .append("text")
+            .attr("fill", state.axis.xLabelColor)
+            .attr("opacity", state.axis.xLabelOpacity)
+            .attr(axis, position)
+            .attr("dy", dy)
+            .attr("transform", `translate(${absolutePositionX}, ${absolutePositionY})`)
+            .text(label);
+
+        if(state.axis.overlapPriority === axis.toUpperCase()){
+            state.canvas
+                .select("mask.Graph2D_Partial_Mask")
+                .append("rect")
+                .attr("fill", "#00000")
+                .attr("x", labelSize.x-1)
+                .attr("y", labelSize.y-1)
+                .attr("width", labelSize.width+2)
+                .attr("height", labelSize.height+2)
+                .attr("transform", `translate(${absolutePositionX}, ${absolutePositionY})`);
+        
+            state.canvas
+                .select(`g.Graph2D_Proxi${axis==="x"?"Y":"X"}`)
+                .attr("mask", `url(#Graph2D_Partial_Mask_${state.graphID})`);
+        }
+    }
+
+    //---------------------------------------------------------
+    
+    function setupMask(canvasWidth:number, canvasHeight:number){
+        state.canvas    //Create the new mask
+            .select("defs")
+            .append("g")
+            .classed("Graph2D_Mask", true)
+            .append("mask")
+            .classed("Graph2D_Full_Mask", true)
+            .attr("id", `Graph2D_Full_Mask_${state.graphID}`)
+            .append("rect")
+            .attr("fill", "#ffffff")
+            .attr("width", canvasWidth)
+            .attr("height", canvasHeight);
+    
+        state.canvas
+            .select("g.Graph2D_Mask")
+            .append("mask")
+            .classed("Graph2D_Partial_Mask", true)
+            .attr("id", `Graph2D_Partial_Mask_${state.graphID}`)
+            .append("rect")
+            .attr("fill", "#ffffff")
+            .attr("width", canvasWidth)
+            .attr("height", canvasHeight);
+
+        state.canvas
+            .append("g")
+            .classed("Graph2D_Axis_Proxi", true);
+
+        //Attach the new mask
+        state.canvas
+            .select("g.Graph2D_Grid")
+            .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
+            
+        state.canvas
+            .select("g.Graph2D_Axis")
+            .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
+
+        //Create a proxi axis to render on top of the mask
+        state.canvas
+            .select("g.Graph2D_Axis_Proxi")
+            .append("g")
+            .classed("Graph2D_ProxiX", true);
+
+        state.canvas
+            .select("g.Graph2D_Axis_Proxi")
+            .append("g")
+            .classed("Graph2D_ProxiY", true);
+    }
+
+    //---------------------------------------------------------
+
+    function extractPosition(element :SVGGElement) : [number, number]{
+        const position : [number, number] = [0,0];
+        const elementTransform = select(element).attr("transform");
+
+        if(elementTransform != null){
+            const extractedPosition = elementTransform.replace("translate(","").replace(")","").split(",");
+            position[0] = parseFloat(extractedPosition[0]);
+            position[1] = parseFloat(extractedPosition[1]);
+        }
+
+        return position;
+    }
+
+    //---------------------------------------------------------
+
+
 //---------------------------------------------------------
 //---------------------- Non-center  ----------------------
 
@@ -536,133 +539,6 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .attr("x2", 0.5)
             .attr("y1", extensionYStart)
             .attr("y2", extensionYEnd);
-    }
-
-//---------------------------------------------------------
-//---------------------- Mask -----------------------------
-
-    function computeMask(){
-        //Detach the old mask
-        (state.canvas
-            .select("g.Graph2D_Axis")
-            .node() as SVGGElement)
-            .removeAttribute("mask");
-        
-        (state.canvas
-            .select("g.Graph2D_Grid")
-            .node() as SVGGElement)
-            .removeAttribute("mask");
-
-        //Delete the old mask
-        state.canvas
-            .select("defs")
-            .select("g.Graph2D_Mask")
-            .remove();
-
-        state.canvas
-            .select("g.Graph2D_Axis_Proxy")
-            .remove();
-
-        //Guard conditions
-        if(state.axis.position != "center") return;
-        if(state.axis.xAxisOverlap && state.axis.yAxisOverlap) return;
-
-        state.canvas
-            .select("defs")
-            .append("g")
-            .classed("Graph2D_Mask", true);
-
-        const size = (state.canvas
-                        .select("rect.Graph2D_Background")
-                        .node() as SVGRectElement)
-                        .getBBox();
-        
-        //Declare the new masks
-        state.canvas
-            .select("g.Graph2D_Mask")
-            .append("mask")
-            .classed("Graph2D_Full_Mask", true)
-            .attr("id", `Graph2D_Full_Mask_${state.graphID}`)
-            .append("rect")
-            .attr("fill", "#ffffff")
-            .attr("width", size.width)
-            .attr("height", size.height);
-    
-        state.canvas
-            .select("g.Graph2D_Mask")
-            .append("mask")
-            .classed("Graph2D_Partial_Mask", true)
-            .attr("id", `Graph2D_Partial_Mask_${state.graphID}`)
-            .append("rect")
-            .attr("fill", "#ffffff")
-            .attr("width", size.width)
-            .attr("height", size.height);
-
-        if(!state.axis.xAxisOverlap)
-            getLabelPositions("X");
-        if(!state.axis.yAxisOverlap)
-            getLabelPositions("Y");
-        
-    
-        
-
-
-        //Attach the new mask
-        state.canvas
-            .select("g.Graph2D_Grid")
-            .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
-            
-        state.canvas
-            .select("g.Graph2D_Axis")
-            .attr("mask", `url(#Graph2D_Full_Mask_${state.graphID})`);
-    
-    
-    }    
-
-
-    function getLabelPositions(axis : "X"|"Y"){
-        const groupPosition = extractPosition(state.canvas.select(`g.Graph2D_Axis${axis}`));
-
-        state.canvas
-            .select(`g.Graph2D_Axis${axis}`)
-            .selectAll("g.tick")
-            .each((d,i,nodes)=>{
-                const tick = nodes[i] as SVGGElement;
-                if(select(tick).attr("visibility") === "hidden") return;
-
-                const size = (select(tick)
-                                .select("text")
-                                .node() as SVGTextElement)
-                                .getBBox();
-                
-                const tickPosition = extractPosition(select(nodes[i]));    
-                const labelPosition = extractPosition(select(tick).select("text"));
-                const finalPosition = [groupPosition[0]+tickPosition[0]+labelPosition[0], groupPosition[1]+tickPosition[1]+labelPosition[1]];
-                
-                state.canvas
-                    .select("mask.Graph2D_Full_Mask")
-                    .append("rect")
-                    .attr("fill", "#00000")
-                    .attr("x", size.x-1)
-                    .attr("y", size.y-1)
-                    .attr("width", size.width+2)
-                    .attr("height", size.height+2)
-                    .attr("transform", `translate(${finalPosition[0]}, ${finalPosition[1]})`);
-                });
-
-    }
-
-    function extractPosition(element : Selection<BaseType, unknown, null, undefined>) : [number, number]{
-        const position : [number, number] = [0,0];
-        const elementTransform = element.attr("transform");
-
-        if(elementTransform != null){
-            const extractedPosition = elementTransform.replace("translate(","").replace(")","").split(",");
-            position[0] = parseFloat(extractedPosition[0]);
-            position[1] = parseFloat(extractedPosition[1]);
-        }
-
-        return position;
     }
 
 //---------------------------------------------------------
@@ -908,7 +784,6 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     return {
         compute,
-        computeMask,
         axisType,
         getAxisType,
         axisPosition,

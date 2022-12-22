@@ -364,7 +364,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         
         const position = select(tick)
             .select("text")
-            .attr(`${"x"}`);
+            .attr(axis==="x"?"y":"x");
 
         console.log(position);
 
@@ -376,7 +376,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             .append("text")
             .attr("fill", state.axis.xLabelColor)
             .attr("opacity", state.axis.xLabelOpacity)
-            .attr(axis, position)
+            .attr(axis==="x"?"y":"x", position)
             .attr("dy", dy)
             .attr("transform", `translate(${absolutePositionX}, ${absolutePositionY})`)
             .text(label);

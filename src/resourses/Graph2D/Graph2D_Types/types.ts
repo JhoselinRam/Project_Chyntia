@@ -46,9 +46,11 @@ export type Grapg2D_State = {
     grid : {
         main : {
             compute ?: ()=>void,
+            xEnabled : boolean,
             xColor : string,
             xOpacity : number,
             xStyle : Graph2D_LineStyle,
+            yEnabled : boolean,
             yColor : string,
             yOpacity : number,
             yStyle : Graph2D_LineStyle
@@ -56,8 +58,10 @@ export type Grapg2D_State = {
         aux : {
             compute ?: ()=>void,
             xColor : string,
+            xEnabled : boolean,
             xOpacity : number,
             xStyle : Graph2D_LineStyle,
+            yEnabled : boolean,
             yColor : string,
             yOpacity : number,
             yStyle : Graph2D_LineStyle
@@ -128,7 +132,13 @@ export type Axis_Type = {
     getAxisColor :  ()=>Axis_Color_Options,
     axisOpacity : (arg0:Axis_Opacity_Options)=>Graph2D_Type,
     getAxisOpacity : ()=>Axis_Opacity_Options
-};
+}
+
+export type Compute_Background_Props = {
+    tick : SVGGElement,
+    labelTranslationX : number,
+    labelTranslationY : number
+}
 
 export type Define_Mask_Props = {
     tick : SVGGElement, 

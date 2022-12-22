@@ -29,8 +29,8 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
             yAxisContained : true,
             xLabelDynamic : true,
             yLabelDynamic : true,
-            xUnit : null,
-            yUnit : null,
+            xUnit : "s",
+            yUnit : "m/s",
             xAxisColor : "#000000", //Black
             xAxisOpacity : 1,
             yAxisColor : "#000000", //Black
@@ -45,21 +45,25 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
             yLabelOpacity: 1,
             xAxisOverlap : false,
             yAxisOverlap : false,
-            overlapPriority : "Y"
+            overlapPriority : "X"
         },
         grid : {
             main : {
+                xEnabled : true,
                 xColor : "#000000",
                 xOpacity : 0.5,
                 xStyle : "solid",
+                yEnabled : true,
                 yColor : "#00000",
                 yOpacity : 0.5,
                 yStyle : "solid"
             },
             aux : {
+                xEnabled : true,
                 xColor : "#000000",
                 xOpacity : 0.2,
                 xStyle : "doted",
+                yEnabled : true,
                 yColor : "#000000",
                 yOpacity : 0.2,
                 yStyle : "doted"

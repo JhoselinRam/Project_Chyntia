@@ -1,7 +1,7 @@
 import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, Selection, BaseType } from "d3";
 import { isGeneratorFunction } from "util/types";
 import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D";
-import { Axis_Type, Compute_Mask_Props, Method_Generator_Props, Set_Proxi_Props } from "../Graph2D_Types/types";
+import { Axis_Type, Compute_Background_Props, Compute_Mask_Props, Method_Generator_Props, Set_Proxi_Props } from "../Graph2D_Types/types";
 
 function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
     let axisX : Axis<NumberValue>
@@ -37,14 +37,6 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         axisY.tickSizeOuter(0);
 
         //Generate the new axis and save its size
-        const axisHeight = (axisGroup
-                            .append("g")
-                            .classed("Graph2D_AxisX", true)
-                            .call(axisX)
-                            .node() as SVGGElement)
-                            .getBBox()
-                            .height;
-            
         const axisWidth = (axisGroup
                             .append("g")
                             .classed("Graph2D_AxisY", true)
@@ -52,6 +44,14 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                             .node() as SVGGElement)
                             .getBBox()
                             .width;
+            
+        const axisHeight = (axisGroup
+                            .append("g")
+                            .classed("Graph2D_AxisX", true)
+                            .call(axisX)
+                            .node() as SVGGElement)
+                            .getBBox()
+                            .height;
      
         const canvasWidth = (state.canvas
                                 .select("rect.Graph2D_Background")
@@ -193,6 +193,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 const label = select(tick)
                                 .select("text")
                                 .text();
+                                
                      
                 //If is the tick labeled zero, make invisible and dont compute the mask in this position
                 if(parseFloat(label)<tolerance){
@@ -203,7 +204,11 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 if(state.axis.xAxisOverlap) return;
                 
                 if(state.background.bgOpacity === 1)
-                    computeLabelBackground();
+                    computeLabelBackground({
+                        tick,
+                        labelTranslationX : 0,
+                        labelTranslationY
+                    });
                 else
                     computeMask({
                         tick,
@@ -242,7 +247,11 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
                 if(state.axis.yAxisOverlap) return;
                 if(state.background.bgOpacity === 1)
-                    computeLabelBackground();
+                    computeLabelBackground({
+                        tick,
+                        labelTranslationX,
+                        labelTranslationY : 0
+                    });
                 else
                     computeMask({
                         tick,
@@ -254,6 +263,17 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                         label
                     });
             });
+
+        if(!state.axis.yAxisOverlap && 
+            state.axis.overlapPriority==="Y" &&
+            state.background.bgOpacity === 1){
+            const auxData = [1,0];
+            state.canvas
+                .select("g.Graph2D_Axis")
+                .selectChildren()
+                .data(auxData)
+                .sort();
+        }
 
         //Creates little axis extensions to cover the margins
         state.canvas
@@ -307,8 +327,29 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
  
 //---------------------- Aux Center Functions  ----------------------
 
-    function computeLabelBackground(){
-        
+    function computeLabelBackground({tick, labelTranslationX, labelTranslationY} : Compute_Background_Props){
+        const size = (select(tick)
+                        .select("text")
+                        .node() as SVGTextElement)
+                        .getBBox();
+
+        select(tick)    //Create the label background
+            .append("rect")
+            .classed("Graph2D_Label_Background", true)
+            .attr("fill", state.background.bgColor)
+            .attr("opacity", state.background.bgOpacity)
+            .attr("opacity", 1)
+            .attr("x", size.x-1)
+            .attr("y", size.y-1)
+            .attr("width", size.width+2)
+            .attr("height", size.height+2)
+            .attr("transform", `translate(${labelTranslationX}, ${labelTranslationY})`);
+
+        const auxData = [0,2,1] //Aux data to perform a sort
+        select(tick)
+            .selectChildren()
+            .data(auxData)
+            .sort();
     }
 
     //---------------------------------------------------------
@@ -365,8 +406,6 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         const position = select(tick)
             .select("text")
             .attr(axis==="x"?"y":"x");
-
-        console.log(position);
 
         state.canvas
             .select(`g.Graph2D_Proxi${axis.toUpperCase()}`)

@@ -1,6 +1,6 @@
-import { Aux_Grid, Method_Generator_Props, MinMaxCoords_Type } from "../../Graph2D_Types/types";
+import { Aux_Grid, Grid_Method_Generator } from "../../Graph2D_Types/types";
 
-function Aux_Grid({graphHandler, state}:Method_Generator_Props, getMinMaxCoords:()=>MinMaxCoords_Type) : Aux_Grid{
+function Aux_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generator) : Aux_Grid{
 //---------------------------------------------------------
 
     function compute(){

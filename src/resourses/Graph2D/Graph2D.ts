@@ -1,6 +1,6 @@
 import { select } from "d3";
 import { v4 as uuidv4 } from "uuid";
-import { Grapg2D_State } from "./Graph2D_Types/types";
+import { Graph2D_State } from "./Graph2D_Types/types";
 import Axis from "./tools/Axis";
 import Background from "./tools/Background";
 import Config from "./tools/Config";
@@ -14,7 +14,7 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
                     .classed(`Graph2D_Main_Group Graph2D_ID_${graphID}`, true);
     
     //Inner state
-    const state : Grapg2D_State = {
+    const state : Graph2D_State = {
         svg,
         graphID,
         canvas,
@@ -54,7 +54,7 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
                 xOpacity : 0.5,
                 xStyle : "solid",
                 yEnabled : true,
-                yColor : "#00000",
+                yColor : "#000000",
                 yOpacity : 0.5,
                 yStyle : "solid"
             },
@@ -97,6 +97,7 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     state.axis.compute = axis.compute;
     state.grid.main.compute = mainGrid.compute;
     state.grid.aux.compute = auxGrid.compute;
+    state.fullRender = fullRender(state);
     state.render = render(state);
 
     //Populate main object
@@ -155,7 +156,7 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
         .append("g")
         .classed("Graph2D_Data", true);
     
-    state.render();
+    state.fullRender();
 
 
     
@@ -164,11 +165,22 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
 }
 
 //---------------------------------------------------------
+//---------------------- Render ---------------------------
 
-function render(state:Grapg2D_State){
+function render(state:Graph2D_State){
     return function(){
         if(state.scale==null || state.axis.compute==null || state.grid.main.compute==null || state.grid.aux.compute==null) return;
-    
+
+        state.scale.compute();
+        state.axis.compute();
+        state.grid.main.compute();
+        state.grid.aux.compute();
+    }
+}
+
+function fullRender(state:Graph2D_State){
+    return function(){
+
         const svgWidth = state.svg.clientWidth;
         const svgHeight = state.svg.clientHeight;
 
@@ -185,10 +197,7 @@ function render(state:Grapg2D_State){
                 .attr("width" , svgWidth*state.config.relativeWidth)
                 .attr("height", svgHeight*state.config.relativeHeight)
 
-        state.scale.compute();
-        state.axis.compute();
-        state.grid.main.compute();
-        state.grid.aux.compute();
+        render(state)();
     }
 }
 

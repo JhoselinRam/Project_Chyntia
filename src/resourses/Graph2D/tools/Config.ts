@@ -13,15 +13,14 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
 //------------------- Width & Height ----------------------
 
     function size({width, height}:Canvas_Size) : Graph2D_Type{
-        if(state.scale == null || state.axis.compute == null) return graphHandler;
+        if(state.render == null) return graphHandler;
         if(width===state.config.width && height===state.config.height) return graphHandler;
         if(width==null && height==null) return graphHandler;
 
         if(width != null) state.config.width = width;
         if(height != null) state.config.height = height;
 
-        state.scale.compute();
-        state.axis.compute();
+        state.render();
 
         return graphHandler;
     }
@@ -37,14 +36,14 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
 //---------------Relative Width & Height ------------------
 
     function relativeSize({width, height}:Canvas_Size) : Graph2D_Type{
-        if(state.render == null) return graphHandler;
+        if(state.fullRender == null) return graphHandler;
         if(width === state.config.relativeWidth && height === state.config.relativeHeight) return graphHandler;
         if(width==null && height==null) return graphHandler;
 
         if(width != null) state.config.relativeWidth = width < 0 ? 0 : width;
         if(height != null) state.config.relativeHeight = height < 0 ? 0 : height;
 
-        state.render();
+        state.fullRender();
         
         return graphHandler;
 
@@ -61,15 +60,14 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
 //--------------------- Center ----------------------------
 
     function center({x, y}:Center_Type) : Graph2D_Type{
-        if(state.scale == null || state.axis.compute == null) return graphHandler;
+        if(state.render == null) return graphHandler;
         if(x===state.config.centerX && y===state.config.centerY) return graphHandler;
         if(x==null && y==null) return graphHandler;
 
         if(x != null) state.config.centerX = x;
         if(y != null) state.config.centerY = y;
 
-        state.scale.compute();
-        state.axis.compute();
+        state.render();
 
         return graphHandler;
     }   
@@ -85,7 +83,7 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
 //----------------------- Margin --------------------------
 
     function margin({left, right, top, bottom} : Margin_Type) : Graph2D_Type{
-        if(state.scale == null || state.axis.compute == null) return graphHandler;
+        if(state.render == null) return graphHandler;
         if(left === state.config.marginStart && 
            right === state.config.marginEnd &&
            top === state.config.marginTop &&
@@ -97,8 +95,7 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
         if(top!=null) state.config.marginTop = top;
         if(bottom!=null) state.config.marginBottom = bottom;
 
-        state.scale.compute();
-        state.axis.compute();
+        state.render();
 
         return graphHandler;
     }

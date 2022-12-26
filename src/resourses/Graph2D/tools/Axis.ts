@@ -619,12 +619,10 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     function axisType(type : Graph2D_AxisType) : Graph2D_Type{
         if(type === state.axis.type) return graphHandler;
-        if(state.scale == null) return graphHandler;
-        if(state.axis.compute == null) return graphHandler;
+        if(state.render == null) return graphHandler;
 
         state.axis.type = type;
-        state.scale.compute();
-        state.axis.compute();
+        state.render();
 
         return graphHandler;
     }
@@ -638,12 +636,9 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     function axisPosition(position : Graph2D_AxisPosition) : Graph2D_Type{
         if(position === state.axis.position) return graphHandler;
-        if(state.scale == null) return graphHandler;
-        if(state.axis.compute == null) return graphHandler;
-
-        state.axis.position = position;
-        state.scale.compute();
-        state.axis.compute();
+        if(state.render == null) return graphHandler;
+        
+        state.render();
 
         return graphHandler;
     }
@@ -866,7 +861,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 //--------------------- Axis Dynamic ----------------------
 
 function axisDynamic({xContained, yContained, xDynamic, yDynamic}:Axis_Dynamic) : Graph2D_Type{
-    if(state.scale == null || state.axis.compute == null) return graphHandler;
+    if(state.render == null) return graphHandler;
     if(xContained===state.axis.xAxisContained && yContained===state.axis.yAxisContained && xDynamic===state.axis.xLabelDynamic && yDynamic===state.axis.yLabelDynamic) return graphHandler;
     if(xContained==null && yContained==null && xDynamic==null && yDynamic==null) return graphHandler;
 
@@ -875,8 +870,7 @@ function axisDynamic({xContained, yContained, xDynamic, yDynamic}:Axis_Dynamic) 
     if(xDynamic!=null) state.axis.xLabelDynamic = xDynamic;
     if(yDynamic!=null) state.axis.yLabelDynamic = yDynamic;
 
-    state.scale.compute();
-    state.axis.compute();
+    state.render();
 
 
     return graphHandler;
@@ -895,14 +889,14 @@ function getAxisDynamic():Axis_Dynamic{
 //--------------------- Axis Units ------------------------
 
     function axisUnits({x, y}:Axis_Units) : Graph2D_Type{
-        if(state.axis.compute == null) return graphHandler;
+        if(state.render == null) return graphHandler;
         if(x===undefined && y===undefined) return graphHandler; //This time check for undefined instead of null because in this case the value can be set to null
         if(x===state.axis.xUnit && y===state.axis.yUnit) return graphHandler;
 
         if(x!==undefined) state.axis.xUnit = x;
         if(y!==undefined) state.axis.yUnit = y;
 
-        state.axis.compute();
+        state.render();
 
         return graphHandler;
     }

@@ -4,8 +4,9 @@ import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPos
 
 //------------------------- Main ---------------------------
 
-export type Grapg2D_State = {
+export type Graph2D_State = {
     render ?: ()=>void,
+    fullRender ?: ()=>void,
     svg : SVGSVGElement,
     graphID : string,
     canvas : Selection<SVGGElement, unknown, null, undefined>,
@@ -87,7 +88,7 @@ export type Grapg2D_State = {
 
 export type Method_Generator_Props = {
     graphHandler : Graph2D_Type, 
-    state : Grapg2D_State
+    state : Graph2D_State
 }
 
 //---------------------------------------------------------
@@ -196,6 +197,12 @@ export type Config_Type = {
 export type Grid_Type = {
     mainGrid : Main_Grid,
     auxGrid : Aux_Grid
+}
+
+export type Grid_Method_Generator = {
+    state : Graph2D_State,
+    graphHandler : Graph2D_Type,
+    getMinMaxCoords : ()=>MinMaxCoords_Type
 }
 
 export type Main_Grid = {

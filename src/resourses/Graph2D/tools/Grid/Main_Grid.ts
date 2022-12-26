@@ -1,4 +1,5 @@
 import { select } from "d3";
+import { Graph2D_Type, Grid_Enabled } from "../../Graph2D";
 import { Grid_Method_Generator, Main_Grid, Main_Lines_Props} from "../../Graph2D_Types/types";
 
 function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generator) : Main_Grid{
@@ -54,12 +55,17 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
 
         state.canvas
             .select(`g.Graph2D_Axis${axis}`)
-            .selectAll("text")
+            .selectAll("g.tick")
             .each((d,i,nodes)=>{
-                const position = parseFloat(select(nodes[i]).text()
-                                    .replace("−","-")
-                                    .replaceAll(",","")
-                                    .replace(unit,""));
+                const tick = nodes[i] as SVGGElement;
+                if(select(tick).attr("visibility")==="hidden") return;
+
+                const position = parseFloat(select(tick)
+                                            .select("text")
+                                            .text()
+                                            .replace("−","-")
+                                            .replaceAll(",","")
+                                            .replace(unit,""));
                 
                 const {xStart, xEnd, yStart, yEnd} = getLinePosition(axis, position);
 
@@ -67,6 +73,7 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
                     .select(`g.Graph2D_Main_Grid${axis}`)
                     .attr("stroke", color)
                     .attr("opacity", opacity)
+                    .attr("stroke-dasharray", state.lineStyleMap[style])
                     .append("line")
                     .attr("x1", xStart)
                     .attr("x2", xEnd)
@@ -105,9 +112,55 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
     }
 
 //---------------------------------------------------------
+//---------------------------------------------------------
+
+
+
+
+
+/*------------- Customization functions -----------------*/
+
+//---------------------------------------------------------
+//------------------- Main Grid ---------------------------
+
+    function mainGrid({x, y}:Grid_Enabled) : Graph2D_Type{
+        if(state.grid.main.compute == null) return graphHandler;
+        if(x == null && y == null) return graphHandler;
+        if(x===state.grid.main.xEnabled && y===state.grid.main.yEnabled) return graphHandler;
+
+        if(x != null) state.grid.main.xEnabled = x;
+        if(y != null) state.grid.main.yEnabled = y;
+        
+        state.grid.main.compute();
+
+
+        return graphHandler;
+    }
+
+    function getMainGrid():Grid_Enabled{
+        return {
+            x : state.grid.main.xEnabled,
+            y : state.grid.main.yEnabled
+        }
+    }
+
+//---------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
 
     return {
-        compute
+        compute,
+        mainGrid,
+        getMainGrid
     };
 }
 

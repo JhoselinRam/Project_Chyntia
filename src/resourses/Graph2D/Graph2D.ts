@@ -1,6 +1,6 @@
 import { select } from "d3";
 import { v4 as uuidv4 } from "uuid";
-import { Graph2D_State } from "./Graph2D_Types/types";
+import { Graph2D_State, Line_Style_Map } from "./Graph2D_Types/types";
 import Axis from "./tools/Axis";
 import Background from "./tools/Background";
 import Config from "./tools/Config";
@@ -12,12 +12,19 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     const canvas = select(svg)
                     .append("g")
                     .classed(`Graph2D_Main_Group Graph2D_ID_${graphID}`, true);
-    
+    const lineStyleMap : Line_Style_Map = {
+        solid : "",
+        dashed : "5 2",
+        doted : "2 2",
+        "dash-dot" : "5 2 2 2",
+        "dash-2dot" : "5 2 2 2 2 2"
+    }
     //Inner state
     const state : Graph2D_State = {
         svg,
         graphID,
         canvas,
+        lineStyleMap,
         background : {
             bgColor : "#ffffff",   //white
             bgOpacity : 1
@@ -51,11 +58,11 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
             main : {
                 xEnabled : true,
                 xColor : "#000000",
-                xOpacity : 0.5,
+                xOpacity : 0.3,
                 xStyle : "solid",
                 yEnabled : true,
                 yColor : "#000000",
-                yOpacity : 0.5,
+                yOpacity : 0.3,
                 yStyle : "solid"
             },
             aux : {
@@ -130,6 +137,8 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getMargin = config.getMargin;
     graphHandler.relativePosition = config.relativePosition;
     graphHandler.getRelativePosition = config.getRelativePosition;
+    graphHandler.mainGrid = mainGrid.mainGrid;
+    graphHandler.getMainGrid = mainGrid.getMainGrid;
     
     
     //Setup configuration  
@@ -241,7 +250,9 @@ export type Graph2D_Type = {
     axisOverlap : (arg0:Axis_Overlap)=>Graph2D_Type,
     getAxisOverlap : ()=>Axis_Overlap,
     axisUnits : (arg0:Axis_Units)=>Graph2D_Type,
-    getAxisUnits : ()=>Axis_Units
+    getAxisUnits : ()=>Axis_Units,
+    mainGrid : (arg0:Grid_Enabled)=>Graph2D_Type,
+    getMainGrid : ()=>Grid_Enabled
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -311,4 +322,9 @@ export type Axis_Overlap = {
 export type Axis_Units = {
     x ?: string | null,
     y ?: string | null 
+}
+
+export type Grid_Enabled = {
+    x ?: boolean,
+    y ?: boolean
 }

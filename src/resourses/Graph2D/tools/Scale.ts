@@ -1,7 +1,7 @@
 import { scaleLinear, axisBottom, axisLeft, axisRight, axisTop, Selection, select } from "d3";
-import { Grapg2D_State, Scale_Type, GetScale_Type } from "../Graph2D_Types/types";
+import { Graph2D_State, Scale_Type, GetScale_Type } from "../Graph2D_Types/types";
 
-function Scale(state : Grapg2D_State) : Scale_Type{
+function Scale(state : Graph2D_State) : Scale_Type{
     let inner = {x:scaleLinear(), y:scaleLinear()};
     let reference = {x:scaleLinear(), y:scaleLinear()};
     

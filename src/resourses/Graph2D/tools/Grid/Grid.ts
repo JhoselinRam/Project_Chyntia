@@ -35,38 +35,38 @@ function getMinMaxCoords() : MinMaxCoords_Type{
 
     switch(state.axis.position){
         case "center":
-            xMin = state.config.marginStart;
-            xMax = canvasWidth - state.config.marginEnd;
-            yMin = state.config.marginTop;
-            yMax = canvasHeight - state.config.marginBottom;
+            xMin = 0;
+            xMax = canvasWidth;
+            yMin = 0;
+            yMax = canvasHeight;
             break;
 
         case "bottom-left":
             xMin = axisWidth + state.config.marginStart;
-            xMax = canvasWidth - state.config.marginEnd;
-            yMin = state.config.marginTop;
+            xMax = canvasWidth;
+            yMin = 0;
             yMax = canvasHeight - axisHeight - state.config.marginBottom;
             break;
 
         case "bottom-right":
-            xMin = state.config.marginStart;
+            xMin = 0;
             xMax = canvasWidth - axisWidth - state.config.marginEnd;
-            yMin = state.config.marginTop;
+            yMin = 0;
             yMax = canvasHeight - axisHeight - state.config.marginBottom;
             break;
 
         case "top-left":
             xMin = axisWidth + state.config.marginStart;
-            xMax = canvasWidth - state.config.marginEnd;
+            xMax = canvasWidth;
             yMin = axisHeight + state.config.marginTop;
-            yMax = canvasHeight - state.config.marginBottom;
+            yMax = canvasHeight;
             break;
 
         case "top-right":
-            xMin = state.config.marginStart;
+            xMin = 0;
             xMax = canvasWidth - axisWidth - state.config.marginEnd;
             yMin = axisHeight + state.config.marginTop;
-            yMax = canvasHeight - state.config.marginBottom;
+            yMax = canvasHeight;
             break;
     }                
     
@@ -80,8 +80,7 @@ function getMinMaxCoords() : MinMaxCoords_Type{
 }
 
 //---------------------------------------------------------
-    
-    
+
     const mainGrid = Main_Grid({state, graphHandler, getMinMaxCoords});
     const auxGrid = Aux_Grid({state, graphHandler, getMinMaxCoords});
     

@@ -1,6 +1,5 @@
 import { ScaleLinear, Selection } from "d3"
-import { type } from "os"
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units, Grid_Enabled } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -10,6 +9,7 @@ export type Graph2D_State = {
     svg : SVGSVGElement,
     graphID : string,
     canvas : Selection<SVGGElement, unknown, null, undefined>,
+    lineStyleMap : Line_Style_Map,
     background : {
         bgColor : string,
         bgOpacity : number
@@ -89,6 +89,14 @@ export type Graph2D_State = {
 export type Method_Generator_Props = {
     graphHandler : Graph2D_Type, 
     state : Graph2D_State
+}
+
+export type Line_Style_Map = {
+    solid : string,
+    dashed: string, 
+    doted : string,
+    "dash-dot": string, 
+    "dash-2dot": string
 }
 
 //---------------------------------------------------------
@@ -206,7 +214,9 @@ export type Grid_Method_Generator = {
 }
 
 export type Main_Grid = {
-    compute : ()=>void
+    compute : ()=>void,
+    mainGrid : (arg0:Grid_Enabled)=>Graph2D_Type,
+    getMainGrid : ()=>Grid_Enabled
 }
 
 export type Aux_Grid = {

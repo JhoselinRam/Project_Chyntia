@@ -638,6 +638,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         if(position === state.axis.position) return graphHandler;
         if(state.render == null) return graphHandler;
         
+        state.axis.position = position;
         state.render();
 
         return graphHandler;

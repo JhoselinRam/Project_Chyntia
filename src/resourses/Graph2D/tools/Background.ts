@@ -4,6 +4,7 @@ import { Background_Type, Method_Generator_Props } from "../Graph2D_Types/types"
 function Background({graphHandler, state} : Method_Generator_Props) : Background_Type{
   
 //---------------------------------------------------------
+
     function backgroundColor(value : string) : Graph2D_Type{
         if (value === state.background.bgColor) return graphHandler;
         
@@ -18,7 +19,6 @@ function Background({graphHandler, state} : Method_Generator_Props) : Background
         return graphHandler;
     }
 
-//---------------------------------------------------------
     function getBackgroundColor() : string{
         return state.background.bgColor;
     }
@@ -40,8 +40,6 @@ function Background({graphHandler, state} : Method_Generator_Props) : Background
 
         return graphHandler;
     }
-    
-//---------------------------------------------------------
 
     function getBackgroundOpacity() : number{
         return state.background.bgOpacity;

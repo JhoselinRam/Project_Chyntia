@@ -1,5 +1,6 @@
-import { BaseType, ScaleLinear, Selection } from "d3"
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic } from "../Graph2D"
+import { ScaleLinear, Selection } from "d3"
+import { type } from "os"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -40,7 +41,7 @@ export type Grapg2D_State = {
         yLabelOpacity : number,
         xAxisOverlap : boolean,
         yAxisOverlap : boolean,
-        overlapPriority : "X" | "Y" | "none",
+        overlapPriority : "X" | "Y",
         compute ?: ()=>void,
     },
     grid : {
@@ -57,14 +58,15 @@ export type Grapg2D_State = {
         },
         aux : {
             compute ?: ()=>void,
-            xColor : string,
             xEnabled : boolean,
+            xColor : string,
             xOpacity : number,
             xStyle : Graph2D_LineStyle,
             yEnabled : boolean,
             yColor : string,
             yOpacity : number,
-            yStyle : Graph2D_LineStyle
+            yStyle : Graph2D_LineStyle,
+            amount : number | "auto"
         }
     },
     config : {
@@ -112,7 +114,7 @@ export type Scale_Type = {
     compute : ()=>void   
 }
 
-export type _GetScale_Type = {
+export type GetScale_Type = {
     rangeStartX : number,
     rangeEndX : number,
     rangeStartY : number,
@@ -131,7 +133,13 @@ export type Axis_Type = {
     axisColor : (arg0:Axis_Color_Options)=>Graph2D_Type,
     getAxisColor :  ()=>Axis_Color_Options,
     axisOpacity : (arg0:Axis_Opacity_Options)=>Graph2D_Type,
-    getAxisOpacity : ()=>Axis_Opacity_Options
+    getAxisOpacity : ()=>Axis_Opacity_Options,
+    axisOverlap : (arg0:Axis_Overlap)=>Graph2D_Type,
+    getAxisOverlap : ()=>Axis_Overlap,
+    axisDynamic : (arg0:Axis_Dynamic)=>Graph2D_Type,
+    getAxisDynamic : ()=>Axis_Dynamic,
+    axisUnits : (arg0:Axis_Units)=>Graph2D_Type,
+    getAxisUnits : ()=>Axis_Units
 }
 
 export type Compute_Background_Props = {
@@ -179,9 +187,7 @@ export type Config_Type = {
     margin : (arg0:Margin_Type)=>Graph2D_Type,
     getMargin : ()=>Margin_Type,
     relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
-    getRelativePosition : ()=>Relative_Position,
-    axisDynamic : (arg0:Axis_Dynamic)=>Graph2D_Type,
-    getAxisDynamic : ()=>Axis_Dynamic
+    getRelativePosition : ()=>Relative_Position
 }
 
 //---------------------------------------------------------
@@ -193,11 +199,25 @@ export type Grid_Type = {
 }
 
 export type Main_Grid = {
-
+    compute : ()=>void
 }
 
 export type Aux_Grid = {
+    compute : ()=>void
+}
 
+export type Main_Lines_Props = {
+    axis : "X" | "Y",
+    color : string,
+    opacity : number,
+    style : Graph2D_LineStyle
+}
+
+export type MinMaxCoords_Type = {
+    xMin : number,
+    xMax : number,
+    yMin : number,
+    yMax : number
 }
 
 //---------------------------------------------------------

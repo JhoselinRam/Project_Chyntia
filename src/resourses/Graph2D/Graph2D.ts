@@ -29,8 +29,8 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
             yAxisContained : true,
             xLabelDynamic : true,
             yLabelDynamic : true,
-            xUnit : "s",
-            yUnit : "m/s",
+            xUnit : null,
+            yUnit : null,
             xAxisColor : "#000000", //Black
             xAxisOpacity : 1,
             yAxisColor : "#000000", //Black
@@ -66,7 +66,8 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
                 yEnabled : true,
                 yColor : "#000000",
                 yOpacity : 0.2,
-                yStyle : "doted"
+                yStyle : "doted",
+                amount : "auto"
             }
         },
         config : {
@@ -94,6 +95,8 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     const config = Config({graphHandler, state});
     state.scale = Scale(state);
     state.axis.compute = axis.compute;
+    state.grid.main.compute = mainGrid.compute;
+    state.grid.aux.compute = auxGrid.compute;
     state.render = render(state);
 
     //Populate main object
@@ -108,7 +111,13 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.axisColor = axis.axisColor;
     graphHandler.getAxisColor = axis.getAxisColor;
     graphHandler.axisOpacity = axis.axisOpacity;
+    graphHandler.axisOverlap = axis.axisOverlap;
+    graphHandler.getAxisOverlap = axis.getAxisOverlap;
     graphHandler.getAxisOpacity = axis.getAxisOpacity;
+    graphHandler.axisDynamic = axis.axisDynamic;
+    graphHandler.getAxisDynamic = axis.getAxisDynamic;
+    graphHandler.axisUnits = axis.axisUnits;
+    graphHandler.getAxisUnits = axis.getAxisUnits;
     graphHandler.canvas = config.canvas;
     graphHandler.size = config.size;
     graphHandler.getSize = config.getSize;
@@ -120,8 +129,6 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getMargin = config.getMargin;
     graphHandler.relativePosition = config.relativePosition;
     graphHandler.getRelativePosition = config.getRelativePosition;
-    graphHandler.axisDynamic = config.axisDynamic;
-    graphHandler.getAxisDynamic = config.getAxisDynamic;
     
     
     //Setup configuration  
@@ -160,7 +167,7 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
 
 function render(state:Grapg2D_State){
     return function(){
-        if(state.scale==null || state.axis.compute==null) return;
+        if(state.scale==null || state.axis.compute==null || state.grid.main.compute==null || state.grid.aux.compute==null) return;
     
         const svgWidth = state.svg.clientWidth;
         const svgHeight = state.svg.clientHeight;
@@ -180,6 +187,8 @@ function render(state:Grapg2D_State){
 
         state.scale.compute();
         state.axis.compute();
+        state.grid.main.compute();
+        state.grid.aux.compute();
     }
 }
 
@@ -219,7 +228,11 @@ export type Graph2D_Type = {
     relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
     getRelativePosition : ()=>Relative_Position,
     axisDynamic : (arg0:Axis_Dynamic)=>Graph2D_Type,
-    getAxisDynamic : ()=>Axis_Dynamic
+    getAxisDynamic : ()=>Axis_Dynamic,
+    axisOverlap : (arg0:Axis_Overlap)=>Graph2D_Type,
+    getAxisOverlap : ()=>Axis_Overlap,
+    axisUnits : (arg0:Axis_Units)=>Graph2D_Type,
+    getAxisUnits : ()=>Axis_Units
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -278,4 +291,15 @@ export type Axis_Dynamic = {
     yContained ?: boolean,
     xDynamic ?: boolean,
     yDynamic ?: boolean
+}
+
+export type Axis_Overlap = {
+    x ?: boolean,
+    y ?: boolean,
+    priority ?: "X" | "Y"
+}
+
+export type Axis_Units = {
+    x ?: string | null,
+    y ?: string | null 
 }

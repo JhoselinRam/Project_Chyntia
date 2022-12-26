@@ -1,6 +1,5 @@
-import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, Selection, BaseType } from "d3";
-import { isGeneratorFunction } from "util/types";
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType } from "../Graph2D";
+import { Axis, NumberValue, axisBottom, axisLeft, axisRight, axisTop, scaleLinear, select, Selection} from "d3";
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Axis_Overlap, Axis_Dynamic, Axis_Units } from "../Graph2D";
 import { Axis_Type, Compute_Background_Props, Compute_Mask_Props, Method_Generator_Props, Set_Proxi_Props } from "../Graph2D_Types/types";
 
 function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
@@ -41,6 +40,10 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                             .append("g")
                             .classed("Graph2D_AxisY", true)
                             .call(axisY)
+                            .call(element=>{
+                                if(state.axis.yUnit == null) return;
+                                setAxisUnits(element, state.axis.yUnit);
+                            })
                             .node() as SVGGElement)
                             .getBBox()
                             .width;
@@ -49,6 +52,10 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                             .append("g")
                             .classed("Graph2D_AxisX", true)
                             .call(axisX)
+                            .call(element=>{
+                                if(state.axis.xUnit == null) return;
+                                setAxisUnits(element, state.axis.xUnit);
+                            })
                             .node() as SVGGElement)
                             .getBBox()
                             .height;
@@ -117,6 +124,17 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
 
     }
 
+    function setAxisUnits(element:Selection<SVGGElement, unknown, null, undefined>, unit:string){
+        element
+        .selectAll("text")
+        .each((d,i,nodes)=>{
+            const text = nodes[i] as SVGTextElement;
+            const label = select(text).text();
+
+            select(text).text(`${label}${unit}`);
+        });
+    }
+
 //---------------------------------------------------------
 //------------------------- Center ------------------------
 
@@ -132,7 +150,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         const maxTranslationY = canvasHeight - state.config.marginBottom - 2;
         const minTranslationY = state.config.marginTop + 1;
 
-        if(state.axis.xAxisContained){
+        if(state.axis.yAxisContained){
             if(translationX > maxTranslationX)
                 translationX = maxTranslationX;
                 
@@ -140,7 +158,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
                 translationX = minTranslationX;
         }
         
-        if(state.axis.yAxisContained){
+        if(state.axis.xAxisContained){
             if(translationY > maxTranslationY)
                 translationY = maxTranslationY;
     
@@ -149,7 +167,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         }
 
         //set the position of the tick labels
-        if(state.axis.xLabelDynamic){
+        if(state.axis.yLabelDynamic){
             if(translationX < minTranslationX + axisWidth){
                 const translator = scaleLinear().domain([minTranslationX+axisWidth, minTranslationX]).range([0, axisWidth+6]);
                 labelTranslationX = translator(translationX<minTranslationX?minTranslationX:translationX);
@@ -160,7 +178,7 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
             }
         }
 
-        if(state.axis.yLabelDynamic){
+        if(state.axis.xLabelDynamic){
             if(translationY > maxTranslationY - axisHeight){
                 const translator = scaleLinear().domain([maxTranslationY-axisHeight, maxTranslationY]).range([0, -axisHeight-6]);
                 labelTranslationY = translator(translationY>maxTranslationY?maxTranslationY:translationY);
@@ -820,6 +838,83 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
     }
 
 //---------------------------------------------------------
+//-------------------- Axis Overlap -----------------------
+
+    function axisOverlap({x, y, priority} : Axis_Overlap) : Graph2D_Type{
+        if(state.axis.compute == null) return graphHandler;
+        if(x==null && y==null && priority == null) return graphHandler;
+        if(x===state.axis.xAxisOverlap && y===state.axis.yAxisOverlap && priority===state.axis.overlapPriority) return graphHandler;
+
+        if(x!=null) state.axis.xAxisOverlap = x;
+        if(y!=null) state.axis.yAxisOverlap = y;
+        if(priority!=null) state.axis.overlapPriority = priority;
+
+        state.axis.compute();
+
+        return graphHandler;
+    }
+
+    function getAxisOverlap() : Axis_Overlap{
+        return {
+            x : state.axis.xAxisOverlap,
+            y : state.axis.yAxisOverlap,
+            priority : state.axis.overlapPriority
+        };
+    }
+
+//---------------------------------------------------------
+//--------------------- Axis Dynamic ----------------------
+
+function axisDynamic({xContained, yContained, xDynamic, yDynamic}:Axis_Dynamic) : Graph2D_Type{
+    if(state.scale == null || state.axis.compute == null) return graphHandler;
+    if(xContained===state.axis.xAxisContained && yContained===state.axis.yAxisContained && xDynamic===state.axis.xLabelDynamic && yDynamic===state.axis.yLabelDynamic) return graphHandler;
+    if(xContained==null && yContained==null && xDynamic==null && yDynamic==null) return graphHandler;
+
+    if(xContained!=null) state.axis.xAxisContained = xContained;
+    if(yContained!=null) state.axis.yAxisContained = yContained;
+    if(xDynamic!=null) state.axis.xLabelDynamic = xDynamic;
+    if(yDynamic!=null) state.axis.yLabelDynamic = yDynamic;
+
+    state.scale.compute();
+    state.axis.compute();
+
+
+    return graphHandler;
+}
+
+function getAxisDynamic():Axis_Dynamic{
+    return {
+        xContained : state.axis.xAxisContained,
+        yContained : state.axis.yAxisContained,
+        xDynamic : state.axis.xLabelDynamic,
+        yDynamic : state.axis.yLabelDynamic
+    }
+}
+
+//---------------------------------------------------------
+//--------------------- Axis Units ------------------------
+
+    function axisUnits({x, y}:Axis_Units) : Graph2D_Type{
+        if(state.axis.compute == null) return graphHandler;
+        if(x===undefined && y===undefined) return graphHandler; //This time check for undefined instead of null because in this case the value can be set to null
+        if(x===state.axis.xUnit && y===state.axis.yUnit) return graphHandler;
+
+        if(x!==undefined) state.axis.xUnit = x;
+        if(y!==undefined) state.axis.yUnit = y;
+
+        state.axis.compute();
+
+        return graphHandler;
+    }
+
+    function getAxisUnits() : Axis_Units {
+        return {
+            x : state.axis.xUnit,
+            y : state.axis.yUnit
+        }
+    }
+
+//---------------------------------------------------------
 
     return {
         compute,
@@ -830,7 +925,13 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         axisColor,
         getAxisColor,
         axisOpacity,
-        getAxisOpacity
+        getAxisOpacity,
+        axisOverlap,
+        getAxisOverlap,
+        axisDynamic,
+        getAxisDynamic,
+        axisUnits,
+        getAxisUnits
     };
 
 }

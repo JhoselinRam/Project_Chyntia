@@ -1,4 +1,4 @@
-import { ChangeEvent, ReactNode, useRef } from "react";
+import { ChangeEvent, useRef } from "react";
 import Graph2D, { Graph2D_Type, Graph2D_AxisPosition } from "../resourses/Graph2D/Graph2D";
 
 export default function Home() {
@@ -180,8 +180,30 @@ console.timeEnd();
     Graph.axisDynamic({yDynamic:!value.yDynamic});
   }
 
-
-
+  function changeOverlapX(e:ChangeEvent){
+    const value = Graph.getAxisOverlap();
+    Graph.axisOverlap({x:!value.x});
+  }
+  
+  function changeOverlapY(e:ChangeEvent){
+    const value = Graph.getAxisOverlap();
+    Graph.axisOverlap({y:!value.y});
+  }
+  
+  function changePriority(e:ChangeEvent){
+    const value = (e.target as HTMLInputElement).value as "X" | "Y";
+    Graph.axisOverlap({priority : value});
+  }
+  
+  function changeUnitsX(e:ChangeEvent){
+    const value = (e.target as HTMLInputElement).value;
+    Graph.axisUnits({x:value});
+  }
+  
+  function changeUnitsY(e:ChangeEvent){
+    const value = (e.target as HTMLInputElement).value;
+    Graph.axisUnits({y:value});
+  }
 
 
 
@@ -316,6 +338,25 @@ console.timeEnd();
           <input type="checkbox" defaultChecked onChange={changeContainedY} className="w-[15px] h-[15px] self-center"/>
           <p className="place-self-end mr-2">Dynamic y</p>
           <input type="checkbox" defaultChecked onChange={changeDynamicY} className="w-[15px] h-[15px] self-center  "/>
+        </div>
+        <div className="grid grid-cols-2 gap-x-2">
+          <p>Overlap X</p>
+          <input type="checkbox" className="w-[15px] h-[15px] self-center" onChange={changeOverlapX}/>
+          <p>Overlap Y</p>
+          <input type="checkbox" className="w-[15px] h-[15px] self-center" onChange={changeOverlapY}/>
+          <p>Priority:</p>
+          <div className="flex gap-2 items-center justify-center">
+            <p>x: </p>
+            <input type="radio" name="overlap_priority" className="w-[15px] h-[15px]" value="X" defaultChecked onChange={changePriority}/>
+            <p>y: </p>
+            <input type="radio" name="overlap_priority" className="w-[15px] h-[15px]" value="Y" onChange={changePriority}/>
+          </div>
+        </div>
+        <div className="grid grid-cols-2 gap-x-2">
+          <p className="place-self-end max-w-[60px]">Units X: </p>
+          <input type="text" className="border border-gray-500 rounded-md w-full px-1 max-w-[75px]" onChange={changeUnitsX}/>
+          <p className="place-self-end max-w-[60px]">Units Y: </p>
+          <input type="text" className="border border-gray-500 rounded-md w-full px-1 max-w-[75px]" onChange={changeUnitsY}/>
         </div>
       
       </div>

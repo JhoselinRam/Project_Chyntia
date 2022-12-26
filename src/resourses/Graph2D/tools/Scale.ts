@@ -1,17 +1,19 @@
-import { scaleLinear, axisBottom, axisLeft, axisRight, axisTop } from "d3";
-import { Grapg2D_State, Scale_Type, _GetScale_Type } from "../Graph2D_Types/types";
+import { scaleLinear, axisBottom, axisLeft, axisRight, axisTop, Selection, select } from "d3";
+import { Grapg2D_State, Scale_Type, GetScale_Type } from "../Graph2D_Types/types";
 
 function Scale(state : Grapg2D_State) : Scale_Type{
     let inner = {x:scaleLinear(), y:scaleLinear()};
     let reference = {x:scaleLinear(), y:scaleLinear()};
     
-    //---------------------------------------------------------
+//---------------------------------------------------------
+//------------------- Compute Scale -----------------------
+
     function compute(){
         const domainStartX = -state.config.width/2 - state.config.centerX;
         const domainEndX   = state.config.width/2 - state.config.centerX;
         const domainStartY = -state.config.height/2 - state.config.centerY;
         const domainEndY   = state.config.height/2 - state.config.centerY;
-        const {rangeStartX,rangeEndX,rangeStartY,rangeEndY} = _getRange(domainStartX, domainEndX, domainStartY, domainEndY);
+        const {rangeStartX,rangeEndX,rangeStartY,rangeEndY} = getRange(domainStartX, domainEndX, domainStartY, domainEndY);
         
         switch(state.axis.type){
             case "rectangular":
@@ -47,8 +49,9 @@ function Scale(state : Grapg2D_State) : Scale_Type{
     }
 
 //---------------------------------------------------------
+//---------------------------------------------------------
 
-    function _getRange(domainStartX:number, domainEndX:number, domainStartY:number, domainEndY:number) : _GetScale_Type{
+    function getRange(domainStartX:number, domainEndX:number, domainStartY:number, domainEndY:number) : GetScale_Type{
         const fullSizeRange = (state.canvas
                                 .select("rect.Graph2D_Background")
                                 .node() as SVGRectElement)
@@ -74,6 +77,10 @@ function Scale(state : Grapg2D_State) : Scale_Type{
             .classed("Aux_AxisY", true)
             .attr("opacity", 0)
             .call(auxAxisY)
+            .call(element=>{
+                if(state.axis.yUnit == null) return;
+                setAxisUnits(element, state.axis.yUnit);
+            })
             .node() as SVGGElement)
             .getBBox()
             .width;
@@ -83,6 +90,10 @@ function Scale(state : Grapg2D_State) : Scale_Type{
             .classed("Aux_AxisX", true)
             .attr("opacity", 0)
             .call(auxAxisX)
+            .call(element=>{
+                if(state.axis.xUnit == null) return;
+                setAxisUnits(element, state.axis.xUnit);
+            })
             .node() as SVGGElement)
             .getBBox()
             .height;
@@ -131,6 +142,20 @@ function Scale(state : Grapg2D_State) : Scale_Type{
                     rangeEndY : axisHeight + state.config.marginTop
                 }
         }
+    }
+
+//---------------------------------------------------------
+//---------------------------------------------------------
+
+    function setAxisUnits(element:Selection<SVGGElement, unknown, null, undefined>, unit:string){
+        element
+        .selectAll("text")
+        .each((d,i,nodes)=>{
+            const text = nodes[i] as SVGTextElement;
+            const label = select(text).text();
+
+            select(text).text(`${label}${unit}`);
+        });
     }
 
 //---------------------------------------------------------

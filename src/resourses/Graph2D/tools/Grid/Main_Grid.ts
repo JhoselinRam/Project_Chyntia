@@ -41,12 +41,7 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
 //------------------- Set Grid Lines ----------------------
 
     function setGridLines({axis, color, opacity, style} : Main_Lines_Props){
-        
         const unit = (axis==="X" ? state.axis.xUnit : state.axis.yUnit) as string;
-        let xStart : number;
-        let xEnd : number;
-        let yStart : number;
-        let yEnd : number;
 
         state.canvas
             .select("g.Graph2D_Main_Grid")
@@ -220,7 +215,6 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
 //-------------------- Main Grid Style ------------------
 
     function mainGridStyle({style, xStyle, yStyle}:Grid_Style) : Graph2D_Type{
-        console.log(":p");
         if(style==null && xStyle==null && yStyle==null) return graphHandler;
         if(style===state.grid.main.xStyle && style===state.grid.main.yStyle) return graphHandler;
         if(xStyle===state.grid.main.xStyle && yStyle===state.grid.main.yStyle) return graphHandler;

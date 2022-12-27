@@ -68,13 +68,14 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
             aux : {
                 xEnabled : true,
                 xColor : "#000000",
-                xOpacity : 0.2,
+                xOpacity : 0.15,
                 xStyle : "doted",
+                xSpacing : "auto",
                 yEnabled : true,
                 yColor : "#000000",
-                yOpacity : 0.2,
+                yOpacity : 0.15,
                 yStyle : "doted",
-                amount : "auto"
+                ySpacing : "auto"
             }
         },
         config : {
@@ -184,11 +185,12 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
 
 function render(state:Graph2D_State){
     return function(){
-        if(state.scale==null || state.axis.compute==null || state.grid.main.compute==null || state.grid.aux.compute==null) return;
+        if(state.scale==null || state.axis.compute==null || state.grid.main.compute==null || state.grid.aux.compute==null || state.grid.aux.compute == null) return;
 
         state.scale.compute();
         state.axis.compute();
         state.grid.main.compute();
+        state.grid.aux.compute();
         state.grid.aux.compute();
     }
 }

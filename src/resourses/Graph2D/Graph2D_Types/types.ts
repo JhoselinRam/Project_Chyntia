@@ -63,11 +63,12 @@ export type Graph2D_State = {
             xColor : string,
             xOpacity : number,
             xStyle : Graph2D_LineStyle,
+            xSpacing : number | "auto"
             yEnabled : boolean,
             yColor : string,
             yOpacity : number,
             yStyle : Graph2D_LineStyle,
-            amount : number | "auto"
+            ySpacing : number | "auto"
         }
     },
     config : {
@@ -234,6 +235,24 @@ export type Main_Lines_Props = {
     color : string,
     opacity : number,
     style : Graph2D_LineStyle
+}
+
+export type Aux_Lines_Props = {
+    axis : "X" | "Y",
+    color : string,
+    opacity : number,
+    style : Graph2D_LineStyle,
+    spacing : "auto" | number
+}
+
+export type Spacing_Info_Props = {
+    axis : "X" | "Y",
+    spacing : "auto" | number
+}
+
+export type Spacing_Info_Type = {
+    ticks : Array<number>,
+    amount : number
 }
 
 export type MinMaxCoords_Type = {

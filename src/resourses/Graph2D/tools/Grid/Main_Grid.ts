@@ -1,5 +1,5 @@
 import { select } from "d3";
-import { Graph2D_Type, Grid_Enabled } from "../../Graph2D";
+import { Graph2D_Type, Grid_Color, Grid_Enabled, Grid_Opacity, Grid_Style } from "../../Graph2D";
 import { Grid_Method_Generator, Main_Grid, Main_Lines_Props} from "../../Graph2D_Types/types";
 
 function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generator) : Main_Grid{
@@ -123,7 +123,7 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
 //---------------------------------------------------------
 //------------------- Main Grid ---------------------------
 
-    function mainGrid({x, y}:Grid_Enabled) : Graph2D_Type{
+    function mainGridEnabled({x, y}:Grid_Enabled) : Graph2D_Type{
         if(state.grid.main.compute == null) return graphHandler;
         if(x == null && y == null) return graphHandler;
         if(x===state.grid.main.xEnabled && y===state.grid.main.yEnabled) return graphHandler;
@@ -137,10 +137,100 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
         return graphHandler;
     }
 
-    function getMainGrid():Grid_Enabled{
+    function getMainGridEnabled():Grid_Enabled{
         return {
             x : state.grid.main.xEnabled,
             y : state.grid.main.yEnabled
+        }
+    }
+
+//---------------------------------------------------------
+//--------------------- Main Grid Color --------------------
+
+    function mainGridColor({x ,y}:Grid_Color) : Graph2D_Type{
+        if(x==null && y==null) return graphHandler;
+        if(x===state.grid.main.xColor && y===state.grid.main.yColor) return graphHandler;
+
+        if(x!=null){
+            state.grid.main.xColor = x;
+            state.canvas
+                .select("g.Graph2D_Main_GridX")
+                .attr("stroke", x);
+        }
+        if(y!=null){
+            state.grid.main.yColor = y;
+            state.canvas
+                .select("g.Graph2D_Main_GridY")
+                .attr("stroke", y);
+        }
+
+        return graphHandler;
+    }
+
+    function getMainGridColor():Grid_Color{
+        return {
+            x : state.grid.main.xColor,
+            y : state.grid.main.yColor
+        }
+    }
+
+//---------------------------------------------------------
+//-------------------- Main Grid Opacity ------------------
+
+    function mainGridOpacity({x ,y}:Grid_Opacity) : Graph2D_Type{
+        if(x==null && y==null) return graphHandler;
+        if(x===state.grid.main.xOpacity && y===state.grid.main.yOpacity) return graphHandler;
+
+        if(x!=null){
+            state.grid.main.xOpacity = x;
+            state.canvas
+                .select("g.Graph2D_Main_GridX")
+                .attr("opacity", x);
+        }
+        if(y!=null){
+            state.grid.main.yOpacity = y;
+            state.canvas
+                .select("g.Graph2D_Main_GridY")
+                .attr("opacity", y);
+        }
+
+        return graphHandler;
+    }
+
+    function getMainGridOpacity():Grid_Opacity{
+        return {
+            x : state.grid.main.xOpacity,
+            y : state.grid.main.yOpacity
+        }
+    }
+    
+//---------------------------------------------------------
+//-------------------- Main Grid Style ------------------
+
+    function mainGridStyle({x ,y}:Grid_Style) : Graph2D_Type{
+        if(x==null && y==null) return graphHandler;
+        if(x===state.grid.main.xStyle && y===state.grid.main.yStyle) return graphHandler;
+
+        if(x!=null){
+            state.grid.main.xStyle = x;
+            state.canvas
+                .select("g.Graph2D_Main_GridX")
+                .attr("stroke-dasharray", x);
+        }
+        if(y!=null){
+            state.grid.main.yStyle = y;
+            state.canvas
+                .select("g.Graph2D_Main_GridY")
+                .attr("stroke-dasharray", y);
+        }
+
+        return graphHandler;
+    }
+
+    function getMainGridStyle():Grid_Style{
+        return {
+            x : state.grid.main.xStyle,
+            y : state.grid.main.yStyle
         }
     }
 
@@ -149,18 +239,16 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
 
 
 
-
-
-
-
-
-
-
-
     return {
         compute,
-        mainGrid,
-        getMainGrid
+        mainGridEnabled,
+        getMainGridEnabled,
+        mainGridColor,
+        getMainGridColor,
+        mainGridOpacity,
+        getMainGridOpacity,
+        mainGridStyle,
+        getMainGridStyle
     };
 }
 

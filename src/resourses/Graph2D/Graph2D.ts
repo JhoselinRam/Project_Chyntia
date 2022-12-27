@@ -137,11 +137,17 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getMargin = config.getMargin;
     graphHandler.relativePosition = config.relativePosition;
     graphHandler.getRelativePosition = config.getRelativePosition;
-    graphHandler.mainGrid = mainGrid.mainGrid;
-    graphHandler.getMainGrid = mainGrid.getMainGrid;
+    graphHandler.mainGridEnabled = mainGrid.mainGridEnabled;
+    graphHandler.getMainGridEnabled = mainGrid.getMainGridEnabled;
+    graphHandler.mainGridColor = mainGrid.mainGridColor;
+    graphHandler.getMainGridColor = mainGrid.getMainGridColor;
+    graphHandler.mainGridOpacity = mainGrid.mainGridOpacity;
+    graphHandler.getMainGridOpacity = mainGrid.getMainGridOpacity;
+    graphHandler.mainGridStyle = mainGrid.mainGridStyle;
+    graphHandler.getMainGridStyle = mainGrid.getMainGridStyle;
     
     
-    //Setup configuration  
+    //Setup configuration 
     canvas.append("defs")   
           .append("clipPath")
           .attr("id", `Graph2D_ClipPath_ID_${graphID}`)
@@ -251,8 +257,14 @@ export type Graph2D_Type = {
     getAxisOverlap : ()=>Axis_Overlap,
     axisUnits : (arg0:Axis_Units)=>Graph2D_Type,
     getAxisUnits : ()=>Axis_Units,
-    mainGrid : (arg0:Grid_Enabled)=>Graph2D_Type,
-    getMainGrid : ()=>Grid_Enabled
+    mainGridEnabled : (arg0:Grid_Enabled)=>Graph2D_Type,
+    getMainGrid : ()=>Grid_Enabled,
+    mainGridColor : (arg0:Grid_Color)=>Graph2D_Type,
+    getMainGridColor : ()=>Grid_Color,
+    mainGridOpacity : (arg0:Grid_Opacity)=>Graph2D_Type,
+    getMainGridOpacity : ()=>Grid_Opacity,
+    mainGridStyle : (arg0:Grid_Style)=>Graph2D_Type,
+    getMainGridStyle : ()=>Grid_Style
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -327,4 +339,19 @@ export type Axis_Units = {
 export type Grid_Enabled = {
     x ?: boolean,
     y ?: boolean
+}
+
+export type Grid_Color = {
+    x ?: string,
+    y ?: string
+}
+
+export type Grid_Opacity = {
+    x ?: number,
+    y ?: number
+}
+
+export type Grid_Style = {
+    x ?: Graph2D_LineStyle,
+    y ?: Graph2D_LineStyle
 }

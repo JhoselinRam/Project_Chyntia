@@ -1,5 +1,5 @@
 import { ScaleLinear, Selection } from "d3"
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units, Grid_Enabled } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units, Grid_Enabled, Grid_Color, Grid_Opacity, Grid_Style } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -215,8 +215,14 @@ export type Grid_Method_Generator = {
 
 export type Main_Grid = {
     compute : ()=>void,
-    mainGrid : (arg0:Grid_Enabled)=>Graph2D_Type,
-    getMainGrid : ()=>Grid_Enabled
+    mainGridEnabled : (arg0:Grid_Enabled)=>Graph2D_Type,
+    getMainGridEnabled : ()=>Grid_Enabled,
+    mainGridColor : (arg0:Grid_Color)=>Graph2D_Type,
+    getMainGridColor : ()=>Grid_Color,
+    mainGridOpacity : (arg0:Grid_Opacity)=>Graph2D_Type,
+    getMainGridOpacity : ()=>Grid_Opacity,
+    mainGridStyle : (arg0:Grid_Style)=>Graph2D_Type,
+    getMainGridStyle : ()=>Grid_Style
 }
 
 export type Aux_Grid = {

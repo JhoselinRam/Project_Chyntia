@@ -258,7 +258,7 @@ export type Graph2D_Type = {
     axisUnits : (arg0:Axis_Units)=>Graph2D_Type,
     getAxisUnits : ()=>Axis_Units,
     mainGridEnabled : (arg0:Grid_Enabled)=>Graph2D_Type,
-    getMainGrid : ()=>Grid_Enabled,
+    getMainGridEnabled : ()=>Grid_Enabled,
     mainGridColor : (arg0:Grid_Color)=>Graph2D_Type,
     getMainGridColor : ()=>Grid_Color,
     mainGridOpacity : (arg0:Grid_Opacity)=>Graph2D_Type,
@@ -337,21 +337,25 @@ export type Axis_Units = {
 }
 
 export type Grid_Enabled = {
-    x ?: boolean,
-    y ?: boolean
+    enabled ?: boolean,
+    xEnabled ?: boolean,
+    yEnabled ?: boolean
 }
 
 export type Grid_Color = {
-    x ?: string,
-    y ?: string
+    color ?: string,
+    xColor ?: string,
+    yColor ?: string
 }
 
 export type Grid_Opacity = {
-    x ?: number,
-    y ?: number
+    opacity ?: number,
+    xOpacity ?: number,
+    yOpacity ?: number
 }
 
 export type Grid_Style = {
-    x ?: Graph2D_LineStyle,
-    y ?: Graph2D_LineStyle
+    style ?: Graph2D_LineStyle,
+    xStyle ?: Graph2D_LineStyle,
+    yStyle ?: Graph2D_LineStyle
 }

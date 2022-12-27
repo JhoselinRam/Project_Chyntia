@@ -123,13 +123,18 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
 //---------------------------------------------------------
 //------------------- Main Grid ---------------------------
 
-    function mainGridEnabled({x, y}:Grid_Enabled) : Graph2D_Type{
+    function mainGridEnabled({enabled, xEnabled, yEnabled}:Grid_Enabled) : Graph2D_Type{
         if(state.grid.main.compute == null) return graphHandler;
-        if(x == null && y == null) return graphHandler;
-        if(x===state.grid.main.xEnabled && y===state.grid.main.yEnabled) return graphHandler;
+        if(enabled == null && xEnabled == null && yEnabled == null) return graphHandler;
+        if(enabled===state.grid.main.xEnabled && enabled===state.grid.main.yEnabled) return graphHandler;
+        if(xEnabled===state.grid.main.xEnabled && yEnabled===state.grid.main.yEnabled) return graphHandler;
 
-        if(x != null) state.grid.main.xEnabled = x;
-        if(y != null) state.grid.main.yEnabled = y;
+        if(enabled!=null){
+            state.grid.main.xEnabled = enabled;         
+            state.grid.main.yEnabled = enabled;         
+        }
+        if(xEnabled != null) state.grid.main.xEnabled = xEnabled;
+        if(yEnabled != null) state.grid.main.yEnabled = yEnabled;
         
         state.grid.main.compute();
 
@@ -139,98 +144,109 @@ function Main_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generato
 
     function getMainGridEnabled():Grid_Enabled{
         return {
-            x : state.grid.main.xEnabled,
-            y : state.grid.main.yEnabled
+            xEnabled : state.grid.main.xEnabled,
+            yEnabled : state.grid.main.yEnabled
         }
     }
 
 //---------------------------------------------------------
 //--------------------- Main Grid Color --------------------
 
-    function mainGridColor({x ,y}:Grid_Color) : Graph2D_Type{
-        if(x==null && y==null) return graphHandler;
-        if(x===state.grid.main.xColor && y===state.grid.main.yColor) return graphHandler;
+    function mainGridColor({color, xColor, yColor}:Grid_Color) : Graph2D_Type{
+        if(color==null && xColor==null && yColor==null) return graphHandler;
+        if(color===state.grid.main.xColor && color===state.grid.main.yColor) return graphHandler;
+        if(xColor===state.grid.main.xColor && yColor===state.grid.main.yColor) return graphHandler;
 
-        if(x!=null){
-            state.grid.main.xColor = x;
-            state.canvas
-                .select("g.Graph2D_Main_GridX")
-                .attr("stroke", x);
+        if(color!=null) {
+            state.grid.main.xColor = color;
+            state.grid.main.yColor = color;
         }
-        if(y!=null){
-            state.grid.main.yColor = y;
-            state.canvas
-                .select("g.Graph2D_Main_GridY")
-                .attr("stroke", y);
-        }
+        if(xColor!=null) state.grid.main.xColor = xColor;
+        if(yColor!=null) state.grid.main.yColor = yColor;
+
+        state.canvas
+            .select("g.Graph2D_Main_GridX")
+            .attr("stroke", state.grid.main.xColor);
+        
+        state.canvas
+            .select("g.Graph2D_Main_GridY")
+            .attr("stroke", state.grid.main.yColor);
+
 
         return graphHandler;
     }
 
     function getMainGridColor():Grid_Color{
         return {
-            x : state.grid.main.xColor,
-            y : state.grid.main.yColor
+            xColor : state.grid.main.xColor,
+            yColor : state.grid.main.yColor
         }
     }
 
 //---------------------------------------------------------
 //-------------------- Main Grid Opacity ------------------
 
-    function mainGridOpacity({x ,y}:Grid_Opacity) : Graph2D_Type{
-        if(x==null && y==null) return graphHandler;
-        if(x===state.grid.main.xOpacity && y===state.grid.main.yOpacity) return graphHandler;
+    function mainGridOpacity({opacity, xOpacity, yOpacity}:Grid_Opacity) : Graph2D_Type{
+        if(opacity==null && xOpacity==null && yOpacity==null) return graphHandler;
+        if(opacity===state.grid.main.xOpacity && opacity===state.grid.main.yOpacity) return graphHandler;
+        if(xOpacity===state.grid.main.xOpacity && yOpacity===state.grid.main.yOpacity) return graphHandler;
 
-        if(x!=null){
-            state.grid.main.xOpacity = x;
-            state.canvas
-                .select("g.Graph2D_Main_GridX")
-                .attr("opacity", x);
+        if(opacity!=null){
+            state.grid.main.xOpacity = opacity<0?0:(opacity>1?1:opacity);
+            state.grid.main.yOpacity = opacity<0?0:(opacity>1?1:opacity);
         }
-        if(y!=null){
-            state.grid.main.yOpacity = y;
-            state.canvas
-                .select("g.Graph2D_Main_GridY")
-                .attr("opacity", y);
-        }
+        if(xOpacity!=null) state.grid.main.xOpacity = xOpacity<0?0:(xOpacity>1?1:xOpacity);
+        if(yOpacity!=null) state.grid.main.yOpacity = yOpacity<0?0:(yOpacity>1?1:yOpacity);
+
+        state.canvas
+            .select("g.Graph2D_Main_GridX")
+            .attr("opacity", state.grid.main.xOpacity);
+        
+        state.canvas
+            .select("g.Graph2D_Main_GridY")
+            .attr("opacity", state.grid.main.yOpacity);
 
         return graphHandler;
     }
 
     function getMainGridOpacity():Grid_Opacity{
         return {
-            x : state.grid.main.xOpacity,
-            y : state.grid.main.yOpacity
+            xOpacity : state.grid.main.xOpacity,
+            yOpacity : state.grid.main.yOpacity
         }
     }
     
 //---------------------------------------------------------
 //-------------------- Main Grid Style ------------------
 
-    function mainGridStyle({x ,y}:Grid_Style) : Graph2D_Type{
-        if(x==null && y==null) return graphHandler;
-        if(x===state.grid.main.xStyle && y===state.grid.main.yStyle) return graphHandler;
+    function mainGridStyle({style, xStyle, yStyle}:Grid_Style) : Graph2D_Type{
+        console.log(":p");
+        if(style==null && xStyle==null && yStyle==null) return graphHandler;
+        if(style===state.grid.main.xStyle && style===state.grid.main.yStyle) return graphHandler;
+        if(xStyle===state.grid.main.xStyle && yStyle===state.grid.main.yStyle) return graphHandler;
 
-        if(x!=null){
-            state.grid.main.xStyle = x;
-            state.canvas
-                .select("g.Graph2D_Main_GridX")
-                .attr("stroke-dasharray", x);
+        if(style!=null){
+            state.grid.main.xStyle = style;
+            state.grid.main.yStyle = style;
         }
-        if(y!=null){
-            state.grid.main.yStyle = y;
-            state.canvas
-                .select("g.Graph2D_Main_GridY")
-                .attr("stroke-dasharray", y);
-        }
+        if(xStyle!=null) state.grid.main.xStyle = xStyle;
+        if(yStyle!=null) state.grid.main.yStyle = yStyle;
+
+        state.canvas
+            .select("g.Graph2D_Main_GridX")
+            .attr("stroke-dasharray", state.lineStyleMap[state.grid.main.xStyle]);
+        
+        state.canvas
+            .select("g.Graph2D_Main_GridY")
+            .attr("stroke-dasharray", state.lineStyleMap[state.grid.main.yStyle]);
 
         return graphHandler;
     }
 
     function getMainGridStyle():Grid_Style{
         return {
-            x : state.grid.main.xStyle,
-            y : state.grid.main.yStyle
+            xStyle : state.grid.main.xStyle,
+            yStyle : state.grid.main.yStyle
         }
     }
 

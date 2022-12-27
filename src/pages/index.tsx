@@ -1,10 +1,13 @@
 import { ChangeEvent, useRef } from "react";
-import Graph2D, { Graph2D_Type, Graph2D_AxisPosition } from "../resourses/Graph2D/Graph2D";
+import Graph2D, { Graph2D_Type, Graph2D_AxisPosition, Graph2D_LineStyle } from "../resourses/Graph2D/Graph2D";
 
 export default function Home() {
   let Graph : Graph2D_Type; 
   const colorTarget = useRef("0");
   const opacityTarget = useRef("0");
+  const mainGridColorTarget = useRef("0");
+  const mainGridOpacityTarget = useRef("0");
+  const mainGridStyleTarget = useRef("0");
 
   function changeColor(e:ChangeEvent){
     const color = (e.target as HTMLInputElement).value as string;
@@ -203,8 +206,84 @@ export default function Home() {
     Graph.axisUnits({y:value});
   }
 
+  function changeMainGridColorTarget(e:ChangeEvent){
+    const value = (e.target as HTMLSelectElement).value;
+    mainGridColorTarget.current = value;
+  }
 
+  function changeMainGridColor(e:ChangeEvent){
+    const value = (e.target as HTMLInputElement).value;
 
+    switch(mainGridColorTarget.current){
+      case "0":
+        Graph.mainGridColor({color:value});
+        break;
+      
+      case "1":
+        Graph.mainGridColor({xColor:value});
+        break;
+
+      case "2":
+        Graph.mainGridColor({yColor:value});
+        break;
+    }
+  }
+  
+  function changeMainGridOpacityTarget(e:ChangeEvent){
+    const value = (e.target as HTMLSelectElement).value;
+    mainGridOpacityTarget.current = value;
+  }
+
+  function changeMainGridOpacity(e:ChangeEvent){
+    const value = parseFloat((e.target as HTMLInputElement).value);
+
+    switch(mainGridOpacityTarget.current){
+      case "0":
+        Graph.mainGridOpacity({opacity:value});
+        break;
+      
+      case "1":
+        Graph.mainGridOpacity({xOpacity:value});
+        break;
+
+      case "2":
+        Graph.mainGridOpacity({yOpacity:value});
+        break;
+    }
+  }
+  
+  function changeMainGridStyleTarget(e:ChangeEvent){
+    const value = (e.target as HTMLSelectElement).value;
+    mainGridStyleTarget.current = value;
+  }
+
+  function changeMainGridStyle(e:ChangeEvent){
+    const value = (e.target as HTMLInputElement).value as Graph2D_LineStyle;
+
+    switch(mainGridStyleTarget.current){
+      case "0":
+        Graph.mainGridStyle({style:value});
+        break;
+      
+      case "1":
+        Graph.mainGridStyle({xStyle:value});
+        break;
+
+      case "2":
+        Graph.mainGridStyle({yStyle:value});
+        break;
+    }
+  }
+
+  function changeMainGridEnabledX(){
+    const enabled = Graph.getMainGridEnabled().xEnabled;
+    Graph.mainGridEnabled({xEnabled:!enabled})
+  }
+  
+  function changeMainGridEnabledY(){
+    const enabled = Graph.getMainGridEnabled().yEnabled;
+    Graph.mainGridEnabled({yEnabled:!enabled})
+  }
 
 
 
@@ -356,7 +435,58 @@ export default function Home() {
           <p className="place-self-end max-w-[60px]">Units Y: </p>
           <input type="text" className="border border-gray-500 rounded-md w-full px-1 max-w-[75px]" onChange={changeUnitsY}/>
         </div>
-      
+        <div className="flex flex-col">
+          <div className="flex flex-row gap-3">
+            <p>Main Grid X</p>
+            <input type="checkbox" defaultChecked onChange={changeMainGridEnabledX}/>
+          </div>
+          <div className="flex flex-row gap-3">
+            <p>Main Grid Y</p>
+            <input type="checkbox" defaultChecked onChange={changeMainGridEnabledY}/>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex items-start justify-center gap-5 my-3">
+      <div className="flex flex-col grap-2">
+          <div className="flex flex-row items-start justify-center">
+            <p>Main Grid Color to:</p>
+            <select defaultValue="0" onChange={changeMainGridColorTarget}>
+              <option value="0">All</option>
+              <option value="1">Grid X</option>
+              <option value="2">Grid Y</option>
+            </select>
+          </div>
+          <input type="color" defaultValue="#000000" className="w-6 h-6 self-center mt-1" onChange={changeMainGridColor}/>
+        </div>
+        <div className="flex flex-col grap-2">
+          <div className="flex flex-row items-start justify-center">
+            <p>Main Grid Opacity to:</p>
+            <select defaultValue="0" onChange={changeMainGridOpacityTarget}>
+              <option value="0">All</option>
+              <option value="1">Grid X</option>
+              <option value="2">Grid Y</option>
+            </select>
+          </div>
+          <input type="number" defaultValue={0.3} step={0.02} min={0} max={1} className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" onChange={changeMainGridOpacity}/>
+        </div>
+        <div className="flex flex-col grap-3">
+          <div className="flex flex-row items-start justify-center">
+            <p>Main Grid Style to:</p>
+            <select defaultValue="0" onChange={changeMainGridStyleTarget}>
+              <option value="0">All</option>
+              <option value="1">Grid X</option>
+              <option value="2">Grid Y</option>
+            </select>
+          </div>
+          <select defaultValue="solid" onChange={changeMainGridStyle}>
+            <option value="solid">Solid</option>
+            <option value="dashed">Dashed</option>
+            <option value="doted">Doted</option>
+            <option value="dash-dot">Dash-Dot</option>
+            <option value="dash-2dot">Dash-2Dot</option>
+          </select>
+        </div>
       </div>
     
     </div>

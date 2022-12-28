@@ -8,6 +8,9 @@ export default function Home() {
   const mainGridColorTarget = useRef("0");
   const mainGridOpacityTarget = useRef("0");
   const mainGridStyleTarget = useRef("0");
+  const auxGridColorTarget = useRef("0");
+  const auxGridOpacityTarget = useRef("0");
+  const auxGridStyleTarget = useRef("0");
 
   function changeColor(e:ChangeEvent){
     const color = (e.target as HTMLInputElement).value as string;
@@ -284,8 +287,95 @@ export default function Home() {
     const enabled = Graph.getMainGridEnabled().yEnabled;
     Graph.mainGridEnabled({yEnabled:!enabled})
   }
+  
+  function changeAuxGridColorTarget(e:ChangeEvent){
+    const value = (e.target as HTMLSelectElement).value;
+    auxGridColorTarget.current = value;
+  }
 
+  function changeAuxGridColor(e:ChangeEvent){
+    const value = (e.target as HTMLInputElement).value;
 
+    switch(auxGridColorTarget.current){
+      case "0":
+        Graph.auxGridColor({color:value});
+        break;
+      
+      case "1":
+        Graph.auxGridColor({xColor:value});
+        break;
+
+      case "2":
+        Graph.auxGridColor({yColor:value});
+        break;
+    }
+  }
+  
+  function changeAuxGridOpacityTarget(e:ChangeEvent){
+    const value = (e.target as HTMLSelectElement).value;
+    auxGridOpacityTarget.current = value;
+  }
+
+  function changeAuxGridOpacity(e:ChangeEvent){
+    const value = parseFloat((e.target as HTMLInputElement).value);
+
+    switch(auxGridOpacityTarget.current){
+      case "0":
+        Graph.auxGridOpacity({opacity:value});
+        break;
+      
+      case "1":
+        Graph.auxGridOpacity({xOpacity:value});
+        break;
+
+      case "2":
+        Graph.auxGridOpacity({yOpacity:value});
+        break;
+    }
+  }
+  
+  function changeAuxGridStyleTarget(e:ChangeEvent){
+    const value = (e.target as HTMLSelectElement).value;
+    auxGridStyleTarget.current = value;
+  }
+
+  function changeAuxGridStyle(e:ChangeEvent){
+    const value = (e.target as HTMLInputElement).value as Graph2D_LineStyle;
+
+    switch(auxGridStyleTarget.current){
+      case "0":
+        Graph.auxGridStyle({style:value});
+        break;
+      
+      case "1":
+        Graph.auxGridStyle({xStyle:value});
+        break;
+
+      case "2":
+        Graph.auxGridStyle({yStyle:value});
+        break;
+    }
+  }
+
+  function changeAuxGridEnabledX(){
+    const enabled = Graph.getAuxGridEnabled().xEnabled;
+    Graph.auxGridEnabled({xEnabled:!enabled})
+  }
+  
+  function changeAuxGridEnabledY(){
+    const enabled = Graph.getAuxGridEnabled().yEnabled;
+    Graph.auxGridEnabled({yEnabled:!enabled})
+  }
+
+  function changeLineNumberX(e:ChangeEvent){
+    const value = parseFloat((e.target as HTMLInputElement).value);
+    Graph.auxGridSpacing({x:value===-1?"auto":value});
+  }
+  
+  function changeLineNumberY(e:ChangeEvent){
+    const value = parseFloat((e.target as HTMLInputElement).value);
+    Graph.auxGridSpacing({y:value===-1?"auto":value});
+  }
 
 
 
@@ -304,8 +394,7 @@ export default function Home() {
 
   function setGraphObject(element : SVGSVGElement){
     if(element == null) return;
-    Graph = Graph2D(element);
-
+    Graph = Graph2D(element).enablePointerMove();
   }
 
   return (
@@ -416,7 +505,7 @@ export default function Home() {
           <p className="place-self-end mr-2">Dynamic y</p>
           <input type="checkbox" defaultChecked onChange={changeDynamicY} className="w-[15px] h-[15px] self-center  "/>
         </div>
-        <div className="grid grid-cols-2 gap-x-2">
+        <div className="grid grid-cols-2 gap-x-3">
           <p>Overlap X</p>
           <input type="checkbox" className="w-[15px] h-[15px] self-center" onChange={changeOverlapX}/>
           <p>Overlap Y</p>
@@ -448,7 +537,7 @@ export default function Home() {
       </div>
 
       <div className="flex items-start justify-center gap-5 my-3">
-      <div className="flex flex-col grap-2">
+        <div className="flex flex-col grap-2">
           <div className="flex flex-row items-start justify-center">
             <p>Main Grid Color to:</p>
             <select defaultValue="0" onChange={changeMainGridColorTarget}>
@@ -486,6 +575,61 @@ export default function Home() {
             <option value="dash-dot">Dash-Dot</option>
             <option value="dash-2dot">Dash-2Dot</option>
           </select>
+        </div>
+        <div className="flex flex-col">
+          <div className="flex flex-row gap-3">
+            <p>Aux Grid X</p>
+            <input type="checkbox" defaultChecked onChange={changeAuxGridEnabledX}/>
+          </div>
+          <div className="flex flex-row gap-3">
+            <p>Aux Grid Y</p>
+            <input type="checkbox" defaultChecked onChange={changeAuxGridEnabledY}/>
+          </div>
+        </div>
+        <div className="flex flex-col grap-2">
+          <div className="flex flex-row items-start justify-center">
+            <p>Aux Grid Color to:</p>
+            <select defaultValue="0" onChange={changeAuxGridColorTarget}>
+              <option value="0">All</option>
+              <option value="1">Grid X</option>
+              <option value="2">Grid Y</option>
+            </select>
+          </div>
+          <input type="color" defaultValue="#000000" className="w-6 h-6 self-center mt-1" onChange={changeAuxGridColor}/>
+        </div>
+        <div className="flex flex-col grap-2">
+          <div className="flex flex-row items-start justify-center">
+            <p>Aux Grid Opacity to:</p>
+            <select defaultValue="0" onChange={changeAuxGridOpacityTarget}>
+              <option value="0">All</option>
+              <option value="1">Grid X</option>
+              <option value="2">Grid Y</option>
+            </select>
+          </div>
+          <input type="number" defaultValue={0.3} step={0.02} min={0} max={1} className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" onChange={changeAuxGridOpacity}/>
+        </div>
+        <div className="flex flex-col grap-3">
+          <div className="flex flex-row items-start justify-center">
+            <p>Aux Grid Style to:</p>
+            <select defaultValue="0" onChange={changeAuxGridStyleTarget}>
+              <option value="0">All</option>
+              <option value="1">Grid X</option>
+              <option value="2">Grid Y</option>
+            </select>
+          </div>
+          <select defaultValue="solid" onChange={changeAuxGridStyle}>
+            <option value="solid">Solid</option>
+            <option value="dashed">Dashed</option>
+            <option value="doted">Doted</option>
+            <option value="dash-dot">Dash-Dot</option>
+            <option value="dash-2dot">Dash-2Dot</option>
+          </select>
+        </div>
+        <div className="grid grid-cols-2 gap-2">
+          <p>Lines number X (auto = -1)</p>
+          <input type="number" min={-1} step={1} defaultValue={-1} className="border border-gray-500 rounded-md w-full px-1" onChange={changeLineNumberX}/>
+          <p>Lines number Y (auto = -1)</p>
+          <input type="number" min={-1} step={1} defaultValue={-1} className="border border-gray-500 rounded-md w-full px-1" onChange={changeLineNumberY}/>
         </div>
       </div>
     

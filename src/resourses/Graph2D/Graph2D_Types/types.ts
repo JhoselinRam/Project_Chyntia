@@ -1,5 +1,5 @@
 import { ScaleLinear, Selection } from "d3"
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units, Grid_Enabled, Grid_Color, Grid_Opacity, Grid_Style } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units, Grid_Enabled, Grid_Color, Grid_Opacity, Grid_Style, Grid_Spacing } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -197,7 +197,8 @@ export type Config_Type = {
     margin : (arg0:Margin_Type)=>Graph2D_Type,
     getMargin : ()=>Margin_Type,
     relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
-    getRelativePosition : ()=>Relative_Position
+    getRelativePosition : ()=>Relative_Position,
+    enablePointerMove : (arg0:boolean)=>Graph2D_Type
 }
 
 //---------------------------------------------------------
@@ -235,7 +236,9 @@ export type Aux_Grid = {
     auxGridOpacity : (arg0:Grid_Opacity)=>Graph2D_Type,
     getAuxGridOpacity : ()=>Grid_Opacity,
     auxGridStyle : (arg0:Grid_Style)=>Graph2D_Type,
-    getAuxGridStyle : ()=>Grid_Style
+    getAuxGridStyle : ()=>Grid_Style,
+    auxGridSpacing : (arg0:Grid_Spacing)=>Graph2D_Type,
+    getAuxGridSpacing : ()=>Grid_Spacing
 }
 
 export type Main_Lines_Props = {

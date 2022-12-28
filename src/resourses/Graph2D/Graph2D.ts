@@ -138,6 +138,7 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getMargin = config.getMargin;
     graphHandler.relativePosition = config.relativePosition;
     graphHandler.getRelativePosition = config.getRelativePosition;
+    graphHandler.enablePointerMove = config.enablePointerMove;
     graphHandler.mainGridEnabled = mainGrid.mainGridEnabled;
     graphHandler.getMainGridEnabled = mainGrid.getMainGridEnabled;
     graphHandler.mainGridColor = mainGrid.mainGridColor;
@@ -154,6 +155,8 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getAuxGridOpacity = auxGrid.getAuxGridOpacity;
     graphHandler.auxGridStyle = auxGrid.auxGridStyle;
     graphHandler.getAuxGridStyle = auxGrid.getAuxGridStyle;
+    graphHandler.auxGridSpacing = auxGrid.auxGridSpacing;
+    graphHandler.getAuxGridSpacing = auxGrid.getAuxGridSpacing;
     
     
     //Setup configuration 
@@ -282,7 +285,10 @@ export type Graph2D_Type = {
     auxGridOpacity : (arg0:Grid_Opacity)=>Graph2D_Type,
     getAuxGridOpacity : ()=>Grid_Opacity,
     auxGridStyle : (arg0:Grid_Style)=>Graph2D_Type,
-    getAuxGridStyle : ()=>Grid_Style
+    getAuxGridStyle : ()=>Grid_Style,
+    auxGridSpacing : (arg0:Grid_Spacing)=>Graph2D_Type,
+    getAuxGridSpacing : ()=>Grid_Spacing,
+    enablePointerMove : (arg0?:boolean)=>Graph2D_Type
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -376,4 +382,9 @@ export type Grid_Style = {
     style ?: Graph2D_LineStyle,
     xStyle ?: Graph2D_LineStyle,
     yStyle ?: Graph2D_LineStyle
+}
+
+export type Grid_Spacing = {
+    x ?: "auto" | number,
+    y ?: "auto" | number
 }

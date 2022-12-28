@@ -1,6 +1,6 @@
-import { interval, select } from "d3";
-import { Graph2D_Type, Grid_Color, Grid_Enabled, Grid_Opacity, Grid_Style } from "../../Graph2D";
-import { Aux_Grid, Aux_Lines_Props, Grid_Method_Generator, Spacing_Info_Props, Spacing_Info_Type } from "../../Graph2D_Types/types";
+import { select } from "d3";
+import { Graph2D_Type, Grid_Color, Grid_Enabled, Grid_Opacity, Grid_Spacing, Grid_Style } from "../../Graph2D";
+import { Aux_Grid, Aux_Lines_Props, Grid_Method_Generator, Grid_Type, Spacing_Info_Props, Spacing_Info_Type } from "../../Graph2D_Types/types";
 
 function Aux_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generator) : Aux_Grid{
     const minSeparation = 20;   //Min separation between lines in pixels
@@ -290,7 +290,31 @@ function getAuxGridStyle():Grid_Style{
 }
 
 //---------------------------------------------------------
+//-------------------- Aux Spacing ------------------------
 
+    function auxGridSpacing({x, y} : Grid_Spacing) : Graph2D_Type{
+        if(state.grid.aux.compute==null) return graphHandler;
+        if(x==null && y==null) return graphHandler;
+        if(x===state.grid.aux.xSpacing && y===state.grid.aux.ySpacing) return graphHandler;
+
+        if(x!=null) state.grid.aux.xSpacing = x;
+        if(y!=null) state.grid.aux.ySpacing = y;
+
+        state.grid.aux.compute();
+        
+
+        return graphHandler;
+    }
+
+    function getAuxGridSpacing() : Grid_Spacing{
+        return {
+            x : state.grid.aux.xSpacing,
+            y : state.grid.aux.ySpacing
+        }
+    }
+
+
+//---------------------------------------------------------
 
 
     return {
@@ -302,7 +326,9 @@ function getAuxGridStyle():Grid_Style{
         auxGridOpacity,
         getAuxGridOpacity,
         auxGridStyle,
-        getAuxGridStyle
+        getAuxGridStyle,
+        auxGridSpacing,
+        getAuxGridSpacing
     };
 }
 

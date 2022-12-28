@@ -2,6 +2,7 @@ import { Canvas_Size, Center_Type, Graph2D_Type, Margin_Type, Relative_Position 
 import { Config_Type, Method_Generator_Props } from "../Graph2D_Types/types";
 
 function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
+    const pointerCoords : Array<number> = [];
 
 //--------------------- Canvas ----------------------------
 
@@ -137,6 +138,54 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
     }
 
 //---------------------------------------------------------
+//----------------- Enable Pointer Pan --------------------
+
+    function enablePointerMove(enable : boolean = true) : Graph2D_Type{
+        state.canvas.node()?.removeEventListener("pointerdown", onPointerDown);
+        state.canvas.node()?.removeEventListener("pointerup", onPointerUp);
+        state.canvas.style("cursor", "auto");
+
+        if(enable){
+            state.canvas.style("cursor", "grab");
+            state.canvas.node()?.addEventListener("pointerdown", onPointerDown);
+            state.canvas.node()?.addEventListener("pointerup", onPointerUp);
+        } 
+
+        return graphHandler
+    }
+
+    function onPointerDown(e:PointerEvent){
+        if(state.scale==null) return;
+        
+        pointerCoords[0] = state.scale.inner.x.invert(e.clientX);
+        pointerCoords[1] = state.scale.inner.y.invert(e.clientY);
+
+        state.canvas.node()?.addEventListener("pointermove", onPointerMove)
+    }
+
+    function onPointerMove(e:PointerEvent){
+        if(state.scale==null) return;
+        state.canvas.style("cursor", "grabbing");
+        const displacementX = state.scale.inner.x.invert(e.clientX) - pointerCoords[0];
+        const displacementY = state.scale.inner.y.invert(e.clientY) - pointerCoords[1];
+        const newCoordX = state.config.centerX + displacementX;
+        const newCoordY = state.config.centerY + displacementY;
+
+        center({
+            x : newCoordX,
+            y : newCoordY
+        });
+    }
+
+    function onPointerUp(){
+        state.canvas.style("cursor", "grab");
+        state.canvas.node()?.removeEventListener("pointermove", onPointerMove);
+    }
+
+//---------------------------------------------------------
+
+
+
 
 
     return {
@@ -150,7 +199,8 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
         margin,
         getMargin,
         relativePosition,
-        getRelativePosition
+        getRelativePosition,
+        enablePointerMove
     };
 }
 

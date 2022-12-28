@@ -227,7 +227,15 @@ export type Main_Grid = {
 }
 
 export type Aux_Grid = {
-    compute : ()=>void
+    compute : ()=>void,
+    auxGridEnabled : (arg0:Grid_Enabled)=>Graph2D_Type,
+    getAuxGridEnabled : ()=>Grid_Enabled,
+    auxGridColor : (arg0:Grid_Color)=>Graph2D_Type,
+    getAuxGridColor : ()=>Grid_Color,
+    auxGridOpacity : (arg0:Grid_Opacity)=>Graph2D_Type,
+    getAuxGridOpacity : ()=>Grid_Opacity,
+    auxGridStyle : (arg0:Grid_Style)=>Graph2D_Type,
+    getAuxGridStyle : ()=>Grid_Style
 }
 
 export type Main_Lines_Props = {

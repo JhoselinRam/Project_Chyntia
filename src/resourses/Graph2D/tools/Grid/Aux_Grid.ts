@@ -3,8 +3,8 @@ import { Graph2D_Type, Grid_Color, Grid_Enabled, Grid_Opacity, Grid_Style } from
 import { Aux_Grid, Aux_Lines_Props, Grid_Method_Generator, Spacing_Info_Props, Spacing_Info_Type } from "../../Graph2D_Types/types";
 
 function Aux_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generator) : Aux_Grid{
-    const minSeparation = 12;   //Min separation between lines in pixels
-    const defaulSpacing = 5;    //Defaul number of lines between two ticks
+    const minSeparation = 20;   //Min separation between lines in pixels
+    const defaulSpacing = 4;    //Defaul number of lines between two ticks
 //---------------------------------------------------------
 //----------------- Compute Aux Grid Lines ----------------
 
@@ -55,19 +55,21 @@ function Aux_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generator
 
         ticks.forEach((value)=>{
             for(let i=1; i<=amount; i++){
-                const position = value+delta*i;
-                const {xStart, xEnd, yStart, yEnd} = getLinePosition(axis, position);
+                const position = value-delta*i;
+                const lineCoords = getLinePosition(axis, position);
                 
+                if(lineCoords == null) continue;
+
                 state.canvas
                     .select(`g.Graph2D_Aux_Grid${axis}`)
                     .attr("stroke", color)
                     .attr("opacity", opacity)
                     .attr("stroke-dasharray", state.lineStyleMap[style])
                     .append("line")
-                    .attr("x1", xStart)
-                    .attr("x2", xEnd)
-                    .attr("y1", yStart)
-                    .attr("y2", yEnd)
+                    .attr("x1", lineCoords.xStart)
+                    .attr("x2", lineCoords.xEnd)
+                    .attr("y1", lineCoords.yStart)
+                    .attr("y2", lineCoords.yEnd)
             }
         });
     }
@@ -128,12 +130,14 @@ function Aux_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generator
             xEnd = xStart;
             yStart = yMin;
             yEnd = yMax;
+            if(xStart<xMin || xStart>xMax) return;
         }
         else{
             xStart = xMin;
             xEnd = xMax;
             yStart = state.scale?.inner.y(position) as number;
             yEnd = yStart;
+            if(yStart<yMin || yStart>yMax) return;
         }
 
         return {
@@ -159,7 +163,7 @@ function Aux_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generator
 //---------------------------------------------------------
 //-------------------- Aux Grid ---------------------------
 
-function auxtGridEnabled({enabled, xEnabled, yEnabled}:Grid_Enabled) : Graph2D_Type{
+function auxGridEnabled({enabled, xEnabled, yEnabled}:Grid_Enabled) : Graph2D_Type{
     if(state.grid.aux.compute == null) return graphHandler;
     if(enabled == null && xEnabled == null && yEnabled == null) return graphHandler;
     if(enabled===state.grid.aux.xEnabled && enabled===state.grid.aux.yEnabled) return graphHandler;
@@ -290,7 +294,15 @@ function getAuxGridStyle():Grid_Style{
 
 
     return {
-        compute
+        compute,
+        auxGridEnabled,
+        getAuxGridEnabled,
+        auxGridColor,
+        getAuxGridColor,
+        auxGridOpacity,
+        getAuxGridOpacity,
+        auxGridStyle,
+        getAuxGridStyle
     };
 }
 

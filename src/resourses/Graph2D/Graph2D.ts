@@ -146,6 +146,14 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getMainGridOpacity = mainGrid.getMainGridOpacity;
     graphHandler.mainGridStyle = mainGrid.mainGridStyle;
     graphHandler.getMainGridStyle = mainGrid.getMainGridStyle;
+    graphHandler.auxGridEnabled = auxGrid.auxGridEnabled;
+    graphHandler.getAuxGridEnabled = auxGrid.getAuxGridEnabled;
+    graphHandler.auxGridColor = auxGrid.auxGridColor;
+    graphHandler.getAuxGridColor = auxGrid.getAuxGridColor;
+    graphHandler.auxGridOpacity = auxGrid.auxGridOpacity;
+    graphHandler.getAuxGridOpacity = auxGrid.getAuxGridOpacity;
+    graphHandler.auxGridStyle = auxGrid.auxGridStyle;
+    graphHandler.getAuxGridStyle = auxGrid.getAuxGridStyle;
     
     
     //Setup configuration 
@@ -266,7 +274,15 @@ export type Graph2D_Type = {
     mainGridOpacity : (arg0:Grid_Opacity)=>Graph2D_Type,
     getMainGridOpacity : ()=>Grid_Opacity,
     mainGridStyle : (arg0:Grid_Style)=>Graph2D_Type,
-    getMainGridStyle : ()=>Grid_Style
+    getMainGridStyle : ()=>Grid_Style,
+    auxGridEnabled : (arg0:Grid_Enabled)=>Graph2D_Type,
+    getAuxGridEnabled : ()=>Grid_Enabled,
+    auxGridColor : (arg0:Grid_Color)=>Graph2D_Type,
+    getAuxGridColor : ()=>Grid_Color,
+    auxGridOpacity : (arg0:Grid_Opacity)=>Graph2D_Type,
+    getAuxGridOpacity : ()=>Grid_Opacity,
+    auxGridStyle : (arg0:Grid_Style)=>Graph2D_Type,
+    getAuxGridStyle : ()=>Grid_Style
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";

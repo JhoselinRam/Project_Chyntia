@@ -288,7 +288,7 @@ export type Graph2D_Type = {
     getAuxGridStyle : ()=>Grid_Style,
     auxGridSpacing : (arg0:Grid_Spacing)=>Graph2D_Type,
     getAuxGridSpacing : ()=>Grid_Spacing,
-    enablePointerMove : (arg0?:boolean)=>Graph2D_Type
+    enablePointerMove : (enable?:boolean, options?:PointerMove_Options)=>Graph2D_Type
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -387,4 +387,10 @@ export type Grid_Style = {
 export type Grid_Spacing = {
     x ?: "auto" | number,
     y ?: "auto" | number
+}
+
+export type PointerMove_Options = {
+    cursorHover : string,
+    cursorMove : string,
+    throttleTime : number
 }

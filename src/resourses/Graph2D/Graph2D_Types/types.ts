@@ -1,5 +1,5 @@
 import { ScaleLinear, Selection } from "d3"
-import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units, Grid_Enabled, Grid_Color, Grid_Opacity, Grid_Style, Grid_Spacing } from "../Graph2D"
+import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units, Grid_Enabled, Grid_Color, Grid_Opacity, Grid_Style, Grid_Spacing, PointerMove_Options } from "../Graph2D"
 
 //------------------------- Main ---------------------------
 
@@ -198,7 +198,12 @@ export type Config_Type = {
     getMargin : ()=>Margin_Type,
     relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
     getRelativePosition : ()=>Relative_Position,
-    enablePointerMove : (arg0:boolean)=>Graph2D_Type
+    enablePointerMove : (enable?:boolean, options?:PointerMove_Options)=>Graph2D_Type
+}
+
+export type Compute_PointerMove = {
+    coordX : number,
+    coordY : number,
 }
 
 //---------------------------------------------------------

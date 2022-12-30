@@ -1,4 +1,4 @@
-import { ScaleLinear, Selection } from "d3"
+import { ScaleLinear, ScaleLogarithmic, Selection } from "d3"
 import { Axis_Color_Options, Axis_Opacity_Options, Graph2D_Type, Graph2D_AxisPosition, Graph2D_AxisType, Canvas_Size, Center_Type, Margin_Type, Relative_Position, Graph2D_LineStyle, Axis_Dynamic, Axis_Overlap, Axis_Units, Grid_Enabled, Grid_Color, Grid_Opacity, Grid_Style, Grid_Spacing, PointerMove_Options } from "../Graph2D"
 
 //------------------------- Main ---------------------------
@@ -125,8 +125,8 @@ export type Background_Type = {
 //------------------------- Scale -------------------------
 
 export type Scale = {
-    x : ScaleLinear<number, number, never>,
-    y : ScaleLinear<number, number, never>
+    x : ScaleLinear<number, number, never> | ScaleLogarithmic<number, number, never>,
+    y : ScaleLinear<number, number, never> | ScaleLogarithmic<number, number, never>
 }
 
 export type Scale_Type = {

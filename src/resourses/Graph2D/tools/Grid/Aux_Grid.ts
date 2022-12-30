@@ -1,6 +1,6 @@
 import { select } from "d3";
 import { Graph2D_Type, Grid_Color, Grid_Enabled, Grid_Opacity, Grid_Spacing, Grid_Style } from "../../Graph2D";
-import { Aux_Grid, Aux_Lines_Props, Grid_Method_Generator, Grid_Type, Spacing_Info_Props, Spacing_Info_Type } from "../../Graph2D_Types/types";
+import { Aux_Grid, Aux_Lines_Props, Grid_Method_Generator, Spacing_Info_Props, Spacing_Info_Type } from "../../Graph2D_Types/types";
 
 function Aux_Grid({state, graphHandler, getMinMaxCoords} : Grid_Method_Generator) : Aux_Grid{
     const minSeparation = 20;   //Min separation between lines in pixels

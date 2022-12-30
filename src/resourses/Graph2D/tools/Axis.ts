@@ -621,8 +621,9 @@ function Axis({graphHandler, state}:Method_Generator_Props) : Axis_Type{
         if(type === state.axis.type) return graphHandler;
         if(state.render == null) return graphHandler;
 
-        state.axis.type = type;
-        state.render();
+            //Maybe later
+        //state.axis.type = type;
+        //state.render();
 
         return graphHandler;
     }

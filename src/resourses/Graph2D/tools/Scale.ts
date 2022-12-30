@@ -1,9 +1,9 @@
-import { scaleLinear, axisBottom, axisLeft, axisRight, axisTop, Selection, select } from "d3";
-import { Graph2D_State, Scale_Type, GetScale_Type } from "../Graph2D_Types/types";
+import { scaleLinear, axisBottom, axisLeft, axisRight, axisTop, Selection, select, scaleLog } from "d3";
+import { Graph2D_State, Scale_Type, GetScale_Type, Scale } from "../Graph2D_Types/types";
 
 function Scale(state : Graph2D_State) : Scale_Type{
-    let inner = {x:scaleLinear(), y:scaleLinear()};
-    let reference = {x:scaleLinear(), y:scaleLinear()};
+    let inner : Scale = {x:scaleLinear(), y:scaleLinear()};
+    let reference : Scale = {x:scaleLinear(), y:scaleLinear()};
     
 //---------------------------------------------------------
 //------------------- Compute Scale -----------------------
@@ -38,6 +38,21 @@ function Scale(state : Graph2D_State) : Scale_Type{
                 break;
             
             case "x-log":
+                inner.x = scaleLog()
+                    .domain([domainStartX, domainEndX])
+                    .range([rangeStartX, rangeEndX]);
+
+                inner.y = scaleLinear()
+                            .domain([domainStartY, domainEndY])
+                            .range([rangeStartY, rangeEndY]);
+                
+                reference.x = scaleLog()
+                                .domain([-state.config.width/2, state.config.width/2])
+                                .range([rangeStartX, rangeEndX]);
+
+                reference.y = scaleLinear()
+                                .domain([-state.config.height/2, state.config.height/2])
+                                .range([rangeStartY, rangeEndY]);
                 break;
             
             case "y-log":

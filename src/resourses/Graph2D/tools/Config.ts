@@ -1,11 +1,7 @@
-import { Canvas_Size, Center_Type, Graph2D_Type, Margin_Type, PointerMove_Options, Relative_Position } from "../Graph2D";
-import { Compute_PointerMove, Config_Type, Method_Generator_Props } from "../Graph2D_Types/types";
+import { Canvas_Size, Center_Type, Graph2D_Type, Margin_Type, Relative_Position } from "../Graph2D";
+import { Config_Type, Method_Generator_Props } from "../Graph2D_Types/types";
 
 function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
-    const pointerCoords : [number, number] = [0, 0];
-    const cursorStyle : [string, string] = ["", ""];
-    let delayTime : number;
-
 //--------------------- Canvas ----------------------------
 
     function canvas() : SVGGElement{

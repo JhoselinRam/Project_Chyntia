@@ -392,5 +392,5 @@ export type Grid_Spacing = {
 export type PointerMove_Options = {
     cursorHover : string,
     cursorMove : string,
-    throttleTime : number
+    delay : number
 }

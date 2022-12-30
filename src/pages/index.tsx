@@ -11,6 +11,11 @@ export default function Home() {
   const auxGridColorTarget = useRef("0");
   const auxGridOpacityTarget = useRef("0");
   const auxGridStyleTarget = useRef("0");
+  const enablePan = useRef(false);
+  const delayTime = useRef(20);
+  const pointerHover = useRef("grab");
+  const pointerMove = useRef("grabbing");
+
 
   function changeColor(e:ChangeEvent){
     const color = (e.target as HTMLInputElement).value as string;
@@ -377,6 +382,36 @@ export default function Home() {
     Graph.auxGridSpacing({y:value===-1?"auto":value});
   }
 
+  function changeMousePan(){
+    Graph.enablePointerMove(enablePan.current, {
+      cursorHover : pointerHover.current,
+      cursorMove : pointerMove.current,
+      delay : delayTime.current
+    });
+  }
+
+  function changePanEnabled(){
+    enablePan.current = !enablePan.current;
+    changeMousePan();
+  }
+
+  function changePointerHover(e:ChangeEvent){
+    const pointer = (e.target as HTMLSelectElement).value;
+    pointerHover.current = pointer;
+    changeMousePan();
+  }
+  
+  function changePointerMove(e:ChangeEvent){
+    const pointer = (e.target as HTMLSelectElement).value;
+    pointerMove.current = pointer;
+    changeMousePan();
+  }
+
+  function changeDelayTime(e:ChangeEvent){
+    const time = parseFloat((e.target as HTMLInputElement).value);
+    delayTime.current = time;
+    changeMousePan();
+  }
 
 
 
@@ -394,7 +429,7 @@ export default function Home() {
 
   function setGraphObject(element : SVGSVGElement){
     if(element == null) return;
-    Graph = Graph2D(element).enablePointerMove();
+    Graph = Graph2D(element);
   }
 
   return (
@@ -632,8 +667,34 @@ export default function Home() {
           <input type="number" min={-1} step={1} defaultValue={-1} className="border border-gray-500 rounded-md w-full px-1" onChange={changeLineNumberY}/>
         </div>
       </div>
-    
+
+      <div className="flex items-start justify-center gap-5 my-3">
+        <div className="grid grid-cols-2 gap-2">
+            <p>Enable Mouse Pan</p>
+            <input type="checkbox" className="w-[15px] h-[15px] self-center" onChange={changePanEnabled}/>
+            <p>Delay Time :</p>
+            <input type="number" className="border border-gray-500 rounded-md w-full px-1 max-w-[120px]" min={0} step={1} defaultValue={20} onChange={changeDelayTime}/>
+            <p>Pointer Hover: </p>
+            <select defaultValue="grab" onChange={changePointerHover}>
+              <option value="grab">Grab</option>
+              <option value="grabbing">Grabbing</option>
+              <option value="pointer">Pointer</option>
+              <option value="auto">Auto</option>
+              <option value="move">Move</option>
+            </select>
+            <p>Pointer Move: </p>
+            <select defaultValue="grabbing" onChange={changePointerMove}>
+              <option value="grab">Grab</option>
+              <option value="grabbing">Grabbing</option>
+              <option value="pointer">Pointer</option>
+              <option value="auto">Auto</option>
+              <option value="move">Move</option>
+            </select>
+          </div>
+      </div>
+
     </div>
+
 
     <div className="w-full h-[500px] p-10 bg-gray-500 flex items-center justify-center">
         <svg className="w-full h-full" ref={setGraphObject}>

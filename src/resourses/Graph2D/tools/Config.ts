@@ -4,7 +4,7 @@ import { Compute_PointerMove, Config_Type, Method_Generator_Props } from "../Gra
 function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
     const pointerCoords : [number, number] = [0, 0];
     const cursorStyle : [string, string] = ["", ""];
-    let delay : number;
+    let delayTime : number;
 
 //--------------------- Canvas ----------------------------
 
@@ -142,7 +142,7 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
 //---------------------------------------------------------
 //----------------- Enable Pointer Pan --------------------
 
-    function enablePointerMove(enable : boolean = true, {cursorHover,cursorMove,throttleTime}:PointerMove_Options = {cursorHover:"grab",  cursorMove:"grabbing", throttleTime:30}) : Graph2D_Type{
+    function enablePointerMove(enable : boolean = true, {cursorHover,cursorMove,delay}:PointerMove_Options = {cursorHover:"grab",  cursorMove:"grabbing", delay:20}) : Graph2D_Type{
         
         state.canvas.node()?.removeEventListener("pointerdown", onPointerDown);
         state.canvas.node()?.removeEventListener("pointerup", onPointerUp);
@@ -151,7 +151,7 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
         if(enable){
             cursorStyle[0] = cursorHover;
             cursorStyle[1] = cursorMove;
-            delay = throttleTime;
+            delayTime = delay;
             state.canvas.style("cursor", cursorHover);
             state.canvas.attr("touch-action", "none");
             state.canvas.node()?.addEventListener("pointerdown", onPointerDown);
@@ -170,7 +170,7 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
         pointerCoords[1] = state.scale.inner.y.invert(e.clientY);
 
         state.canvas.style("cursor", cursorStyle[1]);
-        state.canvas.node()?.setPointerCapture(e.pointerId);
+        //state.canvas.node()?.setPointerCapture(e.pointerId);
         state.canvas.node()?.addEventListener("pointermove", onPointerMove);
     }
 
@@ -186,7 +186,7 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
     function onPointerMove(e:PointerEvent){
         const coordX = e.clientX;
         const coordY = e.clientY;
-
+        console.log(cursorStyle[1]);
         throttlePointerMove({coordX, coordY});
     }
 
@@ -221,7 +221,7 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
                 fun(waitingArgs);
                 waitingArgs = undefined;
                 waitThrottle();
-            }, delay);
+            }, delayTime);
         }
         
         return (args:Compute_PointerMove)=>{

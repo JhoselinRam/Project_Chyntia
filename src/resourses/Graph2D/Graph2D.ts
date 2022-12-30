@@ -4,6 +4,7 @@ import { Graph2D_State, Line_Style_Map } from "./Graph2D_Types/types";
 import Axis from "./tools/Axis";
 import Background from "./tools/Background";
 import Config from "./tools/Config";
+import Events from "./tools/Events";
 import Grid from "./tools/Grid/Grid";
 import Scale from "./tools/Scale";
 
@@ -91,6 +92,16 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
             marginTop : 5,
             marginEnd : 5,
             marginBottom : 5
+        },
+        events : {
+            pointerMove : {
+                pointerCapture : false,
+                delay : 20,
+                x : 0,
+                y : 0,
+                cursorHover : "grab",
+                cursorMove : "grabbing"
+            }
         }
     }
     
@@ -101,6 +112,7 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     const background = Background({graphHandler, state});
     const {mainGrid, auxGrid} = Grid({graphHandler, state});
     const config = Config({graphHandler, state});
+    const events = Events({graphHandler, state});
     state.scale = Scale(state);
     state.axis.compute = axis.compute;
     state.grid.main.compute = mainGrid.compute;
@@ -138,7 +150,6 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getMargin = config.getMargin;
     graphHandler.relativePosition = config.relativePosition;
     graphHandler.getRelativePosition = config.getRelativePosition;
-    graphHandler.enablePointerMove = config.enablePointerMove;
     graphHandler.mainGridEnabled = mainGrid.mainGridEnabled;
     graphHandler.getMainGridEnabled = mainGrid.getMainGridEnabled;
     graphHandler.mainGridColor = mainGrid.mainGridColor;
@@ -157,6 +168,7 @@ function Graph2D(svg : SVGSVGElement) : Graph2D_Type{
     graphHandler.getAuxGridStyle = auxGrid.getAuxGridStyle;
     graphHandler.auxGridSpacing = auxGrid.auxGridSpacing;
     graphHandler.getAuxGridSpacing = auxGrid.getAuxGridSpacing;
+    graphHandler.enablePointerMove = events.enablePointerMove;
     
     
     //Setup configuration 
@@ -288,7 +300,7 @@ export type Graph2D_Type = {
     getAuxGridStyle : ()=>Grid_Style,
     auxGridSpacing : (arg0:Grid_Spacing)=>Graph2D_Type,
     getAuxGridSpacing : ()=>Grid_Spacing,
-    enablePointerMove : (enable?:boolean, options?:PointerMove_Options)=>Graph2D_Type
+    enablePointerMove : (arg0?:boolean, arg1?:PointerMove_Options)=>Graph2D_Type
 }
 
 export type Graph2D_AxisType = "rectangular" | "polar" | "x-log" | "y-log" | "log-log";
@@ -390,7 +402,9 @@ export type Grid_Spacing = {
 }
 
 export type PointerMove_Options = {
-    cursorHover : string,
-    cursorMove : string,
-    delay : number
+    cursorHover ?: string,
+    cursorMove ?: string,
+    delay ?: number,
+    pointerCapture ?: boolean,
+    callback ?: (arg0?:Graph2D_Type)=>void
 }

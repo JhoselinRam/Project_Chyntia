@@ -15,6 +15,7 @@ export default function Home() {
   const delayTime = useRef(20);
   const pointerHover = useRef("grab");
   const pointerMove = useRef("grabbing");
+  const pointerCapture = useRef(false);
 
 
   function changeColor(e:ChangeEvent){
@@ -384,9 +385,10 @@ export default function Home() {
 
   function changeMousePan(){
     Graph.enablePointerMove(enablePan.current, {
+      delay : delayTime.current,
       cursorHover : pointerHover.current,
       cursorMove : pointerMove.current,
-      delay : delayTime.current
+      pointerCapture : pointerCapture.current
     });
   }
 
@@ -410,6 +412,11 @@ export default function Home() {
   function changeDelayTime(e:ChangeEvent){
     const time = parseFloat((e.target as HTMLInputElement).value);
     delayTime.current = time;
+    changeMousePan();
+  }
+
+  function changePointerCapture(){
+    pointerCapture.current = !pointerCapture.current;
     changeMousePan();
   }
 
@@ -690,6 +697,8 @@ export default function Home() {
               <option value="auto">Auto</option>
               <option value="move">Move</option>
             </select>
+            <p>Pointer Campute : </p>
+            <input type="checkbox" className="w-[15px] h-[15px] self-center" onChange={changePointerCapture}/>
           </div>
       </div>
 

@@ -84,6 +84,17 @@ export type Graph2D_State = {
         marginTop : number,
         marginEnd : number,
         marginBottom : number
+    },
+    events : {
+        pointerMove : {
+            pointerCapture : boolean,
+            delay : number,
+            x : number,
+            y : number,
+            cursorHover : string,
+            cursorMove : string,
+            callback ?: (arg0?:Graph2D_Type)=>void
+        }
     }
 }
 
@@ -197,13 +208,7 @@ export type Config_Type = {
     margin : (arg0:Margin_Type)=>Graph2D_Type,
     getMargin : ()=>Margin_Type,
     relativePosition : (arg0:Relative_Position)=>Graph2D_Type,
-    getRelativePosition : ()=>Relative_Position,
-    enablePointerMove : (enable?:boolean, options?:PointerMove_Options)=>Graph2D_Type
-}
-
-export type Compute_PointerMove = {
-    coordX : number,
-    coordY : number,
+    getRelativePosition : ()=>Relative_Position
 }
 
 //---------------------------------------------------------
@@ -276,6 +281,18 @@ export type MinMaxCoords_Type = {
     xMax : number,
     yMin : number,
     yMax : number
+}
+
+//---------------------------------------------------------
+//---------------------- Events ---------------------------
+
+export type Events_Type = {
+    enablePointerMove : (arg?:boolean, arg1?:PointerMove_Options)=>void
+}
+
+export type Compute_PointerMove = {
+    coordX : number,
+    coordY : number,
 }
 
 //---------------------------------------------------------

@@ -143,7 +143,6 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
 //----------------- Enable Pointer Pan --------------------
 
     function enablePointerMove(enable : boolean = true, {cursorHover,cursorMove,delay}:PointerMove_Options = {cursorHover:"grab",  cursorMove:"grabbing", delay:20}) : Graph2D_Type{
-        
         state.canvas.node()?.removeEventListener("pointerdown", onPointerDown);
         state.canvas.node()?.removeEventListener("pointerup", onPointerUp);
         state.canvas.style("cursor", "auto");
@@ -170,13 +169,12 @@ function Config({graphHandler, state}:Method_Generator_Props) : Config_Type{
         pointerCoords[1] = state.scale.inner.y.invert(e.clientY);
 
         state.canvas.style("cursor", cursorStyle[1]);
-        //state.canvas.node()?.setPointerCapture(e.pointerId);
         state.canvas.node()?.addEventListener("pointermove", onPointerMove);
     }
 
     //---------------------------------------------------------
 
-    function onPointerUp(){
+    function onPointerUp(e:PointerEvent){
         state.canvas.style("cursor", cursorStyle[0]);
         state.canvas.node()?.removeEventListener("pointermove", onPointerMove);
     }
